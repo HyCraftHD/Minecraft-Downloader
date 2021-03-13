@@ -8,4 +8,5 @@ repositories {
 
 dependencies {
 	compileOnly "com.google.code.gson:gson:2.8.6"
+	compileOnly "net.sf.jopt-simple:jopt-simple:5.0.4"
 }
