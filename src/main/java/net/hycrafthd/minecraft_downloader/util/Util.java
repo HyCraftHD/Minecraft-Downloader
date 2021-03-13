@@ -17,17 +17,26 @@ import java.util.stream.Collectors;
 
 public class Util {
 	
+	private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
+	
 	public static String downloadJson(String url) throws IOException, NoSuchAlgorithmException {
 		return downloadJson(url, null);
 	}
 	
-	public static String downloadJson(String url, String sha1) throws IOException, NoSuchAlgorithmException {
+	public static String downloadJson(String url, String sha1) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.setConnectTimeout(5000);
 		urlConnection.setReadTimeout(5000);
 		urlConnection.connect();
 		
-		final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+		final MessageDigest messageDigest;
+		
+		try {
+			messageDigest = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException ex) {
+			throw new SHA1VerificationFailedException("SHA1 Algorithm not available");
+		}
+		
 		final String json;
 		
 		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(new DigestInputStream(urlConnection.getInputStream(), messageDigest), StandardCharsets.UTF_8))) {
@@ -36,7 +45,7 @@ public class Util {
 		
 		if (sha1 != null) {
 			if (!bytesToHex(messageDigest.digest()).equals(sha1)) {
-				throw new SHA1VerificationFailedException();
+				throw new SHA1VerificationFailedException("SHA1 signature does not match the expected one");
 			}
 		}
 		
@@ -47,7 +56,13 @@ public class Util {
 		final URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.connect();
 		
-		final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+		final MessageDigest messageDigest;
+		
+		try {
+			messageDigest = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException ex) {
+			throw new SHA1VerificationFailedException("SHA1 Algorithm not available");
+		}
 		
 		final byte buffer[] = new byte[2048];
 		
@@ -61,12 +76,10 @@ public class Util {
 		
 		if (sha1 != null) {
 			if (!bytesToHex(messageDigest.digest()).equals(sha1)) {
-				throw new SHA1VerificationFailedException();
+				throw new SHA1VerificationFailedException("SHA1 signature does not match the expected one");
 			}
 		}
 	}
-	
-	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 	
 	public static String bytesToHex(byte[] bytes) {
 		byte[] hexChars = new byte[bytes.length * 2];

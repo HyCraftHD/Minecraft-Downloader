@@ -9,4 +9,8 @@ public class SHA1VerificationFailedException extends IOException {
 	public SHA1VerificationFailedException() {
 	}
 	
+	public SHA1VerificationFailedException(String string) {
+		super(string);
+	}
+	
 }
