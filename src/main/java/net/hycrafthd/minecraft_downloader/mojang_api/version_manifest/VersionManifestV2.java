@@ -20,6 +20,11 @@ public class VersionManifestV2 {
 		return versions;
 	}
 	
+	@Override
+	public String toString() {
+		return "VersionManifestV2 [latest=" + latest + ", versions=" + versions + "]";
+	}
+	
 	public class Latest {
 		
 		private String release;
@@ -31,6 +36,11 @@ public class VersionManifestV2 {
 		
 		public String getSnapshot() {
 			return snapshot;
+		}
+		
+		@Override
+		public String toString() {
+			return "Latest [release=" + release + ", snapshot=" + snapshot + "]";
 		}
 		
 	}
@@ -72,5 +82,11 @@ public class VersionManifestV2 {
 		public int getComplianceLevel() {
 			return complianceLevel;
 		}
+		
+		@Override
+		public String toString() {
+			return "Version [id=" + id + ", type=" + type + ", url=" + url + ", time=" + time + ", releaseTime=" + releaseTime + ", sha1=" + sha1 + ", complianceLevel=" + complianceLevel + "]";
+		}
+		
 	}
 }

@@ -21,7 +21,7 @@ public class MinecraftDownloader {
 			
 			VersionManifestV2 manifest = gson.fromJson(versionManifest, VersionManifestV2.class);
 			
-			Main.LOGGER.info(manifest);
+			Main.LOGGER.info(manifest.getVersions().get(0));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
