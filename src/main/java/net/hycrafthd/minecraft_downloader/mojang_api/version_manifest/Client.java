@@ -9,6 +9,14 @@ public class Client {
 	private Downloads downloads;
 	private ArrayList<Libary> libraries;
 	
+	public Downloads getDownloads() {
+		return downloads;
+	}
+	
+	public ArrayList<Libary> getLibraries() {
+		return libraries;
+	}
+	
 	@Override
 	public String toString() {
 		return "Client [downloads=" + downloads + ", libraries=" + libraries + "]";
@@ -21,6 +29,22 @@ public class Client {
 		private ClientDL server;
 		private ClientDL server_mappings;
 		
+		public ClientDL getClient() {
+			return client;
+		}
+		
+		public ClientDL getClient_mappings() {
+			return client_mappings;
+		}
+		
+		public ClientDL getServer() {
+			return server;
+		}
+		
+		public ClientDL getServer_mappings() {
+			return server_mappings;
+		}
+		
 		@Override
 		public String toString() {
 			return "Downloads [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
@@ -31,7 +55,24 @@ public class Client {
 			private String sha1;
 			private int size;
 			private int totalSize;
+			
 			private String url;
+			
+			public String getSha1() {
+				return sha1;
+			}
+			
+			public int getSize() {
+				return size;
+			}
+			
+			public int getTotalSize() {
+				return totalSize;
+			}
+			
+			public String getUrl() {
+				return url;
+			}
 			
 			@Override
 			public String toString() {
@@ -42,13 +83,41 @@ public class Client {
 	
 	public class Libary {
 		
-		private Downloads downloads;
 		private Classifiers classifiers;
-		private String name;
-		private String url;
-		private Natives natives;
+		private Downloads downloads;
 		private Extract extract;
+		private String name;
+		private Natives natives;
 		private ArrayList<Rule> rules;
+		private String url;
+		
+		public Classifiers getClassifiers() {
+			return classifiers;
+		}
+		
+		public Downloads getDownloads() {
+			return downloads;
+		}
+		
+		public Extract getExtract() {
+			return extract;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public Natives getNatives() {
+			return natives;
+		}
+		
+		public ArrayList<Rule> getRules() {
+			return rules;
+		}
+		
+		public String getUrl() {
+			return url;
+		}
 		
 		@Override
 		public String toString() {
@@ -62,19 +131,25 @@ public class Client {
 			private int size;
 			private String url;
 			
+			public String getPath() {
+				return path;
+			}
+			
+			public String getSha1() {
+				return sha1;
+			}
+			
+			public int getSize() {
+				return size;
+			}
+			
+			public String getUrl() {
+				return url;
+			}
+			
 			@Override
 			public String toString() {
 				return "Artifact [path=" + path + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
-			}
-		}
-		
-		public class Downloads {
-			
-			private Artifact artifact;
-			
-			@Override
-			public String toString() {
-				return "Downloads [artifact=" + artifact + "]";
 			}
 		}
 		
@@ -89,22 +164,43 @@ public class Client {
 			private Artifact natives_windows;
 			private Artifact sources;
 			
+			public Artifact getJavadoc() {
+				return javadoc;
+			}
+			
+			public Artifact getNatives_linux() {
+				return natives_linux;
+			}
+			
+			public Artifact getNatives_macos() {
+				return natives_macos;
+			}
+			
+			public Artifact getNatives_windows() {
+				return natives_windows;
+			}
+			
+			public Artifact getSources() {
+				return sources;
+			}
+			
 			@Override
 			public String toString() {
 				return "Classifiers [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
 			}
 		}
 		
-		public class Natives {
+		public class Downloads {
 			
-			private String linux;
-			private String macos;
-			private String windows;
-			private String osx;
+			private Artifact artifact;
+			
+			public Artifact getArtifact() {
+				return artifact;
+			}
 			
 			@Override
 			public String toString() {
-				return "Natives [linux=" + linux + ", macos=" + macos + ", windows=" + windows + ", osx=" + osx + "]";
+				return "Downloads [artifact=" + artifact + "]";
 			}
 		}
 		
@@ -112,9 +208,42 @@ public class Client {
 			
 			private ArrayList<String> exclude;
 			
+			public ArrayList<String> getExclude() {
+				return exclude;
+			}
+			
 			@Override
 			public String toString() {
 				return "Extract [exclude=" + exclude + "]";
+			}
+		}
+		
+		public class Natives {
+			
+			private String linux;
+			private String macos;
+			private String osx;
+			private String windows;
+			
+			public String getLinux() {
+				return linux;
+			}
+			
+			public String getMacos() {
+				return macos;
+			}
+			
+			public String getOsx() {
+				return osx;
+			}
+			
+			public String getWindows() {
+				return windows;
+			}
+			
+			@Override
+			public String toString() {
+				return "Natives [linux=" + linux + ", macos=" + macos + ", windows=" + windows + ", osx=" + osx + "]";
 			}
 		}
 		
@@ -122,6 +251,14 @@ public class Client {
 			
 			private String action;
 			private OS os;
+			
+			public String getAction() {
+				return action;
+			}
+			
+			public OS getOs() {
+				return os;
+			}
 			
 			@Override
 			public String toString() {
@@ -131,6 +268,10 @@ public class Client {
 			public class OS {
 				
 				private String name;
+				
+				public String getName() {
+					return name;
+				}
 				
 				@Override
 				public String toString() {
