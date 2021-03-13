@@ -1,5 +1,7 @@
 plugins {
     id "java-library"
+    id "eclipse"
+    id "com.palantir.launch-config" version "1.2.0"
 }
 
 repositories {
@@ -9,4 +11,22 @@ repositories {
 dependencies {
 	compileOnly "com.google.code.gson:gson:2.8.6"
 	compileOnly "net.sf.jopt-simple:jopt-simple:5.0.4"
+	compileOnly ("org.apache.logging.log4j:log4j-core:2.14.1")
+	compileOnly ("org.apache.logging.log4j:log4j-iostreams:2.14.1")
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
+task runDownloader(type: JavaExec) {
+	main "net.hycrafthd.minecraft_downloader.Main"
+	args "--version 1.16.5 --output download"
+	def run = new File("$rootDir/run")
+	if(!run.exists() ) {
+		run.mkdirs()
+	}
+	workingDir run
 }
