@@ -19,7 +19,7 @@ public class Util {
 	
 	private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
 	
-	public static String downloadJson(String url) throws IOException, NoSuchAlgorithmException {
+	public static String downloadJson(String url) throws IOException {
 		return downloadJson(url, null);
 	}
 	
@@ -52,7 +52,7 @@ public class Util {
 		return json;
 	}
 	
-	public static void downloadFile(String url, String sha1, File output) throws IOException, NoSuchAlgorithmException {
+	public static void downloadFile(String url, String sha1, File output) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.connect();
 		
