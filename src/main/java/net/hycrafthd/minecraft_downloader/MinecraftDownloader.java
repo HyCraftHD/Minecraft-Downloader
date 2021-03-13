@@ -47,6 +47,8 @@ public class MinecraftDownloader {
 			return;
 		}
 		
+		Main.LOGGER.info("Client info {}", client); // DEBUG
+		
 		// TODO download libraries and other stuff
 	}
 }
