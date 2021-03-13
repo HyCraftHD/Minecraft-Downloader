@@ -43,7 +43,7 @@ public class MinecraftDownloader {
 		try {
 			client = GSON.fromJson(Util.downloadJson(foundVersion.getUrl(), foundVersion.getSha1()), Client.class);
 		} catch (IOException ex) {
-			Main.LOGGER.fatal("Could not download / parse version manifest json", ex);
+			Main.LOGGER.fatal("Could not download / parse client json", ex);
 			return;
 		}
 		
