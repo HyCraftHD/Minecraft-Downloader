@@ -22,9 +22,9 @@ public class Index {
 	public static class AssetObject {
 		
 		private String hash;
-		private String size;
+		private int size;
 		
-		public AssetObject(String hash, String size) {
+		public AssetObject(String hash, int size) {
 			this.hash = hash;
 			this.size = size;
 		}
@@ -33,7 +33,7 @@ public class Index {
 			return hash;
 		}
 		
-		public String getSize() {
+		public int getSize() {
 			return size;
 		}
 		

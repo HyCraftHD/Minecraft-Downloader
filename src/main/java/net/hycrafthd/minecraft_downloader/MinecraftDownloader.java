@@ -201,12 +201,16 @@ public class MinecraftDownloader {
 			
 			index = GSON.fromJson(Util.readText(indexFile), Index.class);
 		} catch (IOException ex) {
-			throw new IllegalStateException("Could not download asset index", ex);
+			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}
 		
-		Main.LOGGER.info(index);
-		
-		Main.LOGGER.info(client.getAssetIndex());
-		Main.LOGGER.info(client.getAssets());
+		index.getAssets().values().stream().forEach(assetObject -> {
+			final String first2HashLetters = Util.first2Letters(assetObject.getHash());
+			
+			final String url = RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
+			final File file = new File(assets, "objects/" + first2HashLetters + "/" + assetObject.getHash());
+			
+			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
+		});
 	}
 }
