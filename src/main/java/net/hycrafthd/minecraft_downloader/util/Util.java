@@ -31,6 +31,14 @@ public class Util {
 		return readText(urlConnection.getInputStream());
 	}
 	
+	public static void downloadFileException(String url, File output, int expectedSize, String expectedSha1, String exception) {
+		try {
+			downloadFile(url, output, expectedSize, expectedSha1);
+		} catch (IOException ex) {
+			throw new FileDownloadFailedException(exception, url, output, ex);
+		}
+	}
+	
 	public static void downloadFile(String url, File output, String expectedSha1) throws IOException {
 		downloadFile(url, output, null, expectedSha1);
 	}

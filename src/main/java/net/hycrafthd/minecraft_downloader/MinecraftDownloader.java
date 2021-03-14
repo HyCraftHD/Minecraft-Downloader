@@ -5,12 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.security.DigestInputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -25,13 +21,10 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Artifact;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
-import net.hycrafthd.minecraft_downloader.util.FileDownloadFailedException;
-import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
 public class MinecraftDownloader {
@@ -97,8 +90,8 @@ public class MinecraftDownloader {
 		final Client clientJar = downloads.getClient();
 		final Client clientMappings = downloads.getClientMappings();
 		
-		downloadFile(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
-		downloadFile(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
+		Util.downloadFileException(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
+		Util.downloadFileException(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 	}
 	
 	private static List<LibraryParser> parseLibraries(ClientJson client) {
@@ -116,7 +109,7 @@ public class MinecraftDownloader {
 				.flatMap(parser -> parser.getFiles().stream()).forEach(downloadableFile -> {
 					final File file = new File(libraries, downloadableFile.getPath());
 					
-					downloadFile(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
+					Util.downloadFileException(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
 					downloadableFile.setDownloadedFile(file);
 				});
 	}
@@ -170,13 +163,5 @@ public class MinecraftDownloader {
 					}
 					
 				});
-	}
-	
-	private static void downloadFile(String url, File output, int expectedSize, String expectedSha1, String exception) {
-		try {
-			Util.downloadFile(url, output, expectedSize, expectedSha1);
-		} catch (IOException ex) {
-			throw new FileDownloadFailedException(exception, url, output, ex);
-		}
 	}
 }
