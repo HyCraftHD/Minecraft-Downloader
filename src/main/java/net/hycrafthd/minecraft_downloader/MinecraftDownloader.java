@@ -23,11 +23,14 @@ public class MinecraftDownloader {
 	public static final String CLIENT_JAR = "client.jar";
 	public static final String CLIENT_MAPPINGS = "client.txt";
 	
+	public static final String LIBRARIES = "libraries";
+	
 	static void launch(String version, File output) {
 		final Version foundVersion = getVersionOfManifest(version);
 		final ClientJson client = getClientJson(foundVersion, output);
 		
 		downloadClient(client, output);
+		downloadLibraries(client, output);
 	}
 	
 	private static Version getVersionOfManifest(String version) {
@@ -76,5 +79,14 @@ public class MinecraftDownloader {
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not download client", ex);
 		}
+	}
+	
+	private static void downloadLibraries(ClientJson client, File output) {
+		final File libraries = new File(output, LIBRARIES);
+		libraries.mkdir();
+		
+		client.getLibraries().parallelStream().forEach(library -> {
+			library.getUrl();
+		});
 	}
 }

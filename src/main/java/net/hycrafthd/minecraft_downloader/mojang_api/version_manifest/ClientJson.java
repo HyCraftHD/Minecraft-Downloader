@@ -79,17 +79,12 @@ public class ClientJson {
 	
 	public class Libary {
 		
-		private Classifiers classifiers;
 		private Downloads downloads;
 		private Extract extract;
 		private String name;
 		private Natives natives;
 		private ArrayList<Rule> rules;
 		private String url;
-		
-		public Classifiers getClassifiers() {
-			return classifiers;
-		}
 		
 		public Downloads getDownloads() {
 			return downloads;
@@ -117,7 +112,7 @@ public class ClientJson {
 		
 		@Override
 		public String toString() {
-			return "Libary [downloads=" + downloads + ", classifiers=" + classifiers + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
+			return "Libary [downloads=" + downloads + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
 		}
 		
 		public class Artifact {
@@ -189,15 +184,21 @@ public class ClientJson {
 		public class Downloads {
 			
 			private Artifact artifact;
+			private Classifiers classifiers;
 			
 			public Artifact getArtifact() {
 				return artifact;
 			}
 			
+			public Classifiers getClassifiers() {
+				return classifiers;
+			}
+			
 			@Override
 			public String toString() {
-				return "Downloads [artifact=" + artifact + "]";
+				return "Downloads [artifact=" + artifact + ", classifiers=" + classifiers + "]";
 			}
+			
 		}
 		
 		public class Extract {
