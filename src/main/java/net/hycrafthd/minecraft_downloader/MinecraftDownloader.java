@@ -7,10 +7,14 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Arguments;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.LibaryForOS;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ValueSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
@@ -19,7 +23,7 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 public class MinecraftDownloader {
 	
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
 	public static final String CLIENT_JAR = "client.jar";

@@ -4,10 +4,17 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Libary.Rule;
+
 public class ClientJson {
 	
+	private Arguments arguments;
 	private Downloads downloads;
 	private ArrayList<Libary> libraries;
+	
+	public Arguments getArguments() {
+		return arguments;
+	}
 	
 	public Downloads getDownloads() {
 		return downloads;
@@ -19,10 +26,142 @@ public class ClientJson {
 	
 	@Override
 	public String toString() {
-		return "Client [downloads=" + downloads + ", libraries=" + libraries + "]";
+		return "ClientJson [arguments=" + arguments + ", downloads=" + downloads + ", libraries=" + libraries + "]";
 	}
 	
-	public class Downloads {
+	public static class Arguments {
+		
+		private ArrayList<String> gameArguments;
+		private ArrayList<ConditionalGameArgument> conditionalGameArguments;
+		
+		private ArrayList<String> jvmArguments;
+		private ArrayList<ConditionalJvmArgument> conditionaljvmArguments;
+		
+		public Arguments(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgument> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgument> conditionaljvmArguments) {
+			this.gameArguments = gameArguments;
+			this.conditionalGameArguments = conditionalGameArguments;
+			this.jvmArguments = jvmArguments;
+			this.conditionaljvmArguments = conditionaljvmArguments;
+		}
+		
+		public ArrayList<String> getGameArguments() {
+			return gameArguments;
+		}
+		
+		public ArrayList<ConditionalGameArgument> getConditionalGameArguments() {
+			return conditionalGameArguments;
+		}
+		
+		public ArrayList<String> getJvmArguments() {
+			return jvmArguments;
+		}
+		
+		public ArrayList<ConditionalJvmArgument> getConditionaljvmArguments() {
+			return conditionaljvmArguments;
+		}
+		
+		@Override
+		public String toString() {
+			return "Arguments [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionaljvmArguments=" + conditionaljvmArguments + "]";
+		}
+		
+		public static class ConditionalGameArgument {
+			
+			private ArrayList<GameRule> rules;
+			private Value value;
+			
+			public ArrayList<GameRule> getRules() {
+				return rules;
+			}
+			
+			public Value getValue() {
+				return value;
+			}
+			
+			@Override
+			public String toString() {
+				return "ConditionalGameArgument [rules=" + rules + ", value=" + value + "]";
+			}
+			
+			public static class GameRule {
+				
+				private String action;
+				private Features features;
+				
+				public String getAction() {
+					return action;
+				}
+				
+				public Features getFeatures() {
+					return features;
+				}
+				
+				@Override
+				public String toString() {
+					return "GameRule [action=" + action + ", features=" + features + "]";
+				}
+				
+				public static class Features {
+					
+					private boolean is_demo_user;
+					private boolean has_custom_resolution;
+					
+					public boolean isIsDemoUser() {
+						return is_demo_user;
+					}
+					
+					public boolean isHasCustomResolution() {
+						return has_custom_resolution;
+					}
+					
+					@Override
+					public String toString() {
+						return "Features [is_demo_user=" + is_demo_user + ", has_custom_resolution=" + has_custom_resolution + "]";
+					}
+				}
+			}
+		}
+		
+		public static class ConditionalJvmArgument {
+			
+			private ArrayList<Rule> rules;
+			private Value value;
+			
+			public ArrayList<Rule> getRules() {
+				return rules;
+			}
+			
+			public Value getValue() {
+				return value;
+			}
+			
+			@Override
+			public String toString() {
+				return "ConditionalArgument [rules=" + rules + ", value=" + value + "]";
+			}
+		}
+		
+		public static class Value {
+			
+			private ArrayList<String> value;
+			
+			public Value(ArrayList<String> value) {
+				this.value = value;
+			}
+			
+			public ArrayList<String> getValue() {
+				return value;
+			}
+			
+			@Override
+			public String toString() {
+				return "Value [value=" + value + "]";
+			}
+			
+		}
+	}
+	
+	public static class Downloads {
 		
 		private Client client;
 		private Client client_mappings;
@@ -50,7 +189,7 @@ public class ClientJson {
 			return "Downloads [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
 		}
 		
-		public class Client {
+		public static class Client {
 			
 			private String sha1;
 			private int size;
@@ -77,7 +216,7 @@ public class ClientJson {
 		}
 	}
 	
-	public class Libary {
+	public static class Libary {
 		
 		private Downloads downloads;
 		private Extract extract;
@@ -115,7 +254,7 @@ public class ClientJson {
 			return "Libary [downloads=" + downloads + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
 		}
 		
-		public class Artifact {
+		public static class Artifact {
 			
 			private String path;
 			private String sha1;
@@ -144,7 +283,7 @@ public class ClientJson {
 			}
 		}
 		
-		public class Classifiers {
+		public static class Classifiers {
 			
 			private Artifact javadoc;
 			@SerializedName(value = "natives-linux")
@@ -181,7 +320,7 @@ public class ClientJson {
 			}
 		}
 		
-		public class Downloads {
+		public static class Downloads {
 			
 			private Artifact artifact;
 			private Classifiers classifiers;
@@ -201,7 +340,7 @@ public class ClientJson {
 			
 		}
 		
-		public class Extract {
+		public static class Extract {
 			
 			private ArrayList<String> exclude;
 			
@@ -215,7 +354,7 @@ public class ClientJson {
 			}
 		}
 		
-		public class Natives {
+		public static class Natives {
 			
 			private String linux;
 			private String macos;
@@ -244,7 +383,7 @@ public class ClientJson {
 			}
 		}
 		
-		public class Rule {
+		public static class Rule {
 			
 			private String action;
 			private OS os;
@@ -262,20 +401,29 @@ public class ClientJson {
 				return "Rule [action=" + action + ", os=" + os + "]";
 			}
 			
-			public class OS {
+			public static class OS {
 				
 				private String name;
+				private String version;
+				private String arch;
 				
 				public String getName() {
 					return name;
 				}
 				
+				public String getVersion() {
+					return version;
+				}
+				
+				public String getArch() {
+					return arch;
+				}
+				
 				@Override
 				public String toString() {
-					return "OS [name=" + name + "]";
+					return "OS [name=" + name + ", version=" + version + ", arch=" + arch + "]";
 				}
 			}
 		}
 	}
-	
 }
