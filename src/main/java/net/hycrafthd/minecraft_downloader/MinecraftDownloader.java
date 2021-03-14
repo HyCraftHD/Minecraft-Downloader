@@ -52,6 +52,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static Version getVersionOfManifest(String version) {
+		Main.LOGGER.info("Download and load version manifest");
+		
 		final VersionManifestV2Json manifest;
 		
 		try {
@@ -70,6 +72,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static ClientJson getClientJson(Version foundVersion, File output) {
+		Main.LOGGER.info("Download and extract client json");
+		
 		final ClientJson client;
 		
 		try {
@@ -86,6 +90,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static void downloadClient(ClientJson client, File output) {
+		Main.LOGGER.info("Download client jar and mappings");
+		
 		final Downloads downloads = client.getDownloads();
 		
 		final Client clientJar = downloads.getClient();
@@ -96,6 +102,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static List<LibraryParser> parseLibraries(ClientJson client) {
+		Main.LOGGER.info("Parse required libraries");
+		
 		return client.getLibraries().stream() //
 				.map(LibraryParser::new) //
 				.filter(LibraryParser::isAllowedOnOs) //
@@ -103,6 +111,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static void downloadLibraries(List<LibraryParser> parsedLibraries, File output) {
+		Main.LOGGER.info("Download required libraries");
+		
 		final File libraries = new File(output, LIBRARIES);
 		libraries.mkdir();
 		
@@ -117,6 +127,8 @@ public class MinecraftDownloader {
 	}
 	
 	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
+		Main.LOGGER.info("Extract native files from native jars");
+		
 		final File natives = new File(output, NATIVES);
 		natives.mkdir();
 		
