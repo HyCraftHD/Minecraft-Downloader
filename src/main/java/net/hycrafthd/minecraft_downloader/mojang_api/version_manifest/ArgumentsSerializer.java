@@ -36,7 +36,6 @@ public class ArgumentsSerializer implements JsonDeserializer<Arguments>, JsonSer
 			if (element.isJsonPrimitive()) {
 				gameArguments.add(element.getAsString());
 			} else {
-				System.out.println(element);
 				conditionalGameArguments.add(context.deserialize(element.getAsJsonObject(), ConditionalGameArgument.class));
 			}
 		});
