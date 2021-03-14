@@ -137,8 +137,12 @@ public class MinecraftDownloader {
 				.filter(DownloadableFile::isNative) //
 				.filter(DownloadableFile::hasDownloadedFile) //
 				.forEach(downloadableFile -> {
-					try (final JarFile jarFile = new JarFile(downloadableFile.getDownloadedFile()); //
+					final File downloadedFile = downloadableFile.getDownloadedFile();
+					
+					try (final JarFile jarFile = new JarFile(downloadedFile); //
 							final Stream<JarEntry> entryStream = jarFile.stream()) {
+						
+						Main.LOGGER.debug("Try to extract files from {}", downloadedFile);
 						
 						final byte buffer[] = new byte[8192];
 						
@@ -156,6 +160,8 @@ public class MinecraftDownloader {
 									
 									Util.createParentFolders(file);
 									
+									Main.LOGGER.debug("Extract entry {} of file {} to {}", jarEntry.getName(), downloadedFile, file);
+									
 									try (final InputStream inputStream = jarFile.getInputStream(jarEntry); //
 											final OutputStream outputStream = new FileOutputStream(file)) {
 										Util.copy(inputStream, outputStream, buffer);
@@ -165,8 +171,10 @@ public class MinecraftDownloader {
 									
 									file.setLastModified(jarEntry.getLastModifiedTime().toMillis());
 								});
+								
+						Main.LOGGER.debug("Extracted files from {}", downloadedFile);
 					} catch (IOException ex) {
-						throw new IllegalStateException("Could not extract native library of file " + downloadableFile.getDownloadedFile(), ex);
+						throw new IllegalStateException("Could not extract native library of file " + downloadedFile, ex);
 					}
 				});
 	}
