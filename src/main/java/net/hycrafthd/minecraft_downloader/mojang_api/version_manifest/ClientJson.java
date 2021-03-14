@@ -24,24 +24,24 @@ public class ClientJson {
 	
 	public class Downloads {
 		
-		private ClientDL client;
-		private ClientDL client_mappings;
-		private ClientDL server;
-		private ClientDL server_mappings;
+		private Client client;
+		private Client client_mappings;
+		private Client server;
+		private Client server_mappings;
 		
-		public ClientDL getClient() {
+		public Client getClient() {
 			return client;
 		}
 		
-		public ClientDL getClient_mappings() {
+		public Client getClient_mappings() {
 			return client_mappings;
 		}
 		
-		public ClientDL getServer() {
+		public Client getServer() {
 			return server;
 		}
 		
-		public ClientDL getServer_mappings() {
+		public Client getServer_mappings() {
 			return server_mappings;
 		}
 		
@@ -50,11 +50,10 @@ public class ClientJson {
 			return "Downloads [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
 		}
 		
-		public class ClientDL {
+		public class Client {
 			
 			private String sha1;
 			private int size;
-			private int totalSize;
 			
 			private String url;
 			
@@ -66,18 +65,15 @@ public class ClientJson {
 				return size;
 			}
 			
-			public int getTotalSize() {
-				return totalSize;
-			}
-			
 			public String getUrl() {
 				return url;
 			}
 			
 			@Override
 			public String toString() {
-				return "ClientDL [sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
+				return "Client [sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
 			}
+			
 		}
 	}
 	
