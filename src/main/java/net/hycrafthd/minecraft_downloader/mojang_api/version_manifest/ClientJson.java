@@ -366,17 +366,26 @@ public class ClientJson {
 			public static class OS {
 				
 				private String name;
+				private String version;
+				private String arch;
 				
 				public String getName() {
 					return name;
 				}
 				
+				public String getVersion() {
+					return version;
+				}
+				
+				public String getArch() {
+					return arch;
+				}
+				
 				@Override
 				public String toString() {
-					return "OS [name=" + name + "]";
+					return "OS [name=" + name + ", version=" + version + ", arch=" + arch + "]";
 				}
 			}
 		}
 	}
-	
 }
