@@ -1,6 +1,9 @@
 package net.hycrafthd.minecraft_downloader.util;
 
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OSUtil {
 	
@@ -25,6 +28,12 @@ public class OSUtil {
 		WINDOWS("windows", "windows"),
 		LINUX("linux", "linux"),
 		OSX("osx", "macos");
+		
+		private static final Map<String, OS> MAPPING = Arrays.stream(values()).collect(Collectors.toMap(os -> os.getName(), os -> os));
+		
+		public static final OS getOsByName(String name) {
+			return MAPPING.get(name);
+		}
 		
 		private final String name;
 		private final String classifierName;
