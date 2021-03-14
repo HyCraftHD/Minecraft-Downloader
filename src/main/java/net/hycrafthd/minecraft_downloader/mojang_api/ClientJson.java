@@ -7,11 +7,21 @@ import com.google.gson.annotations.SerializedName;
 public class ClientJson {
 	
 	private Arguments arguments;
+	private AssetIndex assetIndex;
+	private String assets;
 	private Downloads downloads;
 	private ArrayList<Library> libraries;
 	
 	public Arguments getArguments() {
 		return arguments;
+	}
+	
+	public AssetIndex getAssetIndex() {
+		return assetIndex;
+	}
+	
+	public String getAssets() {
+		return assets;
 	}
 	
 	public Downloads getDownloads() {
@@ -24,7 +34,7 @@ public class ClientJson {
 	
 	@Override
 	public String toString() {
-		return "ClientJson [arguments=" + arguments + ", downloads=" + downloads + ", libraries=" + libraries + "]";
+		return "ClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", libraries=" + libraries + "]";
 	}
 	
 	public static class Arguments {
@@ -157,6 +167,41 @@ public class ClientJson {
 			}
 			
 		}
+	}
+	
+	public static class AssetIndex {
+		
+		private String version;
+		private String sha1;
+		private int size;
+		private int totalSize;
+		private String url;
+		
+		public String getVersion() {
+			return version;
+		}
+		
+		public String getSha1() {
+			return sha1;
+		}
+		
+		public int getSize() {
+			return size;
+		}
+		
+		public int getTotalSize() {
+			return totalSize;
+		}
+		
+		public String getUrl() {
+			return url;
+		}
+		
+		@Override
+		public String toString() {
+			return "AssetIndex [version=" + version + ", sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
+		}
+		
 	}
 	
 	public static class Downloads {
