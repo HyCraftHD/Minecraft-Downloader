@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class Index {
 	
-	public Map<String, AssetObject> assets;
+	private Map<String, AssetObject> assets;
 	
 	public Index(Map<String, AssetObject> assets) {
 		this.assets = assets;
