@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Artifact;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
@@ -14,12 +15,12 @@ public class LibraryParser {
 	private static final String ALLOW = "allow";
 	private static final String DISALLOW = "disallow";
 	
-	private final Library library;
 	private final Set<OS> allowedOS;
+	private final Set<DownloadableFile> files;
 	
 	public LibraryParser(Library library) {
-		this.library = library;
 		allowedOS = parseRules(library.getRules());
+		files = parseArtifact(library);
 	}
 	
 	private Set<OS> parseRules(List<Rule> rules) {
@@ -46,8 +47,13 @@ public class LibraryParser {
 		return os;
 	}
 	
-	public Library getLibrary() {
-		return library;
+	private Set<DownloadableFile> parseArtifact(Library library) {
+		final Set<DownloadableFile> files = new HashSet<>();
+		
+		final Artifact mainArtifact = library.getDownloads().getArtifact();
+		files.add(new DownloadableFile(mainArtifact.getUrl(), mainArtifact.getPath(), mainArtifact.getSize(), mainArtifact.getSha1()));
+		
+		return files;
 	}
 	
 	public boolean isAllowedOnOs() {

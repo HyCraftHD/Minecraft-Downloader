@@ -2,7 +2,9 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,8 +38,10 @@ public class MinecraftDownloader {
 		final Version foundVersion = getVersionOfManifest(version);
 		final ClientJson client = getClientJson(foundVersion, output);
 		
+		final List<LibraryParser> parsedLibraries = parseLibraries(client);
+		
 		downloadClient(client, output);
-		downloadLibraries(client, output);
+		downloadLibraries(parsedLibraries, output);
 	}
 	
 	private static Version getVersionOfManifest(String version) {
@@ -88,45 +92,56 @@ public class MinecraftDownloader {
 		}
 	}
 	
-	private static void downloadLibraries(ClientJson client, File output) {
+	private static List<LibraryParser> parseLibraries(ClientJson client) {
+		return client.getLibraries().stream() //
+				.map(LibraryParser::new) //
+				.filter(LibraryParser::isAllowedOnOs) //
+				.collect(Collectors.toList());
+	}
+	
+	private static void downloadLibraries(List<LibraryParser> parsedLibraries, File output) {
 		final File libraries = new File(output, LIBRARIES);
 		libraries.mkdir();
 		
-		client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
-				.map(LibraryParser::new) // Map to Libary with List of Allowed OS�s
-				.filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)) // Filter for Current OS
-				.map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
-					
-					// Download Libaries
-					final ClientJson.Library.Artifact artifact = e.getDownloads().getArtifact();
-					try {
-						Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(), artifact.getSha1());
-					} catch (final IOException ex) {
-						// ex.printStackTrace(); // TODO Exeption
-						throw new IllegalStateException("Libary download failed");
-					}
-					
-					// Download Natives
-					try {
-						if (e.getNatives() != null) {
-							if (e.getNatives().getLinux() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.LINUX)) {
-								final Artifact art = e.getDownloads().getClassifiers().getNativesLinux();
-								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-							}
-							if (e.getNatives().getOsx() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.OSX)) {
-								final Artifact art = e.getDownloads().getClassifiers().getNativesMacos();
-								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-							}
-							if (e.getNatives().getWindows() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.WINDOWS)) {
-								final Artifact art = e.getDownloads().getClassifiers().getNativesWindows();
-								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-							}
-						}
-					} catch (final IOException ex) {
-						// ex.printStackTrace(); // TODO Exeption
-						throw new IllegalStateException("Natives download failed");
-					}
-				});
+		parsedLibraries.parallelStream().forEach(library -> {
+		});
+		
+		// client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
+		// .map(LibraryParser::new) // Map to Libary with List of Allowed OS�s
+		// .filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)) // Filter for Current OS
+		// .map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
+		//
+		// // Download Libaries
+		// final ClientJson.Library.Artifact artifact = e.getDownloads().getArtifact();
+		// try {
+		// Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(),
+		// artifact.getSha1());
+		// } catch (final IOException ex) {
+		// // ex.printStackTrace(); // TODO Exeption
+		// throw new IllegalStateException("Libary download failed");
+		// }
+		//
+		// // Download Natives
+		// try {
+		// if (e.getNatives() != null) {
+		// if (e.getNatives().getLinux() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.LINUX)) {
+		// final Artifact art = e.getDownloads().getClassifiers().getNativesLinux();
+		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
+		// }
+		// if (e.getNatives().getOsx() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.OSX)) {
+		// final Artifact art = e.getDownloads().getClassifiers().getNativesMacos();
+		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
+		// }
+		// if (e.getNatives().getWindows() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.WINDOWS)) {
+		// final Artifact art = e.getDownloads().getClassifiers().getNativesWindows();
+		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
+		// }
+		// }
+		// } catch (final IOException ex) {
+		// // ex.printStackTrace(); // TODO Exeption
+		// throw new IllegalStateException("Natives download failed");
+		// }
+		// });
 		
 	}
 }
