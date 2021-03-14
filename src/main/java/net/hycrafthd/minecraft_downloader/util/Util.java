@@ -73,10 +73,7 @@ public class Util {
 		
 		try (final InputStream inputStream = new DigestInputStream(urlConnection.getInputStream(), digest); //
 				final OutputStream outputStream = new FileOutputStream(output)) {
-			int count;
-			while ((count = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, count);
-			}
+			copy(inputStream, outputStream, buffer);
 		}
 		
 		if (expectedSha1 != null) {
@@ -125,6 +122,13 @@ public class Util {
 		final File parent = file.getParentFile();
 		if (parent != null && !parent.exists()) {
 			parent.mkdirs();
+		}
+	}
+	
+	public static void copy(InputStream inputStream, OutputStream outputStream, byte[] buffer) throws IOException {
+		int count;
+		while ((count = inputStream.read(buffer)) != -1) {
+			outputStream.write(buffer, 0, count);
 		}
 	}
 	
