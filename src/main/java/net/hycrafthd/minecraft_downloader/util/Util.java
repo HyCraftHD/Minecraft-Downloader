@@ -22,7 +22,7 @@ public class Util {
 	
 	private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
 	
-	public static String downloadJson(String url) throws IOException {
+	public static String downloadText(String url) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.setConnectTimeout(5000);
 		urlConnection.setReadTimeout(5000);
