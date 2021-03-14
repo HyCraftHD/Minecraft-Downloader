@@ -2,6 +2,7 @@ package net.hycrafthd.minecraft_downloader.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,58 +16,52 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 
+import net.hycrafthd.minecraft_downloader.Main;
+
 public class Util {
 	
 	private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
 	
 	public static String downloadJson(String url) throws IOException {
-		return downloadJson(url, null);
-	}
-	
-	public static String downloadJson(String url, String sha1) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.setConnectTimeout(5000);
 		urlConnection.setReadTimeout(5000);
 		urlConnection.connect();
 		
-		final MessageDigest messageDigest;
+		return readText(urlConnection.getInputStream());
+	}
+	
+	public static void downloadFile(String url, File output, String expectedSha1) throws IOException {
+		downloadFile(url, output, null, expectedSha1);
+	}
+	
+	public static void downloadFile(String url, File output, Integer expectedSize, String expectedSha1) throws IOException {
+		Main.LOGGER.debug("Try to download file from {} to {}", url, output);
 		
-		try {
-			messageDigest = MessageDigest.getInstance("SHA1");
-		} catch (NoSuchAlgorithmException ex) {
-			throw new SHA1VerificationFailedException("SHA1 Algorithm not available");
-		}
+		final MessageDigest digest = createSha1Digest();
 		
-		final String json;
-		
-		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(new DigestInputStream(urlConnection.getInputStream(), messageDigest), StandardCharsets.UTF_8))) {
-			json = reader.lines().collect(Collectors.joining("\n"));
-		}
-		
-		if (sha1 != null) {
-			if (!bytesToHex(messageDigest.digest()).equals(sha1)) {
-				throw new SHA1VerificationFailedException("SHA1 signature does not match the expected one");
+		if (checkFile(output)) {
+			final boolean sizeCheck;
+			if (expectedSize != null) {
+				sizeCheck = checkFileSize(output, expectedSize);
+			} else {
+				sizeCheck = true;
+			}
+			
+			if (sizeCheck && expectedSha1 != null && checkFileSha1(digest, output, expectedSha1)) {
+				Main.LOGGER.debug("File {} already downloaded and verified", output);
+				return;
 			}
 		}
 		
-		return json;
-	}
-	
-	public static void downloadFile(String url, String sha1, File output) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
+		urlConnection.setConnectTimeout(5000);
+		urlConnection.setReadTimeout(5000);
 		urlConnection.connect();
 		
-		final MessageDigest messageDigest;
+		final byte buffer[] = new byte[8192];
 		
-		try {
-			messageDigest = MessageDigest.getInstance("SHA1");
-		} catch (NoSuchAlgorithmException ex) {
-			throw new SHA1VerificationFailedException("SHA1 Algorithm not available");
-		}
-		
-		final byte buffer[] = new byte[2048];
-		
-		try (final InputStream inputStream = new DigestInputStream(urlConnection.getInputStream(), messageDigest); //
+		try (final InputStream inputStream = new DigestInputStream(urlConnection.getInputStream(), digest); //
 				final OutputStream outputStream = new FileOutputStream(output)) {
 			int count;
 			while ((count = inputStream.read(buffer)) != -1) {
@@ -74,19 +69,62 @@ public class Util {
 			}
 		}
 		
-		if (sha1 != null) {
-			if (!bytesToHex(messageDigest.digest()).equals(sha1)) {
-				throw new SHA1VerificationFailedException("SHA1 signature does not match the expected one");
+		if (expectedSha1 != null) {
+			if (!bytesToHex(digest.digest()).equals(expectedSha1)) {
+				throw new IllegalStateException("SHA1 signature does not match the expected one");
 			}
+		}
+		
+		Main.LOGGER.debug("Finished to download file {}", output);
+	}
+	
+	public static boolean checkFile(File file) {
+		return file.exists() && file.isFile() && file.canRead() && file.canWrite();
+	}
+	
+	public static boolean checkFileSize(File file, int expectedSize) {
+		return file.length() == expectedSize;
+	}
+	
+	public static boolean checkFileSha1(MessageDigest digest, File file, String expectedSha1) throws IOException {
+		final byte buffer[] = new byte[8192];
+		
+		try (final InputStream inputStream = new FileInputStream(file)) {
+			int count;
+			while ((count = inputStream.read(buffer)) != -1) {
+				digest.update(buffer, 0, count);
+			}
+		}
+		
+		return bytesToHex(digest.digest()).equals(expectedSha1);
+	}
+	
+	public static String readText(File file) throws IOException {
+		try (final FileInputStream fileInputStream = new FileInputStream(file)) {
+			return readText(fileInputStream);
+		}
+	}
+	
+	public static String readText(InputStream inputStream) throws IOException {
+		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			return reader.lines().collect(Collectors.joining("\n"));
+		}
+	}
+	
+	public static MessageDigest createSha1Digest() {
+		try {
+			return MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException ex) {
+			throw new IllegalStateException("SHA1 Algorithm not available");
 		}
 	}
 	
 	public static String bytesToHex(byte[] bytes) {
-		byte[] hexChars = new byte[bytes.length * 2];
-		for (int j = 0; j < bytes.length; j++) {
-			int v = bytes[j] & 0xFF;
-			hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-			hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+		final byte[] hexChars = new byte[bytes.length * 2];
+		for (int index = 0; index < bytes.length; index++) {
+			final int byteAtIndex = bytes[index] & 0xFF;
+			hexChars[index * 2] = HEX_ARRAY[byteAtIndex >>> 4];
+			hexChars[index * 2 + 1] = HEX_ARRAY[byteAtIndex & 0x0F];
 		}
 		return new String(hexChars, StandardCharsets.UTF_8);
 	}
