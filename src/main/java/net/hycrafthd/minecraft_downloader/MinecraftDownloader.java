@@ -7,7 +7,7 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.hycrafthd.minecraft_downloader.library.LibraryForOS;
+import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
@@ -93,7 +93,7 @@ public class MinecraftDownloader {
 		libraries.mkdir();
 		
 		client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
-				.map(LibraryForOS::new) // Map to Libary with List of Allowed OS�s
+				.map(LibraryParser::new) // Map to Libary with List of Allowed OS�s
 				.filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)) // Filter for Current OS
 				.map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
 					

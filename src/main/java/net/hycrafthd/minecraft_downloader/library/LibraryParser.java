@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 
-public class LibraryForOS {
+public class LibraryParser {
 	
 	private List<OSUtil.OS> OS = new ArrayList<>();
 	
 	private final Library libary;
 	
-	public LibraryForOS(Library libary) {
+	public LibraryParser(Library libary) {
 		this.libary = libary;
 		if (libary.getRules().size() != 1 && libary.getRules().size() != 2) {
 			throw new IllegalStateException("This Rule is not in thr correct format! Only 1 and 2 Rules are allowed");
