@@ -40,10 +40,6 @@ public class Main {
 				LOGGER.fatal("Cannot write to the output folder");
 				return;
 			}
-			if (output.list().length > 0) {
-				LOGGER.error("Output folder must be empty");
-				return;
-			}
 		} else {
 			LOGGER.debug("Created output folder " + output.getAbsolutePath());
 			output.mkdirs();
