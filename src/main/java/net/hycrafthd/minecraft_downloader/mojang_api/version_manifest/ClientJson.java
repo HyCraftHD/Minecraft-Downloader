@@ -357,16 +357,11 @@ public class ClientJson {
 		public static class Natives {
 			
 			private String linux;
-			private String macos;
 			private String osx;
 			private String windows;
 			
 			public String getLinux() {
 				return linux;
-			}
-			
-			public String getMacos() {
-				return macos;
 			}
 			
 			public String getOsx() {
@@ -379,8 +374,9 @@ public class ClientJson {
 			
 			@Override
 			public String toString() {
-				return "Natives [linux=" + linux + ", macos=" + macos + ", windows=" + windows + ", osx=" + osx + "]";
+				return "Natives [linux=" + linux + ", osx=" + osx + ", windows=" + windows + "]";
 			}
+			
 		}
 		
 		public static class Rule {
