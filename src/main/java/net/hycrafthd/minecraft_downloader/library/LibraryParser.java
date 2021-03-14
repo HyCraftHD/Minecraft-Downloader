@@ -1,57 +1,48 @@
 package net.hycrafthd.minecraft_downloader.library;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
-import net.hycrafthd.minecraft_downloader.util.OSUtil;
+import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
 public class LibraryParser {
 	
-	private List<OSUtil.OS> OS = new ArrayList<>();
+	private static final String ALLOW = "allow";
+	private static final String DISALLOW = "disallow";
 	
-	private final Library libary;
+	private final Library library;
+	private final Set<OS> os;
 	
-	public LibraryParser(Library libary) {
-		this.libary = libary;
-		if (libary.getRules().size() != 1 && libary.getRules().size() != 2) {
-			throw new IllegalStateException("This Rule is not in thr correct format! Only 1 and 2 Rules are allowed");
+	public LibraryParser(Library library) {
+		this.library = library;
+		os = parseRules(library.getRules());
+	}
+	
+	private Set<OS> parseRules(List<Rule> rules) {
+		// Check if no rule exist. Then library is for all os
+		if (rules == null || rules.isEmpty()) {
+			return OS.ALL_OS;
 		}
-		parseRules(libary.getRules());
-	}
-	
-	public Library getLibary() {
-		return libary;
-	}
-	
-	public List<OSUtil.OS> getOSList() {
-		return OS;
-	}
-	
-	private void parseRules(ArrayList<Rule> rules) {
-		// Case allow
-		rules.stream().filter(e -> e.getAction().equalsIgnoreCase("allow")).forEach(e -> {
-			if (e.getOs() == null) { // All Allowed
-				OS = new ArrayList<>(Arrays.asList(OSUtil.OS.values()));
-			} else { // Specific Allowed
-				OS.add(getOSFromString(e.getOs().getName()));
-			}
-		});
 		
-		// Case disallow
-		rules.stream().filter(e -> e.getAction().equalsIgnoreCase("disallow")).forEach(e -> {
-			OS.remove(getOSFromString(e.getOs().getName()));
-		});
-	}
-	
-	private OSUtil.OS getOSFromString(String in) {
-		for (final OSUtil.OS item : OSUtil.OS.values()) {
-			if (item.getName().equals(in)) {
-				return item;
+		final Set<OS> os = new HashSet<>();
+		
+		// Check if allow rule is there.
+		for (Rule rule : rules) {
+			// If os is not defined in allow then add all os
+			if (ALLOW.equals(rule.getAction())) {
+				if (rule.getOs() != null) {
+					os.add(OS.getOsByName(rule.getOs().getName()));
+				} else {
+					os.addAll(OS.ALL_OS);
+				}
+			} else if (DISALLOW.equals(rule.getAction())) {
+				os.remove(OS.getOsByName(rule.getOs().getName()));
 			}
 		}
-		return null;
+		
+		return os;
 	}
 }
