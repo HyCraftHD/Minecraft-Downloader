@@ -1,11 +1,14 @@
 package net.hycrafthd.minecraft_downloader.library;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Artifact;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Downloads;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Natives;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
@@ -50,8 +53,41 @@ public class LibraryParser {
 	private Set<DownloadableFile> parseFiles(Library library) {
 		final Set<DownloadableFile> files = new HashSet<>();
 		
-		final Artifact mainArtifact = library.getDownloads().getArtifact();
+		final Downloads downloads = library.getDownloads();
+		
+		// Add main artifact
+		final Artifact mainArtifact = downloads.getArtifact();
 		files.add(new DownloadableFile(mainArtifact.getUrl(), mainArtifact.getPath(), mainArtifact.getSize(), mainArtifact.getSha1()));
+		
+		// Check for native library
+		final Natives natives = library.getNatives();
+		if (natives != null) {
+			// TODO make os not variables but a list / map with a custom gson serializer
+			
+			final Artifact nativeArtifact;
+			
+			if (OSUtil.CURRENT_OS == OS.WINDOWS && natives.getWindows() != null) {
+				nativeArtifact = downloads.getClassifiers().getNativesWindows();
+			} else if (OSUtil.CURRENT_OS == OS.LINUX && natives.getLinux() != null) {
+				nativeArtifact = downloads.getClassifiers().getNativesLinux();
+			} else if (OSUtil.CURRENT_OS == OS.OSX && natives.getOsx() != null) {
+				nativeArtifact = downloads.getClassifiers().getNativesMacos();
+			} else {
+				nativeArtifact = null;
+			}
+			
+			if (nativeArtifact != null) {
+				final List<String> extractExclusion;
+				
+				if (library.getExtract() != null && library.getExtract().getExclude() != null) {
+					extractExclusion = library.getExtract().getExclude();
+				} else {
+					extractExclusion = new ArrayList<>();
+				}
+				
+				files.add(new DownloadableFile(nativeArtifact.getUrl(), nativeArtifact.getPath(), nativeArtifact.getSize(), nativeArtifact.getSha1(), true, extractExclusion));
+			}
+		}
 		
 		return files;
 	}
