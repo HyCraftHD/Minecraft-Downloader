@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Libary.Rule;
-
 public class ClientJson {
 	
 	private Arguments arguments;
@@ -378,47 +376,47 @@ public class ClientJson {
 			}
 			
 		}
+	}
+	
+	public static class Rule {
 		
-		public static class Rule {
+		private String action;
+		private OS os;
+		
+		public String getAction() {
+			return action;
+		}
+		
+		public OS getOs() {
+			return os;
+		}
+		
+		@Override
+		public String toString() {
+			return "Rule [action=" + action + ", os=" + os + "]";
+		}
+		
+		public static class OS {
 			
-			private String action;
-			private OS os;
+			private String name;
+			private String version;
+			private String arch;
 			
-			public String getAction() {
-				return action;
+			public String getName() {
+				return name;
 			}
 			
-			public OS getOs() {
-				return os;
+			public String getVersion() {
+				return version;
+			}
+			
+			public String getArch() {
+				return arch;
 			}
 			
 			@Override
 			public String toString() {
-				return "Rule [action=" + action + ", os=" + os + "]";
-			}
-			
-			public static class OS {
-				
-				private String name;
-				private String version;
-				private String arch;
-				
-				public String getName() {
-					return name;
-				}
-				
-				public String getVersion() {
-					return version;
-				}
-				
-				public String getArch() {
-					return arch;
-				}
-				
-				@Override
-				public String toString() {
-					return "OS [name=" + name + ", version=" + version + ", arch=" + arch + "]";
-				}
+				return "OS [name=" + name + ", version=" + version + ", arch=" + arch + "]";
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Libary;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Libary.Rule;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Rule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 
 public class LibaryForOS {
