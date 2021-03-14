@@ -59,6 +59,11 @@ public class Util {
 		urlConnection.setReadTimeout(5000);
 		urlConnection.connect();
 		
+		final File parent = output.getParentFile();
+		if (parent != null && !parent.exists()) {
+			parent.mkdirs();
+		}
+		
 		final byte buffer[] = new byte[8192];
 		
 		try (final InputStream inputStream = new DigestInputStream(urlConnection.getInputStream(), digest); //
