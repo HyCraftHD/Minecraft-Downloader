@@ -14,11 +14,11 @@ public class LibraryParser {
 	private static final String DISALLOW = "disallow";
 	
 	private final Library library;
-	private final Set<OS> os;
+	private final Set<OS> allowedOS;
 	
 	public LibraryParser(Library library) {
 		this.library = library;
-		os = parseRules(library.getRules());
+		allowedOS = parseRules(library.getRules());
 	}
 	
 	private Set<OS> parseRules(List<Rule> rules) {
@@ -42,7 +42,14 @@ public class LibraryParser {
 				os.remove(OS.getOsByName(rule.getOs().getName()));
 			}
 		}
-		
 		return os;
+	}
+	
+	public Library getLibrary() {
+		return library;
+	}
+	
+	public Set<OS> getAllowedOS() {
+		return allowedOS;
 	}
 }
