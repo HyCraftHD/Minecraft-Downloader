@@ -1,5 +1,6 @@
 package net.hycrafthd.minecraft_downloader.library;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,6 +13,8 @@ public class DownloadableFile {
 	
 	private final boolean isNative;
 	private final List<String> extractExclusion;
+	
+	private File downloadedFile;
 	
 	public DownloadableFile(String url, String path, int size, String sha1) {
 		this(url, path, size, sha1, false);
@@ -52,6 +55,18 @@ public class DownloadableFile {
 	
 	public List<String> getExtractExclusion() {
 		return extractExclusion;
+	}
+	
+	public void setDownloadedFile(File downloadedFile) {
+		this.downloadedFile = downloadedFile;
+	}
+	
+	public boolean hasDownloadedFile() {
+		return downloadedFile != null;
+	}
+	
+	public File getDownloadedFile() {
+		return downloadedFile;
 	}
 	
 }
