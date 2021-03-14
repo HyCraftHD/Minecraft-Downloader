@@ -86,7 +86,12 @@ public class MinecraftDownloader {
 		libraries.mkdir();
 		
 		client.getLibraries().parallelStream().forEach(library -> {
-			library.getUrl();
+			ClientJson.Libary.Artifact artifact = library.getDownloads().getArtifact();
+			try {
+				Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(), artifact.getSha1());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
 	}
 }
