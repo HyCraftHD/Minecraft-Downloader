@@ -67,10 +67,10 @@ public class ClientJson {
 		
 		public static class ConditionalGameArgument {
 			
-			private ArrayList<Rule> rules;
+			private ArrayList<GameRule> rules;
 			private Value value;
 			
-			public ArrayList<Rule> getRules() {
+			public ArrayList<GameRule> getRules() {
 				return rules;
 			}
 			
@@ -80,7 +80,45 @@ public class ClientJson {
 			
 			@Override
 			public String toString() {
-				return "ConditionalArgument [rules=" + rules + ", value=" + value + "]";
+				return "ConditionalGameArgument [rules=" + rules + ", value=" + value + "]";
+			}
+			
+			public static class GameRule {
+				
+				private String action;
+				private Features features;
+				
+				public String getAction() {
+					return action;
+				}
+				
+				public Features getFeatures() {
+					return features;
+				}
+				
+				@Override
+				public String toString() {
+					return "GameRule [action=" + action + ", features=" + features + "]";
+				}
+				
+				public static class Features {
+					
+					private boolean is_demo_user;
+					private boolean has_custom_resolution;
+					
+					public boolean isIsDemoUser() {
+						return is_demo_user;
+					}
+					
+					public boolean isHasCustomResolution() {
+						return has_custom_resolution;
+					}
+					
+					@Override
+					public String toString() {
+						return "Features [is_demo_user=" + is_demo_user + ", has_custom_resolution=" + has_custom_resolution + "]";
+					}
+				}
 			}
 		}
 		
