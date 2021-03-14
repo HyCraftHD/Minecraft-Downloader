@@ -1,10 +1,20 @@
 package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.security.DigestInputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +43,7 @@ public class MinecraftDownloader {
 	public static final String CLIENT_MAPPINGS = "client.txt";
 	
 	public static final String LIBRARIES = "libraries";
+	public static final String NATIVES = "natives";
 	
 	static void launch(String version, File output) {
 		final Version foundVersion = getVersionOfManifest(version);
@@ -42,6 +53,7 @@ public class MinecraftDownloader {
 		
 		downloadClient(client, output);
 		downloadLibraries(parsedLibraries, output);
+		extractNatives(parsedLibraries, output);
 	}
 	
 	private static Version getVersionOfManifest(String version) {
@@ -112,4 +124,54 @@ public class MinecraftDownloader {
 		});
 	}
 	
+	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
+		final File natives = new File(output, NATIVES);
+		natives.mkdir();
+		
+		parsedLibraries.stream()//
+				.flatMap(e -> e.getFiles().stream())//
+				.filter(e -> e.isNative())//
+				.forEach(downloadableFile -> {
+					File libaries = new File(output, LIBRARIES);
+					File file = new File(libaries, downloadableFile.getPath());
+					
+					try (final JarFile jarFile = new JarFile(file)) {
+						
+						try (final Stream<JarEntry> entryStream = jarFile.stream()) {
+							entryStream.filter(e -> !e.isDirectory()).filter(jarEntry -> {
+								for (String string : downloadableFile.getExtractExclusion()) {
+									if (jarEntry.getName().startsWith(string)) {
+										return false;
+									}
+								}
+								return true;
+								
+							}).forEach(finalJarEntry -> {
+								
+								File fileOut = new File(natives, finalJarEntry.getName());
+								
+								final File parent = fileOut.getParentFile();
+								if (parent != null) {
+									parent.mkdirs();
+								}
+								final byte buffer[] = new byte[8192];
+								try (final InputStream inputStream = jarFile.getInputStream(finalJarEntry); //
+										final OutputStream outputStream = new FileOutputStream(fileOut)) {
+									int count;
+									while ((count = inputStream.read(buffer)) != -1) {
+										outputStream.write(buffer, 0, count);
+									}
+								} catch (IOException ex) {
+									ex.printStackTrace();
+								}
+								
+							});
+						}
+						
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+					
+				});
+	}
 }
