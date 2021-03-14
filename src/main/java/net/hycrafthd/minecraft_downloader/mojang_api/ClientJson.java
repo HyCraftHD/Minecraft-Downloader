@@ -171,14 +171,14 @@ public class ClientJson {
 	
 	public static class AssetIndex {
 		
-		private String version;
+		private String id;
 		private String sha1;
 		private int size;
 		private int totalSize;
 		private String url;
 		
-		public String getVersion() {
-			return version;
+		public String getId() {
+			return id;
 		}
 		
 		public String getSha1() {
@@ -199,7 +199,7 @@ public class ClientJson {
 		
 		@Override
 		public String toString() {
-			return "AssetIndex [version=" + version + ", sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
+			return "AssetIndex [id=" + id + ", sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
 		}
 		
 	}
