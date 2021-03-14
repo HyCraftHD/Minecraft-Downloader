@@ -97,12 +97,8 @@ public class MinecraftDownloader {
 		final Client clientJar = downloads.getClient();
 		final Client clientMappings = downloads.getClientMappings();
 		
-		try {
-			Util.downloadFile(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1());
-			Util.downloadFile(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1());
-		} catch (final IOException ex) {
-			throw new IllegalStateException("Could not download client", ex);
-		}
+		downloadFile(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
+		downloadFile(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 	}
 	
 	private static List<LibraryParser> parseLibraries(ClientJson client) {
@@ -118,16 +114,10 @@ public class MinecraftDownloader {
 		
 		parsedLibraries.parallelStream() //
 				.flatMap(parser -> parser.getFiles().stream()).forEach(downloadableFile -> {
-					
-					final String url = downloadableFile.getUrl();
 					final File file = new File(libraries, downloadableFile.getPath());
 					
-					try {
-						Util.downloadFile(url, file, downloadableFile.getSize(), downloadableFile.getSha1());
-						downloadableFile.setDownloadedFile(file);
-					} catch (IOException ex) {
-						throw new FileDownloadFailedException("Could not download file from", url, file, ex);
-					}
+					downloadFile(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
+					downloadableFile.setDownloadedFile(file);
 				});
 	}
 	
@@ -180,5 +170,13 @@ public class MinecraftDownloader {
 					}
 					
 				});
+	}
+	
+	private static void downloadFile(String url, File output, int expectedSize, String expectedSha1, String exception) {
+		try {
+			Util.downloadFile(url, output, expectedSize, expectedSha1);
+		} catch (IOException ex) {
+			throw new FileDownloadFailedException(exception, url, output, ex);
+		}
 	}
 }
