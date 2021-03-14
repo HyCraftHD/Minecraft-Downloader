@@ -6,6 +6,7 @@ import java.util.Set;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
+import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
 public class LibraryParser {
@@ -49,7 +50,8 @@ public class LibraryParser {
 		return library;
 	}
 	
-	public Set<OS> getAllowedOS() {
-		return allowedOS;
+	public boolean isAllowedOnOs() {
+		return allowedOS.contains(OSUtil.CURRENT_OS);
 	}
+	
 }
