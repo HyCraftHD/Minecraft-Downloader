@@ -30,6 +30,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
+import net.hycrafthd.minecraft_downloader.util.FileDownloadFailedException;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
@@ -115,13 +116,19 @@ public class MinecraftDownloader {
 		final File libraries = new File(output, LIBRARIES);
 		libraries.mkdir();
 		
-		parsedLibraries.parallelStream().flatMap(e -> e.getFiles().stream()).forEach(e -> {
-			try {
-				Util.downloadFile(e.getUrl(), new File(libraries, e.getPath()), e.getSize(), e.getSha1());
-			} catch (IOException ex) {
-				throw new IllegalStateException("File Download failed!", ex);
-			}
-		});
+		parsedLibraries.parallelStream() //
+				.flatMap(parser -> parser.getFiles().stream()).forEach(downloadableFile -> {
+					
+					final String url = downloadableFile.getUrl();
+					final File file = new File(libraries, downloadableFile.getPath());
+					
+					try {
+						Util.downloadFile(url, file, downloadableFile.getSize(), downloadableFile.getSha1());
+						downloadableFile.setDownloadedFile(file);
+					} catch (IOException ex) {
+						throw new FileDownloadFailedException("Could not download file from", url, file, ex);
+					}
+				});
 	}
 	
 	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
