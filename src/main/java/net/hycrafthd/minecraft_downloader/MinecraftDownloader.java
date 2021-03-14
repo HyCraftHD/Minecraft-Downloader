@@ -106,7 +106,8 @@ public class MinecraftDownloader {
 		libraries.mkdir();
 		
 		parsedLibraries.parallelStream() //
-				.flatMap(parser -> parser.getFiles().stream()).forEach(downloadableFile -> {
+				.flatMap(parser -> parser.getFiles().stream()) //
+				.forEach(downloadableFile -> {
 					final File file = new File(libraries, downloadableFile.getPath());
 					
 					Util.downloadFileException(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
@@ -115,15 +116,15 @@ public class MinecraftDownloader {
 	}
 	
 	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
+		final File libraries = new File(output, LIBRARIES);
 		final File natives = new File(output, NATIVES);
 		natives.mkdir();
 		
-		parsedLibraries.stream()//
-				.flatMap(e -> e.getFiles().stream())//
-				.filter(e -> e.isNative())//
+		parsedLibraries.stream() //
+				.flatMap(e -> e.getFiles().stream()) //
+				.filter(e -> e.isNative()) //
 				.forEach(downloadableFile -> {
-					File libaries = new File(output, LIBRARIES);
-					File file = new File(libaries, downloadableFile.getPath());
+					File file = new File(libraries, downloadableFile.getPath());
 					
 					try (final JarFile jarFile = new JarFile(file)) {
 						
