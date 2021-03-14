@@ -10,8 +10,10 @@ import com.google.gson.GsonBuilder;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads.Client;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.LibaryForOS;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json.Version;
+import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
 public class MinecraftDownloader {
@@ -93,5 +95,30 @@ public class MinecraftDownloader {
 				e.printStackTrace();
 			}
 		});
+		
+		client.getLibraries().parallelStream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
+				.map(LibaryForOS::new) // Map to Libary with List of Allowed OS´s
+				.filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)).map(e -> e.getLibary()).forEach(e -> { // Filter for Current OS
+					
+					// Download Libaries
+					ClientJson.Libary.Artifact artifact = e.getDownloads().getArtifact();
+					try {
+						Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(), artifact.getSha1());
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+					
+					// Download Natives
+					if (e.getNatives().getLinux() != null) {
+						
+					}
+					if (e.getNatives().getOsx() != null) {
+						
+					}
+					if (e.getNatives().getWindows() != null) {
+						
+					}
+				});
+		
 	}
 }
