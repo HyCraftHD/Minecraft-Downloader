@@ -34,7 +34,7 @@ public class LibaryForOS {
 		// Case allow
 		rules.stream().filter(e -> e.getAction().equalsIgnoreCase("allow")).forEach(e -> {
 			if (e.getOs() == null) { // All Allowed
-				OS = Arrays.asList(OSUtil.OS.values());
+				OS = new ArrayList<>(Arrays.asList(OSUtil.OS.values()));
 			} else { // Specific Allowed
 				OS.add(getOSFromString(e.getOs().getName()));
 			}
