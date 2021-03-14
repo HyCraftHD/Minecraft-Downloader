@@ -20,8 +20,10 @@ import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndex;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
+import net.hycrafthd.minecraft_downloader.mojang_api.Index;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
@@ -31,6 +33,8 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 public class MinecraftDownloader {
 	
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
+	public static final String RESOURCES = "https://resources.download.minecraft.net";
+	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
@@ -39,6 +43,7 @@ public class MinecraftDownloader {
 	
 	public static final String LIBRARIES = "libraries";
 	public static final String NATIVES = "natives";
+	public static final String ASSETS = "assets";
 	
 	static void launch(String version, File output) {
 		final Version foundVersion = getVersionOfManifest(version);
@@ -49,6 +54,7 @@ public class MinecraftDownloader {
 		downloadClient(client, output);
 		downloadLibraries(parsedLibraries, output);
 		extractNatives(parsedLibraries, output);
+		downloadAssets(client, output);
 	}
 	
 	private static Version getVersionOfManifest(String version) {
@@ -177,5 +183,27 @@ public class MinecraftDownloader {
 						throw new IllegalStateException("Could not extract native library of file " + downloadedFile, ex);
 					}
 				});
+	}
+	
+	public static void downloadAssets(ClientJson client, File output) {
+		final File assets = new File(output, ASSETS);
+		assets.mkdir();
+		
+		final AssetIndex assetIndex = client.getAssetIndex();
+		
+		final Index index;
+		
+		try {
+			final File indexFile = new File(assets, "indexes/" + assetIndex.getId() + ".json");
+			
+			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
+			
+			client = MinecraftDownloader.GSON.fromJson(Util.readText(indexFile), ClientJson.class);
+		} catch (IOException ex) {
+			throw new IllegalStateException("Could not download asset index", ex);
+		}
+		
+		Main.LOGGER.info(client.getAssetIndex());
+		Main.LOGGER.info(client.getAssets());
 	}
 }
