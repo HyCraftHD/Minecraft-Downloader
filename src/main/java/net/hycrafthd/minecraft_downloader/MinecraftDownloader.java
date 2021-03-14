@@ -7,10 +7,8 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.LibaryForOS;
-import net.hycrafthd.minecraft_downloader.mojang_api.ValueSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
@@ -18,6 +16,8 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Libary.Artifact;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.Util;
 

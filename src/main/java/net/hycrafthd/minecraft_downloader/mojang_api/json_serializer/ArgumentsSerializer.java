@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.mojang_api;
+package net.hycrafthd.minecraft_downloader.mojang_api.json_serializer;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
