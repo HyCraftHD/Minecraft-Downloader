@@ -8,7 +8,7 @@ public class ClientJson {
 	
 	private Arguments arguments;
 	private Downloads downloads;
-	private ArrayList<Libary> libraries;
+	private ArrayList<Library> libraries;
 	
 	public Arguments getArguments() {
 		return arguments;
@@ -18,7 +18,7 @@ public class ClientJson {
 		return downloads;
 	}
 	
-	public ArrayList<Libary> getLibraries() {
+	public ArrayList<Library> getLibraries() {
 		return libraries;
 	}
 	
@@ -214,7 +214,7 @@ public class ClientJson {
 		}
 	}
 	
-	public static class Libary {
+	public static class Library {
 		
 		private Downloads downloads;
 		private Extract extract;
