@@ -60,4 +60,7 @@ public class LibraryParser {
 		return allowedOS.contains(OSUtil.CURRENT_OS);
 	}
 	
+	public Set<DownloadableFile> getFiles() {
+		return files;
+	}
 }
