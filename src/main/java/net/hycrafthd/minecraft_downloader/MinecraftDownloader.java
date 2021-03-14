@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads;
+import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.util.Util;
@@ -15,24 +17,17 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 public class MinecraftDownloader {
 	
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
-	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	
+	public static final String CLIENT_JSON = "client.json";
+	public static final String CLIENT_JAR = "client.jar";
+	public static final String CLIENT_MAPPINGS = "client.txt";
 	
 	static void launch(String version, File output) {
 		final Version foundVersion = getVersionOfManifest(version);
 		final ClientJson client = getClientJson(foundVersion, output);
 		
-		Main.LOGGER.info("Client info {}", client); // DEBUG
-		
-		try {
-			Util.downloadFile(client.getDownloads().getClient().getUrl(), new File(output, "client.jar"), null, client.getDownloads().getClient().getSha1());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		Main.LOGGER.info(GSON.toJson(client));
-		
-		// TODO download libraries and other stuff
+		downloadClient(client, output);
 	}
 	
 	private static Version getVersionOfManifest(String version) {
@@ -57,7 +52,7 @@ public class MinecraftDownloader {
 		final ClientJson client;
 		
 		try {
-			final File file = new File(output, "client.json");
+			final File file = new File(output, CLIENT_JSON);
 			
 			Util.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
 			
@@ -67,5 +62,19 @@ public class MinecraftDownloader {
 		}
 		
 		return client;
+	}
+	
+	private static void downloadClient(ClientJson client, File output) {
+		final Downloads downloads = client.getDownloads();
+		
+		final Client clientJar = downloads.getClient();
+		final Client clientMappings = downloads.getClientMappings();
+		
+		try {
+			Util.downloadFile(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1());
+			Util.downloadFile(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1());
+		} catch (IOException ex) {
+			throw new IllegalStateException("Could not download client", ex);
+		}
 	}
 }
