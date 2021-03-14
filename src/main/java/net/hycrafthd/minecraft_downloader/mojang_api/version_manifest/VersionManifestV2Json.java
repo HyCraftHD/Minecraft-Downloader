@@ -25,7 +25,7 @@ public class VersionManifestV2Json {
 		return "VersionManifestV2 [latest=" + latest + ", versions=" + versions + "]";
 	}
 	
-	public class Latest {
+	public static class Latest {
 		
 		private String release;
 		private String snapshot;
@@ -45,7 +45,7 @@ public class VersionManifestV2Json {
 		
 	}
 	
-	public class Version {
+	public static class Version {
 		
 		private String id;
 		private String type;
