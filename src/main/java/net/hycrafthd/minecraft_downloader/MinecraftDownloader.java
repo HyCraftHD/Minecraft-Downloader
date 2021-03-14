@@ -19,42 +19,53 @@ public class MinecraftDownloader {
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	
 	static void launch(String version, File output) {
+		final Version foundVersion = getVersionOfManifest(version);
+		final ClientJson client = getClientJson(foundVersion, output);
 		
+		Main.LOGGER.info("Client info {}", client); // DEBUG
+		
+		try {
+			Util.downloadFile(client.getDownloads().getClient().getUrl(), new File(output, "client.jar"), null, client.getDownloads().getClient().getSha1());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Main.LOGGER.info(GSON.toJson(client));
+		
+		// TODO download libraries and other stuff
+	}
+	
+	private static Version getVersionOfManifest(String version) {
 		final VersionManifestV2Json manifest;
 		
 		try {
-			manifest = GSON.fromJson(Util.downloadJson(VERSION_MANIFEST), VersionManifestV2Json.class);
+			manifest = GSON.fromJson(Util.downloadText(VERSION_MANIFEST), VersionManifestV2Json.class);
 		} catch (IOException ex) {
-			Main.LOGGER.fatal("Could not download / parse version manifest json", ex);
-			return;
+			throw new IllegalStateException("Could not download / parse version manifest json", ex);
 		}
 		
 		final Optional<Version> foundVersionOptional = manifest.getVersions().stream().filter(manifestVersion -> manifestVersion.getId().equals(version)).findAny();
 		
 		if (!foundVersionOptional.isPresent()) {
-			Main.LOGGER.error("The requested version {} was not found in the version manifest json", version);
-			return;
+			throw new IllegalArgumentException("The requested version {} was not found in the version manifest json");
 		}
 		
-		final Version foundVersion = foundVersionOptional.get();
-		
+		return foundVersionOptional.get();
+	}
+	
+	private static ClientJson getClientJson(Version foundVersion, File output) {
 		final ClientJson client;
 		
 		try {
-			client = GSON.fromJson(Util.downloadJson(foundVersion.getUrl(), foundVersion.getSha1()), ClientJson.class);
+			final File file = new File(output, "client.json");
+			
+			Util.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
+			
+			client = GSON.fromJson(Util.readText(file), ClientJson.class);
 		} catch (IOException ex) {
-			Main.LOGGER.fatal("Could not download / parse client json", ex);
-			return;
+			throw new IllegalStateException("Could not download / parse client json", ex);
 		}
 		
-		Main.LOGGER.info("Client info {}", client); // DEBUG
-		
-		try {
-			Util.downloadFile(client.getDownloads().getClient().getUrl(), client.getDownloads().getClient().getSha1(), new File(output, "client.jar"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		// TODO download libraries and other stuff
+		return client;
 	}
 }
