@@ -103,7 +103,8 @@ public class MinecraftDownloader {
 		final File libraries = new File(output, LIBRARIES);
 		libraries.mkdir();
 		
-		parsedLibraries.parallelStream().forEach(library -> {
+		parsedLibraries.parallelStream().flatMap(e -> e.getFiles().stream()).forEach(e -> {
+			
 		});
 		
 		// client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
