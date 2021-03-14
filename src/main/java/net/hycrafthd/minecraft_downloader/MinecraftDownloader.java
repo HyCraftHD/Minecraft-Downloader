@@ -104,45 +104,12 @@ public class MinecraftDownloader {
 		libraries.mkdir();
 		
 		parsedLibraries.parallelStream().flatMap(e -> e.getFiles().stream()).forEach(e -> {
-			
+			try {
+				Util.downloadFile(e.getUrl(), new File(libraries, e.getPath()), e.getSize(), e.getSha1());
+			} catch (IOException ex) {
+				throw new IllegalStateException("File Download failed!", ex);
+			}
 		});
-		
-		// client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
-		// .map(LibraryParser::new) // Map to Libary with List of Allowed OS�s
-		// .filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)) // Filter for Current OS
-		// .map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
-		//
-		// // Download Libaries
-		// final ClientJson.Library.Artifact artifact = e.getDownloads().getArtifact();
-		// try {
-		// Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(),
-		// artifact.getSha1());
-		// } catch (final IOException ex) {
-		// // ex.printStackTrace(); // TODO Exeption
-		// throw new IllegalStateException("Libary download failed");
-		// }
-		//
-		// // Download Natives
-		// try {
-		// if (e.getNatives() != null) {
-		// if (e.getNatives().getLinux() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.LINUX)) {
-		// final Artifact art = e.getDownloads().getClassifiers().getNativesLinux();
-		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-		// }
-		// if (e.getNatives().getOsx() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.OSX)) {
-		// final Artifact art = e.getDownloads().getClassifiers().getNativesMacos();
-		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-		// }
-		// if (e.getNatives().getWindows() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.WINDOWS)) {
-		// final Artifact art = e.getDownloads().getClassifiers().getNativesWindows();
-		// Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
-		// }
-		// }
-		// } catch (final IOException ex) {
-		// // ex.printStackTrace(); // TODO Exeption
-		// throw new IllegalStateException("Natives download failed");
-		// }
-		// });
-		
 	}
+	
 }
