@@ -33,7 +33,7 @@ public class ClientJson {
 			return client;
 		}
 		
-		public Client getClient_mappings() {
+		public Client getClientMappings() {
 			return client_mappings;
 		}
 		
@@ -41,7 +41,7 @@ public class ClientJson {
 			return server;
 		}
 		
-		public Client getServer_mappings() {
+		public Client getServerMappings() {
 			return server_mappings;
 		}
 		
@@ -164,15 +164,15 @@ public class ClientJson {
 				return javadoc;
 			}
 			
-			public Artifact getNatives_linux() {
+			public Artifact getNativesLinux() {
 				return natives_linux;
 			}
 			
-			public Artifact getNatives_macos() {
+			public Artifact getNativesMacos() {
 				return natives_macos;
 			}
 			
-			public Artifact getNatives_windows() {
+			public Artifact getNativesWindows() {
 				return natives_windows;
 			}
 			
