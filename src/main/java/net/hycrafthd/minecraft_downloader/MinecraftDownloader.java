@@ -27,6 +27,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.Index;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
@@ -35,7 +36,7 @@ public class MinecraftDownloader {
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
 	public static final String RESOURCES = "https://resources.download.minecraft.net";
 	
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).create();
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).registerTypeHierarchyAdapter(Index.class, new IndexSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
 	public static final String CLIENT_JAR = "client.jar";
@@ -198,10 +199,12 @@ public class MinecraftDownloader {
 			
 			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
-			client = MinecraftDownloader.GSON.fromJson(Util.readText(indexFile), ClientJson.class);
+			index = GSON.fromJson(Util.readText(indexFile), Index.class);
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not download asset index", ex);
 		}
+		
+		Main.LOGGER.info(index);
 		
 		Main.LOGGER.info(client.getAssetIndex());
 		Main.LOGGER.info(client.getAssets());
