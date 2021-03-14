@@ -62,7 +62,7 @@ public class DownloadableFile {
 	}
 	
 	public boolean hasDownloadedFile() {
-		return downloadedFile != null;
+		return downloadedFile != null && downloadedFile.exists();
 	}
 	
 	public File getDownloadedFile() {
