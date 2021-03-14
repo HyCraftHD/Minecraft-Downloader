@@ -187,6 +187,8 @@ public class MinecraftDownloader {
 	}
 	
 	public static void downloadAssets(ClientJson client, File output) {
+		Main.LOGGER.info("Download assets");
+		
 		final File assets = new File(output, ASSETS);
 		assets.mkdir();
 		
