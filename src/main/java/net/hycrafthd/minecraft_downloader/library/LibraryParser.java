@@ -20,7 +20,7 @@ public class LibraryParser {
 	
 	public LibraryParser(Library library) {
 		allowedOS = parseRules(library.getRules());
-		files = parseArtifact(library);
+		files = parseFiles(library);
 	}
 	
 	private Set<OS> parseRules(List<Rule> rules) {
@@ -47,7 +47,7 @@ public class LibraryParser {
 		return os;
 	}
 	
-	private Set<DownloadableFile> parseArtifact(Library library) {
+	private Set<DownloadableFile> parseFiles(Library library) {
 		final Set<DownloadableFile> files = new HashSet<>();
 		
 		final Artifact mainArtifact = library.getDownloads().getArtifact();
