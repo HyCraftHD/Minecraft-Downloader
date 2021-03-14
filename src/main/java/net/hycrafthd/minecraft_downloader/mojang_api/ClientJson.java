@@ -29,11 +29,11 @@ public class ClientJson {
 	
 	public static class Arguments {
 		
-		private ArrayList<String> gameArguments;
-		private ArrayList<ConditionalGameArgument> conditionalGameArguments;
+		private final ArrayList<String> gameArguments;
+		private final ArrayList<ConditionalGameArgument> conditionalGameArguments;
 		
-		private ArrayList<String> jvmArguments;
-		private ArrayList<ConditionalJvmArgument> conditionaljvmArguments;
+		private final ArrayList<String> jvmArguments;
+		private final ArrayList<ConditionalJvmArgument> conditionaljvmArguments;
 		
 		public Arguments(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgument> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgument> conditionaljvmArguments) {
 			this.gameArguments = gameArguments;
@@ -141,7 +141,7 @@ public class ClientJson {
 		
 		public static class Value {
 			
-			private ArrayList<String> value;
+			private final ArrayList<String> value;
 			
 			public Value(ArrayList<String> value) {
 				this.value = value;

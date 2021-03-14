@@ -41,6 +41,5 @@ public class OSUtil {
 		public String getClassifierName() {
 			return classifierName;
 		}
-		
 	}
 }

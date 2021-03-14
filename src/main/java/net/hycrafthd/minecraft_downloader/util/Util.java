@@ -119,7 +119,7 @@ public class Util {
 	public static MessageDigest createSha1Digest() {
 		try {
 			return MessageDigest.getInstance("SHA1");
-		} catch (NoSuchAlgorithmException ex) {
+		} catch (final NoSuchAlgorithmException ex) {
 			throw new IllegalStateException("SHA1 Algorithm not available");
 		}
 	}

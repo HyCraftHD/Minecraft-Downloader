@@ -8,13 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.LibaryForOS;
-import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Libary.Artifact;
+import net.hycrafthd.minecraft_downloader.mojang_api.LibaryForOS;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
@@ -45,7 +45,7 @@ public class MinecraftDownloader {
 		
 		try {
 			manifest = GSON.fromJson(Util.downloadText(VERSION_MANIFEST), VersionManifestV2Json.class);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse version manifest json", ex);
 		}
 		
@@ -67,7 +67,7 @@ public class MinecraftDownloader {
 			Util.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
 			
 			client = GSON.fromJson(Util.readText(file), ClientJson.class);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse client json", ex);
 		}
 		
@@ -83,7 +83,7 @@ public class MinecraftDownloader {
 		try {
 			Util.downloadFile(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1());
 			Util.downloadFile(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1());
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download client", ex);
 		}
 	}
@@ -98,10 +98,10 @@ public class MinecraftDownloader {
 				.map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
 					
 					// Download Libaries
-					ClientJson.Libary.Artifact artifact = e.getDownloads().getArtifact();
+					final ClientJson.Libary.Artifact artifact = e.getDownloads().getArtifact();
 					try {
 						Util.downloadFile(artifact.getUrl(), new File(libraries, artifact.getPath()), artifact.getSize(), artifact.getSha1());
-					} catch (IOException ex) {
+					} catch (final IOException ex) {
 						// ex.printStackTrace(); // TODO Exeption
 						throw new IllegalStateException("Libary download failed");
 					}
@@ -110,19 +110,19 @@ public class MinecraftDownloader {
 					try {
 						if (e.getNatives() != null) {
 							if (e.getNatives().getLinux() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.LINUX)) {
-								Artifact art = e.getDownloads().getClassifiers().getNativesLinux();
+								final Artifact art = e.getDownloads().getClassifiers().getNativesLinux();
 								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
 							}
 							if (e.getNatives().getOsx() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.OSX)) {
-								Artifact art = e.getDownloads().getClassifiers().getNativesMacos();
+								final Artifact art = e.getDownloads().getClassifiers().getNativesMacos();
 								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
 							}
 							if (e.getNatives().getWindows() != null && OSUtil.CURRENT_OS.equals(OSUtil.OS.WINDOWS)) {
-								Artifact art = e.getDownloads().getClassifiers().getNativesWindows();
+								final Artifact art = e.getDownloads().getClassifiers().getNativesWindows();
 								Util.downloadFile(art.getUrl(), new File(libraries, art.getPath()), art.getSize(), art.getSha1());
 							}
 						}
-					} catch (IOException ex) {
+					} catch (final IOException ex) {
 						// ex.printStackTrace(); // TODO Exeption
 						throw new IllegalStateException("Natives download failed");
 					}

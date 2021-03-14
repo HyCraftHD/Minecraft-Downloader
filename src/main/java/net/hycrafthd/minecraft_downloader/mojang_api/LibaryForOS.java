@@ -12,7 +12,7 @@ public class LibaryForOS {
 	
 	private List<OSUtil.OS> OS = new ArrayList<>();
 	
-	private Libary libary;
+	private final Libary libary;
 	
 	public LibaryForOS(Libary libary) {
 		this.libary = libary;
@@ -47,7 +47,7 @@ public class LibaryForOS {
 	}
 	
 	private OSUtil.OS getOSFromString(String in) {
-		for (OSUtil.OS item : OSUtil.OS.values()) {
+		for (final OSUtil.OS item : OSUtil.OS.values()) {
 			if (item.getName().equals(in)) {
 				return item;
 			}
