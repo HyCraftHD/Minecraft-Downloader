@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
@@ -116,53 +117,45 @@ public class MinecraftDownloader {
 	}
 	
 	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
-		final File libraries = new File(output, LIBRARIES);
 		final File natives = new File(output, NATIVES);
 		natives.mkdir();
 		
 		parsedLibraries.stream() //
-				.flatMap(e -> e.getFiles().stream()) //
-				.filter(e -> e.isNative()) //
+				.flatMap(parser -> parser.getFiles().stream()) //
+				.filter(DownloadableFile::isNative) //
+				.filter(DownloadableFile::hasDownloadedFile) //
 				.forEach(downloadableFile -> {
-					File file = new File(libraries, downloadableFile.getPath());
-					
-					try (final JarFile jarFile = new JarFile(file)) {
+					try (final JarFile jarFile = new JarFile(downloadableFile.getDownloadedFile()); //
+							final Stream<JarEntry> entryStream = jarFile.stream()) {
 						
-						try (final Stream<JarEntry> entryStream = jarFile.stream()) {
-							entryStream.filter(e -> !e.isDirectory()).filter(jarEntry -> {
-								for (String string : downloadableFile.getExtractExclusion()) {
-									if (jarEntry.getName().startsWith(string)) {
-										return false;
-									}
-								}
-								return true;
-								
-							}).forEach(finalJarEntry -> {
-								
-								File fileOut = new File(natives, finalJarEntry.getName());
-								
-								final File parent = fileOut.getParentFile();
-								if (parent != null) {
-									parent.mkdirs();
-								}
-								final byte buffer[] = new byte[8192];
-								try (final InputStream inputStream = jarFile.getInputStream(finalJarEntry); //
-										final OutputStream outputStream = new FileOutputStream(fileOut)) {
-									int count;
-									while ((count = inputStream.read(buffer)) != -1) {
-										outputStream.write(buffer, 0, count);
-									}
-								} catch (IOException ex) {
-									ex.printStackTrace();
-								}
-								
-							});
-						}
+						final byte buffer[] = new byte[8192];
 						
+						entryStream //
+								.filter(jarEntry -> !jarEntry.isDirectory()) //
+								.filter(jarEntry -> {
+									for (String exclusion : downloadableFile.getExtractExclusion()) {
+										if (jarEntry.getName().startsWith(exclusion)) {
+											return false;
+										}
+									}
+									return true;
+								}).forEach(jarEntry -> {
+									final File file = new File(natives, jarEntry.getName());
+									
+									Util.createParentFolders(file);
+									
+									try (final InputStream inputStream = jarFile.getInputStream(jarEntry); //
+											final OutputStream outputStream = new FileOutputStream(file)) {
+										Util.copy(inputStream, outputStream, buffer);
+									} catch (IOException ex) {
+										throw new IllegalStateException("Could not extract jar entry " + jarEntry.getName(), ex);
+									}
+									
+									file.setLastModified(jarEntry.getLastModifiedTime().toMillis());
+								});
 					} catch (IOException ex) {
-						ex.printStackTrace();
+						throw new IllegalStateException("Could not extract native library of file " + downloadableFile.getDownloadedFile(), ex);
 					}
-					
 				});
 	}
 }
