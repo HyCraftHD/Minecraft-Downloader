@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.mojang_api.version_manifest;
+package net.hycrafthd.minecraft_downloader.mojang_api;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Arguments.Value;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 
 public class ValueSerializer implements JsonDeserializer<Value>, JsonSerializer<Value> {
 	

@@ -7,17 +7,17 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ArgumentsSerializer;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Arguments;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Arguments.Value;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Downloads.Client;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ClientJson.Libary.Artifact;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.LibaryForOS;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.ValueSerializer;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json;
-import net.hycrafthd.minecraft_downloader.mojang_api.version_manifest.VersionManifestV2Json.Version;
+import net.hycrafthd.minecraft_downloader.mojang_api.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.LibaryForOS;
+import net.hycrafthd.minecraft_downloader.mojang_api.ValueSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Libary.Artifact;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
@@ -93,7 +93,7 @@ public class MinecraftDownloader {
 		libraries.mkdir();
 		
 		client.getLibraries().stream().filter(e -> e.getRules() != null && e.getRules().size() > 0) // Libaries with rules
-				.map(LibaryForOS::new) // Map to Libary with List of Allowed OS´s
+				.map(LibaryForOS::new) // Map to Libary with List of Allowed OSï¿½s
 				.filter(e -> e.getOSList().contains(OSUtil.CURRENT_OS)) // Filter for Current OS
 				.map(e -> e.getLibary()).forEach(e -> { // Map back to Libary
 					

@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.mojang_api.version_manifest;
+package net.hycrafthd.minecraft_downloader.mojang_api;
 
 import java.util.ArrayList;
 
