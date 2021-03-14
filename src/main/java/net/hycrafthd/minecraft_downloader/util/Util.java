@@ -67,10 +67,7 @@ public class Util {
 		urlConnection.setReadTimeout(5000);
 		urlConnection.connect();
 		
-		final File parent = output.getParentFile();
-		if (parent != null && !parent.exists()) {
-			parent.mkdirs();
-		}
+		createParentFolders(output);
 		
 		final byte buffer[] = new byte[8192];
 		
@@ -121,6 +118,13 @@ public class Util {
 	public static String readText(InputStream inputStream) throws IOException {
 		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			return reader.lines().collect(Collectors.joining("\n"));
+		}
+	}
+	
+	public static void createParentFolders(File file) {
+		final File parent = file.getParentFile();
+		if (parent != null && !parent.exists()) {
+			parent.mkdirs();
 		}
 	}
 	
