@@ -1,8 +1,11 @@
 package net.hycrafthd.minecraft_downloader.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class OSUtil {
@@ -29,10 +32,11 @@ public class OSUtil {
 		LINUX("linux", "linux"),
 		OSX("osx", "macos");
 		
-		private static final Map<String, OS> MAPPING = Arrays.stream(values()).collect(Collectors.toMap(os -> os.getName(), os -> os));
+		public static final Set<OS> ALL_OS = Collections.unmodifiableSet(Arrays.stream(values()).collect(Collectors.toSet()));
+		private static final Map<String, OS> NAME_TO_OS = ALL_OS.stream().collect(Collectors.toMap(OS::getName, Function.identity()));
 		
 		public static final OS getOsByName(String name) {
-			return MAPPING.get(name);
+			return NAME_TO_OS.get(name);
 		}
 		
 		private final String name;
