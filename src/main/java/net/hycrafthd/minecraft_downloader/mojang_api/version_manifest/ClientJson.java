@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Client {
+public class ClientJson {
 	
 	private Downloads downloads;
 	private ArrayList<Libary> libraries;

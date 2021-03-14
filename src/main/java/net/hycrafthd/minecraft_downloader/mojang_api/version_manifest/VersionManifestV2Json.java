@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * See <a href=
  * "https://minecraft.gamepedia.com/Version_manifest.json">https://minecraft.gamepedia.com/Version_manifest.json</a>
  */
-public class VersionManifestV2 {
+public class VersionManifestV2Json {
 	
 	private Latest latest;
 	private ArrayList<Version> versions;
