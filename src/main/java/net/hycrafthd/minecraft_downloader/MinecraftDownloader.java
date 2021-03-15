@@ -19,7 +19,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetInde
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
-import net.hycrafthd.minecraft_downloader.util.Util;
+import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftDownloader {
 	
@@ -56,8 +56,8 @@ public class MinecraftDownloader {
 		final ClientJson clientJar = downloads.getClient();
 		final ClientJson clientMappings = downloads.getClientMappings();
 		
-		Util.downloadFileException(clientJar.getUrl(), new File(output, Constants.CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
-		Util.downloadFileException(clientMappings.getUrl(), new File(output, Constants.CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
+		FileUtil.downloadFileException(clientJar.getUrl(), new File(output, Constants.CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
+		FileUtil.downloadFileException(clientMappings.getUrl(), new File(output, Constants.CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 	}
 	
 	private static void downloadLibraries(List<LibraryParser> parsedLibraries, File output) {
@@ -71,7 +71,7 @@ public class MinecraftDownloader {
 				.forEach(downloadableFile -> {
 					final File file = new File(libraries, downloadableFile.getPath());
 					
-					Util.downloadFileException(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
+					FileUtil.downloadFileException(downloadableFile.getUrl(), file, downloadableFile.getSize(), downloadableFile.getSha1(), "Failed to download library");
 					downloadableFile.setDownloadedFile(file);
 				});
 	}
@@ -108,13 +108,13 @@ public class MinecraftDownloader {
 								}).forEach(jarEntry -> {
 									final File file = new File(natives, jarEntry.getName());
 									
-									Util.createParentFolders(file);
+									FileUtil.createParentFolders(file);
 									
 									Main.LOGGER.debug("Extract entry {} of file {} to {}", jarEntry.getName(), downloadedFile, file);
 									
 									try (final InputStream inputStream = jarFile.getInputStream(jarEntry); //
 											final OutputStream outputStream = new FileOutputStream(file)) {
-										Util.copy(inputStream, outputStream, buffer);
+										FileUtil.copy(inputStream, outputStream, buffer);
 									} catch (IOException ex) {
 										throw new IllegalStateException("Could not extract jar entry " + jarEntry.getName(), ex);
 									}
@@ -142,20 +142,20 @@ public class MinecraftDownloader {
 		try {
 			final File indexFile = new File(assets, "indexes" + Constants.FILE_SEPERATOR + assetIndex.getId() + ".json");
 			
-			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
+			FileUtil.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
-			index = Constants.GSON.fromJson(Util.readText(indexFile), CurrentAssetIndexJson.class);
+			index = Constants.GSON.fromJson(FileUtil.readText(indexFile), CurrentAssetIndexJson.class);
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}
 		
 		index.getAssets().values().parallelStream().forEach(assetObject -> {
-			final String first2HashLetters = Util.first2Letters(assetObject.getHash());
+			final String first2HashLetters = FileUtil.first2Letters(assetObject.getHash());
 			
 			final String url = Constants.RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
 			final File file = new File(assets, "objects" + Constants.FILE_SEPERATOR + first2HashLetters + Constants.FILE_SEPERATOR + assetObject.getHash());
 			
-			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
+			FileUtil.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
 	}
 	
@@ -167,6 +167,6 @@ public class MinecraftDownloader {
 		
 		final LoggingFileJson loggingFile = client.getLogging().getClient().getFile();
 		
-		Util.downloadFileException(loggingFile.getUrl(), new File(assets, "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId()), loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
+		FileUtil.downloadFileException(loggingFile.getUrl(), new File(assets, "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId()), loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
 	}
 }

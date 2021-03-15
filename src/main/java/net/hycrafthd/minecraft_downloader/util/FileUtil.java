@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import net.hycrafthd.minecraft_downloader.Main;
 
-public class Util {
+public class FileUtil {
 	
 	private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
 	

@@ -7,7 +7,7 @@ import java.util.Optional;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson.VersionJson;
-import net.hycrafthd.minecraft_downloader.util.Util;
+import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftParser {
 	
@@ -27,7 +27,7 @@ public class MinecraftParser {
 		final VersionManifestJson manifest;
 		
 		try {
-			manifest = Constants.GSON.fromJson(Util.downloadText(Constants.VERSION_MANIFEST), VersionManifestJson.class);
+			manifest = Constants.GSON.fromJson(FileUtil.downloadText(Constants.VERSION_MANIFEST), VersionManifestJson.class);
 		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse version manifest json", ex);
 		}
@@ -49,9 +49,9 @@ public class MinecraftParser {
 		try {
 			final File file = new File(output, Constants.CLIENT_JSON);
 			
-			Util.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
+			FileUtil.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
 			
-			client = Constants.GSON.fromJson(Util.readText(file), CurrentClientJson.class);
+			client = Constants.GSON.fromJson(FileUtil.readText(file), CurrentClientJson.class);
 		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse client json", ex);
 		}
