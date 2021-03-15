@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ClassifiersSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.NativesSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 
@@ -461,43 +461,24 @@ public class CurrentClientJson {
 				}
 			}
 			
+			@JsonAdapter(ClassifiersSerializer.class)
 			public static class ClassifiersJson {
 				
-				protected ArtifactJson javadoc;
-				@SerializedName(value = "natives-linux")
-				protected ArtifactJson natives_linux;
-				@SerializedName(value = "natives-macos")
-				protected ArtifactJson natives_macos;
-				@SerializedName(value = "natives-windows")
-				protected ArtifactJson natives_windows;
-				protected ArtifactJson sources;
+				protected Map<String, ArtifactJson> classifiers;
 				
-				public ArtifactJson getJavadoc() {
-					return javadoc;
+				public ClassifiersJson(Map<String, ArtifactJson> classifiers) {
+					this.classifiers = classifiers;
 				}
 				
-				public ArtifactJson getNativesLinux() {
-					return natives_linux;
-				}
-				
-				public ArtifactJson getNativesMacos() {
-					return natives_macos;
-				}
-				
-				public ArtifactJson getNativesWindows() {
-					return natives_windows;
-				}
-				
-				public ArtifactJson getSources() {
-					return sources;
+				public Map<String, ArtifactJson> getClassifiers() {
+					return classifiers;
 				}
 				
 				@Override
 				public String toString() {
-					return "ClassifiersJson [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
+					return "ClassifiersJson [classifiers=" + classifiers + "]";
 				}
 			}
-			
 		}
 		
 		@JsonAdapter(NativesSerializer.class)
