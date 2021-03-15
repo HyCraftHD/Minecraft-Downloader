@@ -20,6 +20,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Downloads
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
+import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class MinecraftDownloader {
 	
@@ -150,7 +151,7 @@ public class MinecraftDownloader {
 		}
 		
 		index.getAssets().values().parallelStream().forEach(assetObject -> {
-			final String first2HashLetters = FileUtil.first2Letters(assetObject.getHash());
+			final String first2HashLetters = StringUtil.first2Letters(assetObject.getHash());
 			
 			final String url = Constants.RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
 			final File file = new File(assets, "objects" + Constants.FILE_SEPERATOR + first2HashLetters + Constants.FILE_SEPERATOR + assetObject.getHash());

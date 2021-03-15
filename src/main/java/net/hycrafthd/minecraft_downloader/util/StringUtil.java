@@ -10,4 +10,11 @@ public class StringUtil {
 		return string.replace("${" + variable + "}", value);
 	}
 	
+	public static String first2Letters(String string) {
+		if (string.length() > 2) {
+			return string.substring(0, 2);
+		} else {
+			return string;
+		}
+	}
 }
