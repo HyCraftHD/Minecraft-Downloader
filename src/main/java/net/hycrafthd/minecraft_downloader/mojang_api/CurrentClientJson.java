@@ -607,15 +607,21 @@ public class CurrentClientJson {
 		public static class LoggingClientJson {
 			
 			protected String argument;
+			protected LoggingFileJson file;
 			protected String type;
 			
-			public LoggingClientJson(String argument, String type) {
+			public LoggingClientJson(String argument, LoggingFileJson file, String type) {
 				this.argument = argument;
+				this.file = file;
 				this.type = type;
 			}
 			
 			public String getArgument() {
 				return argument;
+			}
+			
+			public LoggingFileJson getFile() {
+				return file;
 			}
 			
 			public String getType() {
@@ -624,7 +630,7 @@ public class CurrentClientJson {
 			
 			@Override
 			public String toString() {
-				return "LoggingClientJson [argument=" + argument + ", type=" + type + "]";
+				return "LoggingClientJson [argument=" + argument + ", file=" + file + ", type=" + type + "]";
 			}
 			
 			public static class LoggingFileJson {
