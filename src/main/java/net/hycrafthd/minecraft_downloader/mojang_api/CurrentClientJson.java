@@ -23,14 +23,14 @@ public class CurrentClientJson {
 	protected String id;
 	protected int complianceLevel;
 	protected ArrayList<LibraryJson> libraries;
-	// TODO logging
+	protected LoggingJson logging;
 	protected String mainClass;
 	protected int minimumLauncherVersion;
 	protected String releaseTime;
 	protected String time;
 	protected String type;
 	
-	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, String mainClass, int minimumLauncherVersion, String releaseTime, String time, String type) {
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, LoggingJson logging, String mainClass, int minimumLauncherVersion, String releaseTime, String time, String type) {
 		this.arguments = arguments;
 		this.assetIndex = assetIndex;
 		this.assets = assets;
@@ -38,6 +38,7 @@ public class CurrentClientJson {
 		this.id = id;
 		this.complianceLevel = complianceLevel;
 		this.libraries = libraries;
+		this.logging = logging;
 		this.mainClass = mainClass;
 		this.minimumLauncherVersion = minimumLauncherVersion;
 		this.releaseTime = releaseTime;
@@ -73,6 +74,10 @@ public class CurrentClientJson {
 		return libraries;
 	}
 	
+	public LoggingJson getLogging() {
+		return logging;
+	}
+	
 	public String getMainClass() {
 		return mainClass;
 	}
@@ -95,7 +100,7 @@ public class CurrentClientJson {
 	
 	@Override
 	public String toString() {
-		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + ", mainClass=" + mainClass + ", minimumLauncherVersion=" + minimumLauncherVersion + ", releaseTime=" + releaseTime + ", time=" + time + ", type=" + type + "]";
+		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + ", logging=" + logging + ", mainClass=" + mainClass + ", minimumLauncherVersion=" + minimumLauncherVersion + ", releaseTime=" + releaseTime + ", time=" + time + ", type=" + type + "]";
 	}
 	
 	@JsonAdapter(ArgumentsSerializer.class)
@@ -578,6 +583,84 @@ public class CurrentClientJson {
 			@Override
 			public String toString() {
 				return "OS [name=" + name + ", version=" + version + ", arch=" + arch + "]";
+			}
+		}
+	}
+	
+	public static class LoggingJson {
+		
+		protected LoggingClientJson client;
+		
+		public LoggingJson(LoggingClientJson client) {
+			this.client = client;
+		}
+		
+		public LoggingClientJson getClient() {
+			return client;
+		}
+		
+		@Override
+		public String toString() {
+			return "LoggingJson [client=" + client + "]";
+		}
+		
+		public static class LoggingClientJson {
+			
+			protected String argument;
+			protected String type;
+			
+			public LoggingClientJson(String argument, String type) {
+				this.argument = argument;
+				this.type = type;
+			}
+			
+			public String getArgument() {
+				return argument;
+			}
+			
+			public String getType() {
+				return type;
+			}
+			
+			@Override
+			public String toString() {
+				return "LoggingClientJson [argument=" + argument + ", type=" + type + "]";
+			}
+			
+			public static class LoggingFileJson {
+				
+				protected String id;
+				protected String sha1;
+				protected int size;
+				protected String url;
+				
+				public LoggingFileJson(String id, String sha1, int size, String url) {
+					this.id = id;
+					this.sha1 = sha1;
+					this.size = size;
+					this.url = url;
+				}
+				
+				public String getId() {
+					return id;
+				}
+				
+				public String getSha1() {
+					return sha1;
+				}
+				
+				public int getSize() {
+					return size;
+				}
+				
+				public String getUrl() {
+					return url;
+				}
+				
+				@Override
+				public String toString() {
+					return "LoggingFileJson [id=" + id + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
+				}
 			}
 		}
 	}
