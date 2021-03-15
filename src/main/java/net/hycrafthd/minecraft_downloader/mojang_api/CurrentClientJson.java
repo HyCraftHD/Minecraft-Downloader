@@ -20,9 +20,9 @@ public class CurrentClientJson {
 	protected DownloadsJson downloads;
 	protected String id;
 	protected int complianceLevel;
-	protected ArrayList<Library> libraries;
+	protected ArrayList<LibraryJson> libraries;
 	
-	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<Library> libraries) {
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries) {
 		this.arguments = arguments;
 		this.assetIndex = assetIndex;
 		this.assets = assets;
@@ -56,7 +56,7 @@ public class CurrentClientJson {
 		return complianceLevel;
 	}
 	
-	public ArrayList<Library> getLibraries() {
+	public ArrayList<LibraryJson> getLibraries() {
 		return libraries;
 	}
 	
@@ -198,7 +198,7 @@ public class CurrentClientJson {
 				return "ConditionalJvmArgumentJson [rules=" + rules + ", value=" + value + "]";
 			}
 			
-			public static class JvmRuleJson extends BaseOsRule {
+			public static class JvmRuleJson extends BaseOsRuleJson {
 				
 				public JvmRuleJson(String action, OS os) {
 					super(action, os);
@@ -343,20 +343,20 @@ public class CurrentClientJson {
 		}
 	}
 	
-	public static class Library {
+	public static class LibraryJson {
 		
-		protected Downloads downloads;
-		protected Extract extract;
+		protected DownloadsJson downloads;
 		protected String name;
-		protected Natives natives;
-		protected ArrayList<BaseOsRule> rules;
 		protected String url;
+		protected NativesJson natives;
+		protected ExtractJson extract;
+		protected ArrayList<LibraryRuleJson> rules;
 		
-		public Downloads getDownloads() {
+		public DownloadsJson getDownloads() {
 			return downloads;
 		}
 		
-		public Extract getExtract() {
+		public ExtractJson getExtract() {
 			return extract;
 		}
 		
@@ -364,11 +364,11 @@ public class CurrentClientJson {
 			return name;
 		}
 		
-		public Natives getNatives() {
+		public NativesJson getNatives() {
 			return natives;
 		}
 		
-		public ArrayList<BaseOsRule> getRules() {
+		public ArrayList<LibraryRuleJson> getRules() {
 			return rules;
 		}
 		
@@ -381,82 +381,16 @@ public class CurrentClientJson {
 			return "Libary [downloads=" + downloads + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
 		}
 		
-		public static class Artifact {
+		public static class DownloadsJson {
 			
-			protected String path;
-			protected String sha1;
-			protected int size;
-			protected String url;
+			protected ArtifactJson artifact;
+			protected ClassifiersJson classifiers;
 			
-			public String getPath() {
-				return path;
-			}
-			
-			public String getSha1() {
-				return sha1;
-			}
-			
-			public int getSize() {
-				return size;
-			}
-			
-			public String getUrl() {
-				return url;
-			}
-			
-			@Override
-			public String toString() {
-				return "Artifact [path=" + path + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
-			}
-		}
-		
-		public static class Classifiers {
-			
-			protected Artifact javadoc;
-			@SerializedName(value = "natives-linux")
-			protected Artifact natives_linux;
-			@SerializedName(value = "natives-macos")
-			protected Artifact natives_macos;
-			@SerializedName(value = "natives-windows")
-			protected Artifact natives_windows;
-			protected Artifact sources;
-			
-			public Artifact getJavadoc() {
-				return javadoc;
-			}
-			
-			public Artifact getNativesLinux() {
-				return natives_linux;
-			}
-			
-			public Artifact getNativesMacos() {
-				return natives_macos;
-			}
-			
-			public Artifact getNativesWindows() {
-				return natives_windows;
-			}
-			
-			public Artifact getSources() {
-				return sources;
-			}
-			
-			@Override
-			public String toString() {
-				return "Classifiers [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
-			}
-		}
-		
-		public static class Downloads {
-			
-			protected Artifact artifact;
-			protected Classifiers classifiers;
-			
-			public Artifact getArtifact() {
+			public ArtifactJson getArtifact() {
 				return artifact;
 			}
 			
-			public Classifiers getClassifiers() {
+			public ClassifiersJson getClassifiers() {
 				return classifiers;
 			}
 			
@@ -465,23 +399,75 @@ public class CurrentClientJson {
 				return "Downloads [artifact=" + artifact + ", classifiers=" + classifiers + "]";
 			}
 			
-		}
-		
-		public static class Extract {
-			
-			protected ArrayList<String> exclude;
-			
-			public ArrayList<String> getExclude() {
-				return exclude;
+			public static class ArtifactJson {
+				
+				protected String path;
+				protected String sha1;
+				protected int size;
+				protected String url;
+				
+				public String getPath() {
+					return path;
+				}
+				
+				public String getSha1() {
+					return sha1;
+				}
+				
+				public int getSize() {
+					return size;
+				}
+				
+				public String getUrl() {
+					return url;
+				}
+				
+				@Override
+				public String toString() {
+					return "Artifact [path=" + path + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
+				}
 			}
 			
-			@Override
-			public String toString() {
-				return "Extract [exclude=" + exclude + "]";
+			public static class ClassifiersJson {
+				
+				protected ArtifactJson javadoc;
+				@SerializedName(value = "natives-linux")
+				protected ArtifactJson natives_linux;
+				@SerializedName(value = "natives-macos")
+				protected ArtifactJson natives_macos;
+				@SerializedName(value = "natives-windows")
+				protected ArtifactJson natives_windows;
+				protected ArtifactJson sources;
+				
+				public ArtifactJson getJavadoc() {
+					return javadoc;
+				}
+				
+				public ArtifactJson getNativesLinux() {
+					return natives_linux;
+				}
+				
+				public ArtifactJson getNativesMacos() {
+					return natives_macos;
+				}
+				
+				public ArtifactJson getNativesWindows() {
+					return natives_windows;
+				}
+				
+				public ArtifactJson getSources() {
+					return sources;
+				}
+				
+				@Override
+				public String toString() {
+					return "Classifiers [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
+				}
 			}
+			
 		}
 		
-		public static class Natives {
+		public static class NativesJson {
 			
 			protected String linux;
 			protected String osx;
@@ -505,14 +491,41 @@ public class CurrentClientJson {
 			}
 			
 		}
+		
+		public static class ExtractJson {
+			
+			protected ArrayList<String> exclude;
+			
+			public ArrayList<String> getExclude() {
+				return exclude;
+			}
+			
+			@Override
+			public String toString() {
+				return "Extract [exclude=" + exclude + "]";
+			}
+		}
+		
+		public static class LibraryRuleJson extends BaseOsRuleJson {
+			
+			public LibraryRuleJson(String action, OS os) {
+				super(action, os);
+			}
+			
+			@Override
+			public String toString() {
+				return "LibraryRuleJson [action=" + action + ", os=" + os + "]";
+			}
+			
+		}
 	}
 	
-	public static class BaseOsRule {
+	public static class BaseOsRuleJson {
 		
 		protected String action;
 		protected OS os;
 		
-		public BaseOsRule(String action, OS os) {
+		public BaseOsRuleJson(String action, OS os) {
 			this.action = action;
 			this.os = os;
 		}

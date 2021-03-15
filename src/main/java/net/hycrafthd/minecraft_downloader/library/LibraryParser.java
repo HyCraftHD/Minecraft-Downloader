@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Artifact;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Downloads;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Natives;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.BaseOsRule;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.BaseOsRuleJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.DownloadsJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.DownloadsJson.ArtifactJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.LibraryRuleJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.NativesJson;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
@@ -21,12 +22,12 @@ public class LibraryParser {
 	private final Set<OS> allowedOS;
 	private final Set<DownloadableFile> files;
 	
-	public LibraryParser(Library library) {
+	public LibraryParser(LibraryJson library) {
 		allowedOS = parseRules(library.getRules());
 		files = parseFiles(library);
 	}
 	
-	private Set<OS> parseRules(List<BaseOsRule> rules) {
+	private Set<OS> parseRules(List<LibraryRuleJson> rules) {
 		// Check if no rule exist. Then library is for all os
 		if (rules == null || rules.isEmpty()) {
 			return OS.ALL_OS;
@@ -35,7 +36,7 @@ public class LibraryParser {
 		final Set<OS> os = new HashSet<>();
 		
 		// Check if allow rule is there.
-		for (BaseOsRule rule : rules) {
+		for (BaseOsRuleJson rule : rules) {
 			// If os is not defined in allow then add all os
 			if (ALLOW.equals(rule.getAction())) {
 				if (rule.getOs() != null) {
@@ -50,21 +51,21 @@ public class LibraryParser {
 		return os;
 	}
 	
-	private Set<DownloadableFile> parseFiles(Library library) {
+	private Set<DownloadableFile> parseFiles(LibraryJson library) {
 		final Set<DownloadableFile> files = new HashSet<>();
 		
-		final Downloads downloads = library.getDownloads();
+		final DownloadsJson downloads = library.getDownloads();
 		
 		// Add main artifact
-		final Artifact mainArtifact = downloads.getArtifact();
+		final ArtifactJson mainArtifact = downloads.getArtifact();
 		files.add(new DownloadableFile(mainArtifact.getUrl(), mainArtifact.getPath(), mainArtifact.getSize(), mainArtifact.getSha1()));
 		
 		// Check for native library
-		final Natives natives = library.getNatives();
+		final NativesJson natives = library.getNatives();
 		if (natives != null) {
 			// TODO make os not variables but a list / map with a custom gson serializer
 			
-			final Artifact nativeArtifact;
+			final ArtifactJson nativeArtifact;
 			
 			if (OSUtil.CURRENT_OS == OS.WINDOWS && natives.getWindows() != null) {
 				nativeArtifact = downloads.getClassifiers().getNativesWindows();
