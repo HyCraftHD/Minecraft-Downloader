@@ -28,7 +28,7 @@ public enum LauncherVariables {
 	
 	private LauncherVariables(String name) {
 		this.name = name;
-		replace = "{" + name + "}";
+		replace = "${" + name + "}";
 	}
 	
 	public String getName() {
