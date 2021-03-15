@@ -36,6 +36,8 @@ public class MinecraftDownloader {
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
 	public static final String RESOURCES = "https://resources.download.minecraft.net";
 	
+	public static final String FILE_SEPERATOR = File.separator;
+	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).registerTypeHierarchyAdapter(Index.class, new IndexSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
@@ -197,7 +199,7 @@ public class MinecraftDownloader {
 		final Index index;
 		
 		try {
-			final File indexFile = new File(assets, "indexes/" + assetIndex.getId() + ".json");
+			final File indexFile = new File(assets, "indexes" + FILE_SEPERATOR + assetIndex.getId() + ".json");
 			
 			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
@@ -210,7 +212,7 @@ public class MinecraftDownloader {
 			final String first2HashLetters = Util.first2Letters(assetObject.getHash());
 			
 			final String url = RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
-			final File file = new File(assets, "objects/" + first2HashLetters + "/" + assetObject.getHash());
+			final File file = new File(assets, "objects" + FILE_SEPERATOR + first2HashLetters + FILE_SEPERATOR + assetObject.getHash());
 			
 			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
