@@ -18,7 +18,19 @@ public class CurrentClientJson {
 	protected AssetIndexJson assetIndex;
 	protected String assets;
 	protected DownloadsJson downloads;
+	protected String id;
+	protected int complianceLevel;
 	protected ArrayList<Library> libraries;
+	
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<Library> libraries) {
+		this.arguments = arguments;
+		this.assetIndex = assetIndex;
+		this.assets = assets;
+		this.downloads = downloads;
+		this.id = id;
+		this.complianceLevel = complianceLevel;
+		this.libraries = libraries;
+	}
 	
 	public ArgumentsJson getArguments() {
 		return arguments;
@@ -36,13 +48,21 @@ public class CurrentClientJson {
 		return downloads;
 	}
 	
+	public String getId() {
+		return id;
+	}
+	
+	public int getComplianceLevel() {
+		return complianceLevel;
+	}
+	
 	public ArrayList<Library> getLibraries() {
 		return libraries;
 	}
 	
 	@Override
 	public String toString() {
-		return "ClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", libraries=" + libraries + "]";
+		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + "]";
 	}
 	
 	@JsonAdapter(ArgumentsSerializer.class)
