@@ -23,6 +23,7 @@ public class Main {
 		final OptionSpec<Void> helpSpec = parser.accepts("help", "Show the help menu").forHelp();
 		final OptionSpec<String> versionSpec = parser.accepts("version", "Minecraft version to download").withRequiredArg();
 		final OptionSpec<File> outputSpec = parser.accepts("output", "Output folder").withRequiredArg().ofType(File.class);
+		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
 		
 		final OptionSet set = parser.parse(args);
 		
@@ -35,6 +36,7 @@ public class Main {
 		
 		final String version = set.valueOf(versionSpec);
 		final File output = set.valueOf(outputSpec);
+		final boolean launch = set.has(launchSpec);
 		
 		if (output.exists()) {
 			if (!output.canWrite()) {
@@ -48,6 +50,9 @@ public class Main {
 		
 		final CurrentClientJson client = MinecraftParser.launch(version, output);
 		MinecraftDownloader.launch(client, output);
+		if (launch) {
+			MinecraftLauncher.launch(client, output);
+		}
 	}
 	
 }
