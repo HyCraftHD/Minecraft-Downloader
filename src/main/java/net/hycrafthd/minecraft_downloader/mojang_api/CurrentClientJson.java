@@ -288,15 +288,20 @@ public class CurrentClientJson {
 		
 		@Override
 		public String toString() {
-			return "Downloads [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
+			return "DownloadsJson [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
 		}
 		
 		public static class ClientJson {
 			
 			protected String sha1;
 			protected int size;
-			
 			protected String url;
+			
+			public ClientJson(String sha1, int size, String url) {
+				this.sha1 = sha1;
+				this.size = size;
+				this.url = url;
+			}
 			
 			public String getSha1() {
 				return sha1;
@@ -312,7 +317,7 @@ public class CurrentClientJson {
 			
 			@Override
 			public String toString() {
-				return "Client [sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
+				return "ClientJson [sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
 			}
 			
 		}
