@@ -19,9 +19,23 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.Co
 public class ArgumentsSerializer implements JsonDeserializer<ArgumentsJson>, JsonSerializer<ArgumentsJson> {
 	
 	@Override
-	public JsonElement serialize(ArgumentsJson src, Type typeOfSrc, JsonSerializationContext context) {
-		// TODO
-		return null;
+	public JsonElement serialize(ArgumentsJson arguments, Type typeOfSrc, JsonSerializationContext context) {
+		final JsonObject json = new JsonObject();
+		final JsonArray gameArray = new JsonArray();
+		
+		arguments.getGameArguments().forEach(argument -> gameArray.add(argument));
+		arguments.getConditionalGameArguments().forEach(conditionalArgument -> gameArray.add(context.serialize(conditionalArgument)));
+		
+		json.add("game", gameArray);
+		
+		final JsonArray jvmArray = new JsonArray();
+		
+		arguments.getJvmArguments().forEach(argument -> jvmArray.add(argument));
+		arguments.getConditionalJvmArguments().forEach(conditionalArgument -> jvmArray.add(context.serialize(conditionalArgument)));
+		
+		json.add("jvm", jvmArray);
+		
+		return json;
 	}
 	
 	@Override
