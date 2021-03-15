@@ -24,7 +24,7 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 public class MinecraftDownloader {
 	
 	static void launch(CurrentClientJson client, File output) {
-		Main.LOGGER.info("Download library and asset files");
+		Main.LOGGER.info("Start downloading library and asset files");
 		
 		final List<LibraryParser> parsedLibraries = parseLibraries(client);
 		
@@ -33,6 +33,8 @@ public class MinecraftDownloader {
 		extractNatives(parsedLibraries, output);
 		downloadAssets(client, output);
 		downloadLogger(client, output);
+		
+		Main.LOGGER.info("Finished downloading library and asset files");
 	}
 	
 	private static void downloadClient(CurrentClientJson client, File output) {

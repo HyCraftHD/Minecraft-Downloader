@@ -12,10 +12,12 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 public class MinecraftParser {
 	
 	static CurrentClientJson launch(String version, File output) {
-		Main.LOGGER.info("Parse json files");
+		Main.LOGGER.info("Start parsing json files");
 		
 		final VersionJson foundVersion = getVersionOfManifest(version);
 		final CurrentClientJson client = getClientJson(foundVersion, output);
+		
+		Main.LOGGER.info("Finished parsing json files");
 		return client;
 	}
 	
