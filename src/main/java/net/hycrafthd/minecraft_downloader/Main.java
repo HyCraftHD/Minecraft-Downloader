@@ -11,6 +11,7 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 
 public class Main {
 	
@@ -45,7 +46,8 @@ public class Main {
 			output.mkdirs();
 		}
 		
-		MinecraftDownloader.launch(version, output);
+		final CurrentClientJson client = MinecraftParser.launch(version, output);
+		MinecraftDownloader.launch(client, output);
 	}
 	
 }
