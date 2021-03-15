@@ -14,11 +14,11 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerial
  */
 public class ClientJson {
 	
-	private ArgumentsJson arguments;
-	private AssetIndex assetIndex;
-	private String assets;
-	private Downloads downloads;
-	private ArrayList<Library> libraries;
+	protected ArgumentsJson arguments;
+	protected AssetIndex assetIndex;
+	protected String assets;
+	protected Downloads downloads;
+	protected ArrayList<Library> libraries;
 	
 	public ArgumentsJson getArguments() {
 		return arguments;
@@ -48,11 +48,11 @@ public class ClientJson {
 	@JsonAdapter(ArgumentsSerializer.class)
 	public static class ArgumentsJson {
 		
-		private final ArrayList<String> gameArguments;
-		private final ArrayList<ConditionalGameArgumentJson> conditionalGameArguments;
+		protected final ArrayList<String> gameArguments;
+		protected final ArrayList<ConditionalGameArgumentJson> conditionalGameArguments;
 		
-		private final ArrayList<String> jvmArguments;
-		private final ArrayList<ConditionalJvmArgumentJson> conditionalJvmArguments;
+		protected final ArrayList<String> jvmArguments;
+		protected final ArrayList<ConditionalJvmArgumentJson> conditionalJvmArguments;
 		
 		public ArgumentsJson(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgumentJson> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments) {
 			this.gameArguments = gameArguments;
@@ -79,13 +79,13 @@ public class ClientJson {
 		
 		@Override
 		public String toString() {
-			return "Arguments [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionaljvmArguments=" + conditionalJvmArguments + "]";
+			return "ArgumentsJson [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionalJvmArguments=" + conditionalJvmArguments + "]";
 		}
 		
 		public static class ConditionalGameArgumentJson {
 			
-			private ArrayList<GameRuleJson> rules;
-			private ValueJson value;
+			protected ArrayList<GameRuleJson> rules;
+			protected ValueJson value;
 			
 			public ArrayList<GameRuleJson> getRules() {
 				return rules;
@@ -97,13 +97,13 @@ public class ClientJson {
 			
 			@Override
 			public String toString() {
-				return "ConditionalGameArgument [rules=" + rules + ", value=" + value + "]";
+				return "ConditionalGameArgumentJson [rules=" + rules + ", value=" + value + "]";
 			}
 			
 			public static class GameRuleJson {
 				
-				private String action;
-				private FeaturesJson features;
+				protected String action;
+				protected FeaturesJson features;
 				
 				public String getAction() {
 					return action;
@@ -115,13 +115,13 @@ public class ClientJson {
 				
 				@Override
 				public String toString() {
-					return "GameRule [action=" + action + ", features=" + features + "]";
+					return "GameRuleJson [action=" + action + ", features=" + features + "]";
 				}
 				
 				public static class FeaturesJson {
 					
-					private boolean is_demo_user;
-					private boolean has_custom_resolution;
+					protected boolean is_demo_user;
+					protected boolean has_custom_resolution;
 					
 					public boolean isIsDemoUser() {
 						return is_demo_user;
@@ -133,16 +133,17 @@ public class ClientJson {
 					
 					@Override
 					public String toString() {
-						return "Features [is_demo_user=" + is_demo_user + ", has_custom_resolution=" + has_custom_resolution + "]";
+						return "FeaturesJson [is_demo_user=" + is_demo_user + ", has_custom_resolution=" + has_custom_resolution + "]";
 					}
+					
 				}
 			}
 		}
 		
 		public static class ConditionalJvmArgumentJson {
 			
-			private ArrayList<JvmRuleJson> rules;
-			private ValueJson value;
+			protected ArrayList<JvmRuleJson> rules;
+			protected ValueJson value;
 			
 			public ArrayList<JvmRuleJson> getRules() {
 				return rules;
@@ -154,10 +155,15 @@ public class ClientJson {
 			
 			@Override
 			public String toString() {
-				return "ConditionalArgument [rules=" + rules + ", value=" + value + "]";
+				return "ConditionalJvmArgumentJson [rules=" + rules + ", value=" + value + "]";
 			}
 			
 			public static class JvmRuleJson extends Rule {
+				
+				@Override
+				public String toString() {
+					return "JvmRuleJson [action=" + action + ", os=" + os + "]";
+				}
 			}
 			
 		}
@@ -165,7 +171,7 @@ public class ClientJson {
 		@JsonAdapter(ValueSerializer.class)
 		public static class ValueJson {
 			
-			private final ArrayList<String> value;
+			protected final ArrayList<String> value;
 			
 			public ValueJson(ArrayList<String> value) {
 				this.value = value;
@@ -185,11 +191,11 @@ public class ClientJson {
 	
 	public static class AssetIndex {
 		
-		private String id;
-		private String sha1;
-		private int size;
-		private int totalSize;
-		private String url;
+		protected String id;
+		protected String sha1;
+		protected int size;
+		protected int totalSize;
+		protected String url;
 		
 		public String getId() {
 			return id;
@@ -220,10 +226,10 @@ public class ClientJson {
 	
 	public static class Downloads {
 		
-		private Client client;
-		private Client client_mappings;
-		private Client server;
-		private Client server_mappings;
+		protected Client client;
+		protected Client client_mappings;
+		protected Client server;
+		protected Client server_mappings;
 		
 		public Client getClient() {
 			return client;
@@ -248,10 +254,10 @@ public class ClientJson {
 		
 		public static class Client {
 			
-			private String sha1;
-			private int size;
+			protected String sha1;
+			protected int size;
 			
-			private String url;
+			protected String url;
 			
 			public String getSha1() {
 				return sha1;
@@ -275,12 +281,12 @@ public class ClientJson {
 	
 	public static class Library {
 		
-		private Downloads downloads;
-		private Extract extract;
-		private String name;
-		private Natives natives;
-		private ArrayList<Rule> rules;
-		private String url;
+		protected Downloads downloads;
+		protected Extract extract;
+		protected String name;
+		protected Natives natives;
+		protected ArrayList<Rule> rules;
+		protected String url;
 		
 		public Downloads getDownloads() {
 			return downloads;
@@ -313,10 +319,10 @@ public class ClientJson {
 		
 		public static class Artifact {
 			
-			private String path;
-			private String sha1;
-			private int size;
-			private String url;
+			protected String path;
+			protected String sha1;
+			protected int size;
+			protected String url;
 			
 			public String getPath() {
 				return path;
@@ -342,14 +348,14 @@ public class ClientJson {
 		
 		public static class Classifiers {
 			
-			private Artifact javadoc;
+			protected Artifact javadoc;
 			@SerializedName(value = "natives-linux")
-			private Artifact natives_linux;
+			protected Artifact natives_linux;
 			@SerializedName(value = "natives-macos")
-			private Artifact natives_macos;
+			protected Artifact natives_macos;
 			@SerializedName(value = "natives-windows")
-			private Artifact natives_windows;
-			private Artifact sources;
+			protected Artifact natives_windows;
+			protected Artifact sources;
 			
 			public Artifact getJavadoc() {
 				return javadoc;
@@ -379,8 +385,8 @@ public class ClientJson {
 		
 		public static class Downloads {
 			
-			private Artifact artifact;
-			private Classifiers classifiers;
+			protected Artifact artifact;
+			protected Classifiers classifiers;
 			
 			public Artifact getArtifact() {
 				return artifact;
@@ -399,7 +405,7 @@ public class ClientJson {
 		
 		public static class Extract {
 			
-			private ArrayList<String> exclude;
+			protected ArrayList<String> exclude;
 			
 			public ArrayList<String> getExclude() {
 				return exclude;
@@ -413,9 +419,9 @@ public class ClientJson {
 		
 		public static class Natives {
 			
-			private String linux;
-			private String osx;
-			private String windows;
+			protected String linux;
+			protected String osx;
+			protected String windows;
 			
 			public String getLinux() {
 				return linux;
@@ -439,8 +445,8 @@ public class ClientJson {
 	
 	public static class Rule {
 		
-		private String action;
-		private OS os;
+		protected String action;
+		protected OS os;
 		
 		public String getAction() {
 			return action;
@@ -457,9 +463,9 @@ public class ClientJson {
 		
 		public static class OS {
 			
-			private String name;
-			private String version;
-			private String arch;
+			protected String name;
+			protected String version;
+			protected String arch;
 			
 			public String getName() {
 				return name;
