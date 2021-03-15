@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class VersionManifestV2Json {
 	
-	private LatestJson latest;
-	private ArrayList<VersionJson> versions;
+	protected LatestJson latest;
+	protected ArrayList<VersionJson> versions;
 	
 	public VersionManifestV2Json(LatestJson latest, ArrayList<VersionJson> versions) {
 		this.latest = latest;
@@ -32,8 +32,8 @@ public class VersionManifestV2Json {
 	
 	public static class LatestJson {
 		
-		private String release;
-		private String snapshot;
+		protected String release;
+		protected String snapshot;
 		
 		public LatestJson(String release, String snapshot) {
 			this.release = release;
@@ -57,13 +57,13 @@ public class VersionManifestV2Json {
 	
 	public static class VersionJson {
 		
-		private String id;
-		private String type;
-		private String url;
-		private String time;
-		private String releaseTime;
-		private String sha1;
-		private int complianceLevel;
+		protected String id;
+		protected String type;
+		protected String url;
+		protected String time;
+		protected String releaseTime;
+		protected String sha1;
+		protected int complianceLevel;
 		
 		public VersionJson(String id, String type, String url, String time, String releaseTime, String sha1, int complianceLevel) {
 			this.id = id;

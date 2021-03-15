@@ -15,7 +15,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.CurrentAsse
 @JsonAdapter(CurrentAssetIndexSerializer.class)
 public class CurrentAssetIndexJson {
 	
-	private Map<String, AssetJson> assets;
+	protected Map<String, AssetJson> assets;
 	
 	public CurrentAssetIndexJson(Map<String, AssetJson> assets) {
 		this.assets = assets;
@@ -32,8 +32,8 @@ public class CurrentAssetIndexJson {
 	
 	public static class AssetJson {
 		
-		private String hash;
-		private int size;
+		protected String hash;
+		protected int size;
 		
 		public AssetJson(String hash, int size) {
 			this.hash = hash;
