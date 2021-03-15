@@ -215,5 +215,7 @@ public class MinecraftDownloader {
 			
 			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
+		
+		Main.LOGGER.info(GSON.toJson(index));
 	}
 }

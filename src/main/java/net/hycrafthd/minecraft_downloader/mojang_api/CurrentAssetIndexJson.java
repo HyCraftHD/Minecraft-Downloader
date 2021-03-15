@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.gson.annotations.JsonAdapter;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.CurrentAssetIndexSerializer;
 
 /**
  * Asset index json endpoint <br>
@@ -12,7 +12,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerial
  * "https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets">https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets</a>
  * There is unfortunately only a german version on the minecraft wiki
  */
-@JsonAdapter(IndexSerializer.class)
+@JsonAdapter(CurrentAssetIndexSerializer.class)
 public class CurrentAssetIndexJson {
 	
 	private Map<String, AssetJson> assets;
