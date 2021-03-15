@@ -1,5 +1,6 @@
-package net.hycrafthd.minecraft_downloader.launch;
+package net.hycrafthd.minecraft_downloader.settings;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,10 +9,15 @@ import java.util.Set;
 
 public class ProvidedSettings {
 	
+	private final String version;
+	private final File output;
+	
 	private final Set<LauncherFeatures> features;
 	private final Map<LauncherVariables, String> variables;
 	
-	public ProvidedSettings() {
+	public ProvidedSettings(String version, File output) {
+		this.version = version;
+		this.output = output;
 		this.features = new HashSet<>();
 		this.variables = new HashMap<>();
 	}

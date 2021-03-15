@@ -3,6 +3,7 @@ package net.hycrafthd.minecraft_downloader.launch;
 import java.util.List;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson;
+import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class ArgumentsParser {
 	

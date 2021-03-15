@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.launch;
+package net.hycrafthd.minecraft_downloader.settings;
 
 public enum LauncherVariables {
 	

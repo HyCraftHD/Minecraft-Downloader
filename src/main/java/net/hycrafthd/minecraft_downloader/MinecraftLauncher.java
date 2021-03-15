@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.hycrafthd.minecraft_downloader.launch.ArgumentsParser;
-import net.hycrafthd.minecraft_downloader.launch.LauncherVariables;
-import net.hycrafthd.minecraft_downloader.launch.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
+import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
+import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftLauncher {
 	
