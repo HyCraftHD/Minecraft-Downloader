@@ -220,6 +220,14 @@ public class ClientJson {
 		protected int totalSize;
 		protected String url;
 		
+		public AssetIndexJson(String id, String sha1, int size, int totalSize, String url) {
+			this.id = id;
+			this.sha1 = sha1;
+			this.size = size;
+			this.totalSize = totalSize;
+			this.url = url;
+		}
+		
 		public String getId() {
 			return id;
 		}
@@ -242,7 +250,7 @@ public class ClientJson {
 		
 		@Override
 		public String toString() {
-			return "AssetIndex [id=" + id + ", sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
+			return "AssetIndexJson [id=" + id + ", sha1=" + sha1 + ", size=" + size + ", totalSize=" + totalSize + ", url=" + url + "]";
 		}
 		
 	}
