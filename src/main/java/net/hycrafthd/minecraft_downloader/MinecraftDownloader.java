@@ -153,7 +153,7 @@ public class MinecraftDownloader {
 		index.getAssets().values().parallelStream().forEach(assetObject -> {
 			final String first2HashLetters = StringUtil.first2Letters(assetObject.getHash());
 			
-			final String url = Constants.RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
+			final String url = Constants.RESOURCES + Constants.URL_SEPERATOR + first2HashLetters + Constants.URL_SEPERATOR + assetObject.getHash();
 			final File file = new File(assets, "objects" + Constants.FILE_SEPERATOR + first2HashLetters + Constants.FILE_SEPERATOR + assetObject.getHash());
 			
 			FileUtil.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
