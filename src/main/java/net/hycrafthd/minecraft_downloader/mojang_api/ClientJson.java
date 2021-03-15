@@ -207,8 +207,9 @@ public class ClientJson {
 			
 			@Override
 			public String toString() {
-				return "Value [value=" + value + "]";
+				return "ValueJson [value=" + value + "]";
 			}
+			
 		}
 	}
 	
