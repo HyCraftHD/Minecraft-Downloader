@@ -15,7 +15,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerial
 public class ClientJson {
 	
 	protected ArgumentsJson arguments;
-	protected AssetIndex assetIndex;
+	protected AssetIndexJson assetIndex;
 	protected String assets;
 	protected Downloads downloads;
 	protected ArrayList<Library> libraries;
@@ -24,7 +24,7 @@ public class ClientJson {
 		return arguments;
 	}
 	
-	public AssetIndex getAssetIndex() {
+	public AssetIndexJson getAssetIndex() {
 		return assetIndex;
 	}
 	
@@ -209,11 +209,10 @@ public class ClientJson {
 			public String toString() {
 				return "Value [value=" + value + "]";
 			}
-			
 		}
 	}
 	
-	public static class AssetIndex {
+	public static class AssetIndexJson {
 		
 		protected String id;
 		protected String sha1;

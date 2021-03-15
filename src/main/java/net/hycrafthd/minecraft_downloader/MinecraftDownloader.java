@@ -18,7 +18,7 @@ import com.google.gson.GsonBuilder;
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndex;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
@@ -191,7 +191,7 @@ public class MinecraftDownloader {
 		final File assets = new File(output, ASSETS);
 		assets.mkdir();
 		
-		final AssetIndex assetIndex = client.getAssetIndex();
+		final AssetIndexJson assetIndex = client.getAssetIndex();
 		
 		final CurrentAssetIndexJson index;
 		
