@@ -9,6 +9,7 @@ public class MinecraftLauncher {
 	static void launch(CurrentClientJson client, File output) {
 		Main.LOGGER.info("Start minecraft");
 		
+		Main.LOGGER.info("Stopping minecraft");
 	}
 	
 }
