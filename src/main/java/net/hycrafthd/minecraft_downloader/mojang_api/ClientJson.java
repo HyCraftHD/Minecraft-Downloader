@@ -87,6 +87,11 @@ public class ClientJson {
 			protected ArrayList<GameRuleJson> rules;
 			protected ValueJson value;
 			
+			public ConditionalGameArgumentJson(ArrayList<GameRuleJson> rules, ValueJson value) {
+				this.rules = rules;
+				this.value = value;
+			}
+			
 			public ArrayList<GameRuleJson> getRules() {
 				return rules;
 			}
@@ -105,6 +110,11 @@ public class ClientJson {
 				protected String action;
 				protected FeaturesJson features;
 				
+				public GameRuleJson(String action, FeaturesJson features) {
+					this.action = action;
+					this.features = features;
+				}
+				
 				public String getAction() {
 					return action;
 				}
@@ -122,6 +132,11 @@ public class ClientJson {
 					
 					protected boolean is_demo_user;
 					protected boolean has_custom_resolution;
+					
+					public FeaturesJson(boolean is_demo_user, boolean has_custom_resolution) {
+						this.is_demo_user = is_demo_user;
+						this.has_custom_resolution = has_custom_resolution;
+					}
 					
 					public boolean isIsDemoUser() {
 						return is_demo_user;
@@ -145,6 +160,11 @@ public class ClientJson {
 			protected ArrayList<JvmRuleJson> rules;
 			protected ValueJson value;
 			
+			public ConditionalJvmArgumentJson(ArrayList<JvmRuleJson> rules, ValueJson value) {
+				this.rules = rules;
+				this.value = value;
+			}
+			
 			public ArrayList<JvmRuleJson> getRules() {
 				return rules;
 			}
@@ -158,7 +178,7 @@ public class ClientJson {
 				return "ConditionalJvmArgumentJson [rules=" + rules + ", value=" + value + "]";
 			}
 			
-			public static class JvmRuleJson extends Rule {
+			public static class JvmRuleJson extends BaseOsRule {
 				
 				@Override
 				public String toString() {
@@ -285,7 +305,7 @@ public class ClientJson {
 		protected Extract extract;
 		protected String name;
 		protected Natives natives;
-		protected ArrayList<Rule> rules;
+		protected ArrayList<BaseOsRule> rules;
 		protected String url;
 		
 		public Downloads getDownloads() {
@@ -304,7 +324,7 @@ public class ClientJson {
 			return natives;
 		}
 		
-		public ArrayList<Rule> getRules() {
+		public ArrayList<BaseOsRule> getRules() {
 			return rules;
 		}
 		
@@ -443,7 +463,7 @@ public class ClientJson {
 		}
 	}
 	
-	public static class Rule {
+	public static class BaseOsRule {
 		
 		protected String action;
 		protected OS os;

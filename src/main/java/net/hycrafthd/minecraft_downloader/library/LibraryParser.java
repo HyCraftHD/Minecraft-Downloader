@@ -9,7 +9,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Artifact;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Natives;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Rule;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.BaseOsRule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
@@ -26,7 +26,7 @@ public class LibraryParser {
 		files = parseFiles(library);
 	}
 	
-	private Set<OS> parseRules(List<Rule> rules) {
+	private Set<OS> parseRules(List<BaseOsRule> rules) {
 		// Check if no rule exist. Then library is for all os
 		if (rules == null || rules.isEmpty()) {
 			return OS.ALL_OS;
@@ -35,7 +35,7 @@ public class LibraryParser {
 		final Set<OS> os = new HashSet<>();
 		
 		// Check if allow rule is there.
-		for (Rule rule : rules) {
+		for (BaseOsRule rule : rules) {
 			// If os is not defined in allow then add all os
 			if (ALLOW.equals(rule.getAction())) {
 				if (rule.getOs() != null) {
