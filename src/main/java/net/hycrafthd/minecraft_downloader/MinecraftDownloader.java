@@ -54,7 +54,7 @@ public class MinecraftDownloader {
 		extractNatives(parsedLibraries, output);
 		downloadAssets(client, output);
 		
-		Main.LOGGER.info(GSON.toJson(client.getArguments()));
+		Main.LOGGER.info(GSON.toJson(client));
 	}
 	
 	private static VersionJson getVersionOfManifest(String version) {
