@@ -17,11 +17,11 @@ import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson.VersionJson;
 import net.hycrafthd.minecraft_downloader.util.Util;
@@ -53,8 +53,6 @@ public class MinecraftDownloader {
 		downloadLibraries(parsedLibraries, output);
 		extractNatives(parsedLibraries, output);
 		downloadAssets(client, output);
-		
-		Main.LOGGER.info(GSON.toJson(client));
 	}
 	
 	private static VersionJson getVersionOfManifest(String version) {
