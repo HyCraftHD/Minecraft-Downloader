@@ -12,4 +12,9 @@ public class VersionConstant {
 		return StringUtil.replaceVariable("version", constant, version);
 	}
 	
+	@Override
+	public String toString() {
+		return constant;
+	}
+	
 }
