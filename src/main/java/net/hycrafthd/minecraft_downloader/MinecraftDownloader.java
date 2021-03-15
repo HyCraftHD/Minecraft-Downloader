@@ -206,7 +206,7 @@ public class MinecraftDownloader {
 			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}
 		
-		index.getAssets().values().stream().forEach(assetObject -> {
+		index.getAssets().values().parallelStream().forEach(assetObject -> {
 			final String first2HashLetters = Util.first2Letters(assetObject.getHash());
 			
 			final String url = RESOURCES + "/" + first2HashLetters + "/" + assetObject.getHash();
