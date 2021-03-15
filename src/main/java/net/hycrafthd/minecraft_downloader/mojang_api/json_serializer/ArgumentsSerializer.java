@@ -30,8 +30,8 @@ public class ArgumentsSerializer implements JsonDeserializer<ArgumentsJson>, Jso
 		
 		final JsonArray jvmArray = new JsonArray();
 		
-		arguments.getJvmArguments().forEach(argument -> jvmArray.add(argument));
 		arguments.getConditionalJvmArguments().forEach(conditionalArgument -> jvmArray.add(context.serialize(conditionalArgument)));
+		arguments.getJvmArguments().forEach(argument -> jvmArray.add(argument));
 		
 		json.add("jvm", jvmArray);
 		
