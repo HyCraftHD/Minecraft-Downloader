@@ -17,10 +17,10 @@ import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndexJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
@@ -45,7 +45,7 @@ public class MinecraftDownloader {
 	
 	static void launch(String version, File output) {
 		final VersionJson foundVersion = getVersionOfManifest(version);
-		final ClientJson client = getClientJson(foundVersion, output);
+		final CurrentClientJson client = getClientJson(foundVersion, output);
 		
 		final List<LibraryParser> parsedLibraries = parseLibraries(client);
 		
@@ -77,17 +77,17 @@ public class MinecraftDownloader {
 		return foundVersionOptional.get();
 	}
 	
-	private static ClientJson getClientJson(VersionJson foundVersion, File output) {
+	private static CurrentClientJson getClientJson(VersionJson foundVersion, File output) {
 		Main.LOGGER.info("Download and extract client json");
 		
-		final ClientJson client;
+		final CurrentClientJson client;
 		
 		try {
 			final File file = new File(output, CLIENT_JSON);
 			
 			Util.downloadFile(foundVersion.getUrl(), file, foundVersion.getSha1());
 			
-			client = GSON.fromJson(Util.readText(file), ClientJson.class);
+			client = GSON.fromJson(Util.readText(file), CurrentClientJson.class);
 		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse client json", ex);
 		}
@@ -95,19 +95,19 @@ public class MinecraftDownloader {
 		return client;
 	}
 	
-	private static void downloadClient(ClientJson client, File output) {
+	private static void downloadClient(CurrentClientJson client, File output) {
 		Main.LOGGER.info("Download client jar and mappings");
 		
-		final Downloads downloads = client.getDownloads();
+		final DownloadsJson downloads = client.getDownloads();
 		
-		final Client clientJar = downloads.getClient();
-		final Client clientMappings = downloads.getClientMappings();
+		final ClientJson clientJar = downloads.getClient();
+		final ClientJson clientMappings = downloads.getClientMappings();
 		
 		Util.downloadFileException(clientJar.getUrl(), new File(output, CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
 		Util.downloadFileException(clientMappings.getUrl(), new File(output, CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 	}
 	
-	private static List<LibraryParser> parseLibraries(ClientJson client) {
+	private static List<LibraryParser> parseLibraries(CurrentClientJson client) {
 		Main.LOGGER.info("Parse required libraries");
 		
 		return client.getLibraries().stream() //
@@ -185,7 +185,7 @@ public class MinecraftDownloader {
 				});
 	}
 	
-	public static void downloadAssets(ClientJson client, File output) {
+	public static void downloadAssets(CurrentClientJson client, File output) {
 		Main.LOGGER.info("Download assets");
 		
 		final File assets = new File(output, ASSETS);

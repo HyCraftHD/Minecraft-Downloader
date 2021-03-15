@@ -12,9 +12,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.ConditionalGameArgumentJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.ConditionalJvmArgumentJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalGameArgumentJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalJvmArgumentJson;
 
 public class ArgumentsSerializer implements JsonDeserializer<ArgumentsJson>, JsonSerializer<ArgumentsJson> {
 	

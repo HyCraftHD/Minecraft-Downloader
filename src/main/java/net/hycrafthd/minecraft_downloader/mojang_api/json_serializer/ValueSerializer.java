@@ -12,7 +12,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.ValueJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ValueJson;
 
 public class ValueSerializer implements JsonDeserializer<ValueJson>, JsonSerializer<ValueJson> {
 	

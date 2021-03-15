@@ -12,12 +12,12 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerial
  * Client version json endpoint <br>
  * See <a href= "https://minecraft.gamepedia.com/Client.json">https://minecraft.gamepedia.com/Client.json</a>
  */
-public class ClientJson {
+public class CurrentClientJson {
 	
 	protected ArgumentsJson arguments;
 	protected AssetIndexJson assetIndex;
 	protected String assets;
-	protected Downloads downloads;
+	protected DownloadsJson downloads;
 	protected ArrayList<Library> libraries;
 	
 	public ArgumentsJson getArguments() {
@@ -32,7 +32,7 @@ public class ClientJson {
 		return assets;
 	}
 	
-	public Downloads getDownloads() {
+	public DownloadsJson getDownloads() {
 		return downloads;
 	}
 	
@@ -256,26 +256,33 @@ public class ClientJson {
 		
 	}
 	
-	public static class Downloads {
+	public static class DownloadsJson {
 		
-		protected Client client;
-		protected Client client_mappings;
-		protected Client server;
-		protected Client server_mappings;
+		protected ClientJson client;
+		protected ClientJson client_mappings;
+		protected ClientJson server;
+		protected ClientJson server_mappings;
 		
-		public Client getClient() {
+		public DownloadsJson(ClientJson client, ClientJson client_mappings, ClientJson server, ClientJson server_mappings) {
+			this.client = client;
+			this.client_mappings = client_mappings;
+			this.server = server;
+			this.server_mappings = server_mappings;
+		}
+		
+		public ClientJson getClient() {
 			return client;
 		}
 		
-		public Client getClientMappings() {
+		public ClientJson getClientMappings() {
 			return client_mappings;
 		}
 		
-		public Client getServer() {
+		public ClientJson getServer() {
 			return server;
 		}
 		
-		public Client getServerMappings() {
+		public ClientJson getServerMappings() {
 			return server_mappings;
 		}
 		
@@ -284,7 +291,7 @@ public class ClientJson {
 			return "Downloads [client=" + client + ", client_mappings=" + client_mappings + ", server=" + server + ", server_mappings=" + server_mappings + "]";
 		}
 		
-		public static class Client {
+		public static class ClientJson {
 			
 			protected String sha1;
 			protected int size;

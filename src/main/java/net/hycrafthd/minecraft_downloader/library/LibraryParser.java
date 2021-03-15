@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Artifact;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Downloads;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Library.Natives;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.BaseOsRule;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Artifact;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Downloads;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Library.Natives;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.BaseOsRule;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
