@@ -22,8 +22,8 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetInde
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
-import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson.VersionJson;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
 public class MinecraftDownloader {
@@ -60,10 +60,10 @@ public class MinecraftDownloader {
 	private static VersionJson getVersionOfManifest(String version) {
 		Main.LOGGER.info("Download and load version manifest");
 		
-		final VersionManifestV2Json manifest;
+		final VersionManifestJson manifest;
 		
 		try {
-			manifest = GSON.fromJson(Util.downloadText(VERSION_MANIFEST), VersionManifestV2Json.class);
+			manifest = GSON.fromJson(Util.downloadText(VERSION_MANIFEST), VersionManifestJson.class);
 		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse version manifest json", ex);
 		}
