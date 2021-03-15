@@ -12,48 +12,48 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.ConditionalGameArgument;
-import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.ConditionalJvmArgument;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.ConditionalGameArgumentJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.ArgumentsJson.ConditionalJvmArgumentJson;
 
-public class ArgumentsSerializer implements JsonDeserializer<Arguments>, JsonSerializer<Arguments> {
+public class ArgumentsSerializer implements JsonDeserializer<ArgumentsJson>, JsonSerializer<ArgumentsJson> {
 	
 	@Override
-	public JsonElement serialize(Arguments src, Type typeOfSrc, JsonSerializationContext context) {
+	public JsonElement serialize(ArgumentsJson src, Type typeOfSrc, JsonSerializationContext context) {
 		// TODO
 		return null;
 	}
 	
 	@Override
-	public Arguments deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	public ArgumentsJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 		final JsonObject object = json.getAsJsonObject();
 		final JsonArray gameArray = object.get("game").getAsJsonArray();
 		
 		final ArrayList<String> gameArguments = new ArrayList<>();
-		final ArrayList<ConditionalGameArgument> conditionalGameArguments = new ArrayList<>();
+		final ArrayList<ConditionalGameArgumentJson> conditionalGameArguments = new ArrayList<>();
 		
 		gameArray.forEach(element -> {
 			if (element.isJsonPrimitive()) {
 				gameArguments.add(element.getAsString());
 			} else {
-				conditionalGameArguments.add(context.deserialize(element.getAsJsonObject(), ConditionalGameArgument.class));
+				conditionalGameArguments.add(context.deserialize(element.getAsJsonObject(), ConditionalGameArgumentJson.class));
 			}
 		});
 		
 		final JsonArray jvmArray = object.get("jvm").getAsJsonArray();
 		
 		final ArrayList<String> jvmArguments = new ArrayList<>();
-		final ArrayList<ConditionalJvmArgument> conditionaljvmArguments = new ArrayList<>();
+		final ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments = new ArrayList<>();
 		
 		jvmArray.forEach(element -> {
 			if (element.isJsonPrimitive()) {
 				jvmArguments.add(element.getAsString());
 			} else {
-				conditionaljvmArguments.add(context.deserialize(element, ConditionalJvmArgument.class));
+				conditionaljvmArguments.add(context.deserialize(element, ConditionalJvmArgumentJson.class));
 			}
 		});
 		
-		return new Arguments(gameArguments, conditionalGameArguments, jvmArguments, conditionaljvmArguments);
+		return new ArgumentsJson(gameArguments, conditionalGameArguments, jvmArguments, conditionaljvmArguments);
 	}
 	
 }

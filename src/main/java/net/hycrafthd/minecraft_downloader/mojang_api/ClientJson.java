@@ -2,7 +2,11 @@ package net.hycrafthd.minecraft_downloader.mojang_api;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 
 /**
  * Client version json endpoint <br>
@@ -10,13 +14,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ClientJson {
 	
-	private Arguments arguments;
+	private ArgumentsJson arguments;
 	private AssetIndex assetIndex;
 	private String assets;
 	private Downloads downloads;
 	private ArrayList<Library> libraries;
 	
-	public Arguments getArguments() {
+	public ArgumentsJson getArguments() {
 		return arguments;
 	}
 	
@@ -41,15 +45,16 @@ public class ClientJson {
 		return "ClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", libraries=" + libraries + "]";
 	}
 	
-	public static class Arguments {
+	@JsonAdapter(ArgumentsSerializer.class)
+	public static class ArgumentsJson {
 		
 		private final ArrayList<String> gameArguments;
-		private final ArrayList<ConditionalGameArgument> conditionalGameArguments;
+		private final ArrayList<ConditionalGameArgumentJson> conditionalGameArguments;
 		
 		private final ArrayList<String> jvmArguments;
-		private final ArrayList<ConditionalJvmArgument> conditionaljvmArguments;
+		private final ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments;
 		
-		public Arguments(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgument> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgument> conditionaljvmArguments) {
+		public ArgumentsJson(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgumentJson> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments) {
 			this.gameArguments = gameArguments;
 			this.conditionalGameArguments = conditionalGameArguments;
 			this.jvmArguments = jvmArguments;
@@ -60,7 +65,7 @@ public class ClientJson {
 			return gameArguments;
 		}
 		
-		public ArrayList<ConditionalGameArgument> getConditionalGameArguments() {
+		public ArrayList<ConditionalGameArgumentJson> getConditionalGameArguments() {
 			return conditionalGameArguments;
 		}
 		
@@ -68,7 +73,7 @@ public class ClientJson {
 			return jvmArguments;
 		}
 		
-		public ArrayList<ConditionalJvmArgument> getConditionaljvmArguments() {
+		public ArrayList<ConditionalJvmArgumentJson> getConditionaljvmArguments() {
 			return conditionaljvmArguments;
 		}
 		
@@ -77,16 +82,16 @@ public class ClientJson {
 			return "Arguments [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionaljvmArguments=" + conditionaljvmArguments + "]";
 		}
 		
-		public static class ConditionalGameArgument {
+		public static class ConditionalGameArgumentJson {
 			
-			private ArrayList<GameRule> rules;
-			private Value value;
+			private ArrayList<GameRuleJson> rules;
+			private ValueJson value;
 			
-			public ArrayList<GameRule> getRules() {
+			public ArrayList<GameRuleJson> getRules() {
 				return rules;
 			}
 			
-			public Value getValue() {
+			public ValueJson getValue() {
 				return value;
 			}
 			
@@ -95,16 +100,16 @@ public class ClientJson {
 				return "ConditionalGameArgument [rules=" + rules + ", value=" + value + "]";
 			}
 			
-			public static class GameRule {
+			public static class GameRuleJson {
 				
 				private String action;
-				private Features features;
+				private FeaturesJson features;
 				
 				public String getAction() {
 					return action;
 				}
 				
-				public Features getFeatures() {
+				public FeaturesJson getFeatures() {
 					return features;
 				}
 				
@@ -113,7 +118,7 @@ public class ClientJson {
 					return "GameRule [action=" + action + ", features=" + features + "]";
 				}
 				
-				public static class Features {
+				public static class FeaturesJson {
 					
 					private boolean is_demo_user;
 					private boolean has_custom_resolution;
@@ -134,16 +139,16 @@ public class ClientJson {
 			}
 		}
 		
-		public static class ConditionalJvmArgument {
+		public static class ConditionalJvmArgumentJson {
 			
-			private ArrayList<Rule> rules;
-			private Value value;
+			private ArrayList<JvmRuleJson> rules;
+			private ValueJson value;
 			
-			public ArrayList<Rule> getRules() {
+			public ArrayList<JvmRuleJson> getRules() {
 				return rules;
 			}
 			
-			public Value getValue() {
+			public ValueJson getValue() {
 				return value;
 			}
 			
@@ -151,13 +156,18 @@ public class ClientJson {
 			public String toString() {
 				return "ConditionalArgument [rules=" + rules + ", value=" + value + "]";
 			}
+			
+			public static class JvmRuleJson extends Rule {
+			}
+			
 		}
 		
-		public static class Value {
+		@JsonAdapter(ValueSerializer.class)
+		public static class ValueJson {
 			
 			private final ArrayList<String> value;
 			
-			public Value(ArrayList<String> value) {
+			public ValueJson(ArrayList<String> value) {
 				this.value = value;
 			}
 			
