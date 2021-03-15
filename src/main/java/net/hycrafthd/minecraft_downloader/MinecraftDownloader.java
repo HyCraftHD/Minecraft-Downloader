@@ -17,17 +17,16 @@ import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
+import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndex;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
-import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
-import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 import net.hycrafthd.minecraft_downloader.util.Util;
 
@@ -38,7 +37,7 @@ public class MinecraftDownloader {
 	
 	public static final String FILE_SEPERATOR = File.separator;
 	
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).registerTypeHierarchyAdapter(AssetIndexJson.class, new IndexSerializer()).create();
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
 	public static final String CLIENT_JAR = "client.jar";

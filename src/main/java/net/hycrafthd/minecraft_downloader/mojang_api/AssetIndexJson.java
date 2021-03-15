@@ -2,12 +2,17 @@ package net.hycrafthd.minecraft_downloader.mojang_api;
 
 import java.util.Map;
 
+import com.google.gson.annotations.JsonAdapter;
+
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerializer;
+
 /**
  * Asset index json endpoint <br>
  * See <a href=
  * "https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets">https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets</a>
  * There is unfortunately only a german version on the minecraft wiki
  */
+@JsonAdapter(IndexSerializer.class)
 public class AssetIndexJson {
 	
 	private Map<String, AssetJson> assets;
