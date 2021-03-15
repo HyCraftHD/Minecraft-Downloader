@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Client version json endpoint <br>
+ * See <a href= "https://minecraft.gamepedia.com/Client.json">https://minecraft.gamepedia.com/Client.json</a>
+ */
 public class ClientJson {
 	
 	private Arguments arguments;
