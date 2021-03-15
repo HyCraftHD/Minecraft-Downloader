@@ -180,6 +180,10 @@ public class ClientJson {
 			
 			public static class JvmRuleJson extends BaseOsRule {
 				
+				public JvmRuleJson(String action, OS os) {
+					super(action, os);
+				}
+				
 				@Override
 				public String toString() {
 					return "JvmRuleJson [action=" + action + ", os=" + os + "]";
@@ -468,6 +472,11 @@ public class ClientJson {
 		protected String action;
 		protected OS os;
 		
+		public BaseOsRule(String action, OS os) {
+			this.action = action;
+			this.os = os;
+		}
+		
 		public String getAction() {
 			return action;
 		}
@@ -486,6 +495,12 @@ public class ClientJson {
 			protected String name;
 			protected String version;
 			protected String arch;
+			
+			public OS(String name, String version, String arch) {
+				this.name = name;
+				this.version = version;
+				this.arch = arch;
+			}
 			
 			public String getName() {
 				return name;
