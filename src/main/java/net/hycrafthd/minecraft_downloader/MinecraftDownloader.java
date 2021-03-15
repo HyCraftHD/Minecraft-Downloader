@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
-import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
@@ -195,14 +195,14 @@ public class MinecraftDownloader {
 		
 		final AssetIndex assetIndex = client.getAssetIndex();
 		
-		final AssetIndexJson index;
+		final CurrentAssetIndexJson index;
 		
 		try {
 			final File indexFile = new File(assets, "indexes" + FILE_SEPERATOR + assetIndex.getId() + ".json");
 			
 			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
-			index = GSON.fromJson(Util.readText(indexFile), AssetIndexJson.class);
+			index = GSON.fromJson(Util.readText(indexFile), CurrentAssetIndexJson.class);
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}

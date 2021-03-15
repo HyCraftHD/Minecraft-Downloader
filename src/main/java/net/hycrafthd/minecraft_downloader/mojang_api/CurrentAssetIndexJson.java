@@ -13,11 +13,11 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerial
  * There is unfortunately only a german version on the minecraft wiki
  */
 @JsonAdapter(IndexSerializer.class)
-public class AssetIndexJson {
+public class CurrentAssetIndexJson {
 	
 	private Map<String, AssetJson> assets;
 	
-	public AssetIndexJson(Map<String, AssetJson> assets) {
+	public CurrentAssetIndexJson(Map<String, AssetJson> assets) {
 		this.assets = assets;
 	}
 	
@@ -27,7 +27,7 @@ public class AssetIndexJson {
 	
 	@Override
 	public String toString() {
-		return "AssetIndexJson [assets=" + assets + "]";
+		return "CurrentAssetIndexJson [assets=" + assets + "]";
 	}
 	
 	public static class AssetJson {
