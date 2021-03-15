@@ -22,6 +22,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson.VersionJson;
 import net.hycrafthd.minecraft_downloader.util.Util;
@@ -53,6 +54,7 @@ public class MinecraftDownloader {
 		downloadLibraries(parsedLibraries, output);
 		extractNatives(parsedLibraries, output);
 		downloadAssets(client, output);
+		downloadLogger(client, output);
 	}
 	
 	private static VersionJson getVersionOfManifest(String version) {
@@ -211,5 +213,16 @@ public class MinecraftDownloader {
 			
 			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
+	}
+	
+	private static void downloadLogger(CurrentClientJson client, File output) {
+		Main.LOGGER.info("Download logger file");
+		
+		final File assets = new File(output, ASSETS);
+		assets.mkdir();
+		
+		final LoggingFileJson loggingFile = client.getLogging().getClient().getFile();
+		
+		Util.downloadFileException(loggingFile.getUrl(), new File(assets, "log_configs" + FILE_SEPERATOR + loggingFile.getId()), loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
 	}
 }
