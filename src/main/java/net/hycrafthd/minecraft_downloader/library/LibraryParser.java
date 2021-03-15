@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.BaseOsRuleJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.DownloadsJson.ArtifactJson;
@@ -36,7 +35,7 @@ public class LibraryParser {
 		final Set<OS> os = new HashSet<>();
 		
 		// Check if allow rule is there.
-		for (BaseOsRuleJson rule : rules) {
+		for (LibraryRuleJson rule : rules) {
 			// If os is not defined in allow then add all os
 			if (ALLOW.equals(rule.getAction())) {
 				if (rule.getOs() != null) {
