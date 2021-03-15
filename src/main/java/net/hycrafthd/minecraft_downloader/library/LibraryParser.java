@@ -63,30 +63,21 @@ public class LibraryParser {
 		// Check for native library
 		final NativesJson natives = library.getNatives();
 		if (natives != null) {
-			// TODO make os not variables but a list / map with a custom gson serializer
-			
-			final ArtifactJson nativeArtifact;
-			
-			if (OSUtil.CURRENT_OS == OS.WINDOWS && natives.getWindows() != null) {
-				nativeArtifact = downloads.getClassifiers().getNativesWindows();
-			} else if (OSUtil.CURRENT_OS == OS.LINUX && natives.getLinux() != null) {
-				nativeArtifact = downloads.getClassifiers().getNativesLinux();
-			} else if (OSUtil.CURRENT_OS == OS.OSX && natives.getOsx() != null) {
-				nativeArtifact = downloads.getClassifiers().getNativesMacos();
-			} else {
-				nativeArtifact = null;
-			}
-			
-			if (nativeArtifact != null) {
-				final List<String> extractExclusion;
+			final String classifierName = natives.getNatives().get(OSUtil.CURRENT_OS.getName());
+			if (classifierName != null) {
+				final ArtifactJson nativeArtifact = downloads.getClassifiers().getClassifiers().get(classifierName);
 				
-				if (library.getExtract() != null && library.getExtract().getExclude() != null) {
-					extractExclusion = library.getExtract().getExclude();
-				} else {
-					extractExclusion = new ArrayList<>();
+				if (nativeArtifact != null) {
+					final List<String> extractExclusion;
+					
+					if (library.getExtract() != null && library.getExtract().getExclude() != null) {
+						extractExclusion = library.getExtract().getExclude();
+					} else {
+						extractExclusion = new ArrayList<>();
+					}
+					
+					files.add(new DownloadableFile(nativeArtifact.getUrl(), nativeArtifact.getPath(), nativeArtifact.getSize(), nativeArtifact.getSha1(), true, extractExclusion));
 				}
-				
-				files.add(new DownloadableFile(nativeArtifact.getUrl(), nativeArtifact.getPath(), nativeArtifact.getSize(), nativeArtifact.getSha1(), true, extractExclusion));
 			}
 		}
 		
