@@ -33,7 +33,7 @@ public class MinecraftDownloader {
 	
 	public static final String FILE_SEPERATOR = File.separator;
 	
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	
 	public static final String CLIENT_JSON = "client.json";
 	public static final String CLIENT_JAR = "client.jar";
@@ -53,6 +53,8 @@ public class MinecraftDownloader {
 		downloadLibraries(parsedLibraries, output);
 		extractNatives(parsedLibraries, output);
 		downloadAssets(client, output);
+		
+		Main.LOGGER.info(GSON.toJson(client.getArguments()));
 	}
 	
 	private static VersionJson getVersionOfManifest(String version) {
