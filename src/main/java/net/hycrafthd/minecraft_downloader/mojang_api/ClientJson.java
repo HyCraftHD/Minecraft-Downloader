@@ -52,13 +52,13 @@ public class ClientJson {
 		private final ArrayList<ConditionalGameArgumentJson> conditionalGameArguments;
 		
 		private final ArrayList<String> jvmArguments;
-		private final ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments;
+		private final ArrayList<ConditionalJvmArgumentJson> conditionalJvmArguments;
 		
 		public ArgumentsJson(ArrayList<String> gameArguments, ArrayList<ConditionalGameArgumentJson> conditionalGameArguments, ArrayList<String> jvmArguments, ArrayList<ConditionalJvmArgumentJson> conditionaljvmArguments) {
 			this.gameArguments = gameArguments;
 			this.conditionalGameArguments = conditionalGameArguments;
 			this.jvmArguments = jvmArguments;
-			this.conditionaljvmArguments = conditionaljvmArguments;
+			this.conditionalJvmArguments = conditionaljvmArguments;
 		}
 		
 		public ArrayList<String> getGameArguments() {
@@ -73,13 +73,13 @@ public class ClientJson {
 			return jvmArguments;
 		}
 		
-		public ArrayList<ConditionalJvmArgumentJson> getConditionaljvmArguments() {
-			return conditionaljvmArguments;
+		public ArrayList<ConditionalJvmArgumentJson> getConditionalJvmArguments() {
+			return conditionalJvmArguments;
 		}
 		
 		@Override
 		public String toString() {
-			return "Arguments [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionaljvmArguments=" + conditionaljvmArguments + "]";
+			return "Arguments [gameArguments=" + gameArguments + ", conditionalGameArguments=" + conditionalGameArguments + ", jvmArguments=" + jvmArguments + ", conditionaljvmArguments=" + conditionalJvmArguments + "]";
 		}
 		
 		public static class ConditionalGameArgumentJson {
