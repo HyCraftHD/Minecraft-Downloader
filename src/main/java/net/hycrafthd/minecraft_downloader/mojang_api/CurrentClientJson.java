@@ -200,7 +200,7 @@ public class CurrentClientJson {
 			
 			public static class JvmRuleJson extends BaseOsRuleJson {
 				
-				public JvmRuleJson(String action, OS os) {
+				public JvmRuleJson(String action, OSJson os) {
 					super(action, os);
 				}
 				
@@ -378,7 +378,7 @@ public class CurrentClientJson {
 		
 		@Override
 		public String toString() {
-			return "Libary [downloads=" + downloads + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
+			return "LibraryJson [downloads=" + downloads + ", name=" + name + ", url=" + url + ", natives=" + natives + ", extract=" + extract + ", rules=" + rules + "]";
 		}
 		
 		public static class DownloadsJson {
@@ -396,7 +396,7 @@ public class CurrentClientJson {
 			
 			@Override
 			public String toString() {
-				return "Downloads [artifact=" + artifact + ", classifiers=" + classifiers + "]";
+				return "DownloadsJson [artifact=" + artifact + ", classifiers=" + classifiers + "]";
 			}
 			
 			public static class ArtifactJson {
@@ -424,7 +424,7 @@ public class CurrentClientJson {
 				
 				@Override
 				public String toString() {
-					return "Artifact [path=" + path + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
+					return "ArtifactJson [path=" + path + ", sha1=" + sha1 + ", size=" + size + ", url=" + url + "]";
 				}
 			}
 			
@@ -461,7 +461,7 @@ public class CurrentClientJson {
 				
 				@Override
 				public String toString() {
-					return "Classifiers [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
+					return "ClassifiersJson [javadoc=" + javadoc + ", natives_linux=" + natives_linux + ", natives_macos=" + natives_macos + ", natives_windows=" + natives_windows + ", sources=" + sources + "]";
 				}
 			}
 			
@@ -487,7 +487,7 @@ public class CurrentClientJson {
 			
 			@Override
 			public String toString() {
-				return "Natives [linux=" + linux + ", osx=" + osx + ", windows=" + windows + "]";
+				return "NativesJson [linux=" + linux + ", osx=" + osx + ", windows=" + windows + "]";
 			}
 			
 		}
@@ -502,13 +502,13 @@ public class CurrentClientJson {
 			
 			@Override
 			public String toString() {
-				return "Extract [exclude=" + exclude + "]";
+				return "ExtractJson [exclude=" + exclude + "]";
 			}
 		}
 		
 		public static class LibraryRuleJson extends BaseOsRuleJson {
 			
-			public LibraryRuleJson(String action, OS os) {
+			public LibraryRuleJson(String action, OSJson os) {
 				super(action, os);
 			}
 			
@@ -523,9 +523,9 @@ public class CurrentClientJson {
 	public static class BaseOsRuleJson {
 		
 		protected String action;
-		protected OS os;
+		protected OSJson os;
 		
-		public BaseOsRuleJson(String action, OS os) {
+		public BaseOsRuleJson(String action, OSJson os) {
 			this.action = action;
 			this.os = os;
 		}
@@ -534,22 +534,22 @@ public class CurrentClientJson {
 			return action;
 		}
 		
-		public OS getOs() {
+		public OSJson getOs() {
 			return os;
 		}
 		
 		@Override
 		public String toString() {
-			return "Rule [action=" + action + ", os=" + os + "]";
+			return "BaseOsRuleJson [action=" + action + ", os=" + os + "]";
 		}
 		
-		public static class OS {
+		public static class OSJson {
 			
 			protected String name;
 			protected String version;
 			protected String arch;
 			
-			public OS(String name, String version, String arch) {
+			public OSJson(String name, String version, String arch) {
 				this.name = name;
 				this.version = version;
 				this.arch = arch;
