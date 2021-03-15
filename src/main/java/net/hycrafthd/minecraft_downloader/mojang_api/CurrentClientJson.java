@@ -21,8 +21,14 @@ public class CurrentClientJson {
 	protected String id;
 	protected int complianceLevel;
 	protected ArrayList<LibraryJson> libraries;
+	// TODO logging
+	protected String mainClass;
+	protected int minimumLauncherVersion;
+	protected String releaseTime;
+	protected String time;
+	protected String type;
 	
-	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries) {
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, String mainClass, int minimumLauncherVersion, String releaseTime, String time, String type) {
 		this.arguments = arguments;
 		this.assetIndex = assetIndex;
 		this.assets = assets;
@@ -30,6 +36,11 @@ public class CurrentClientJson {
 		this.id = id;
 		this.complianceLevel = complianceLevel;
 		this.libraries = libraries;
+		this.mainClass = mainClass;
+		this.minimumLauncherVersion = minimumLauncherVersion;
+		this.releaseTime = releaseTime;
+		this.time = time;
+		this.type = type;
 	}
 	
 	public ArgumentsJson getArguments() {
@@ -60,9 +71,29 @@ public class CurrentClientJson {
 		return libraries;
 	}
 	
+	public String getMainClass() {
+		return mainClass;
+	}
+	
+	public int getMinimumLauncherVersion() {
+		return minimumLauncherVersion;
+	}
+	
+	public String getReleaseTime() {
+		return releaseTime;
+	}
+	
+	public String getTime() {
+		return time;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
 	@Override
 	public String toString() {
-		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + "]";
+		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + ", mainClass=" + mainClass + ", minimumLauncherVersion=" + minimumLauncherVersion + ", releaseTime=" + releaseTime + ", time=" + time + ", type=" + type + "]";
 	}
 	
 	@JsonAdapter(ArgumentsSerializer.class)
@@ -516,7 +547,6 @@ public class CurrentClientJson {
 			public String toString() {
 				return "LibraryRuleJson [action=" + action + ", os=" + os + "]";
 			}
-			
 		}
 	}
 	
