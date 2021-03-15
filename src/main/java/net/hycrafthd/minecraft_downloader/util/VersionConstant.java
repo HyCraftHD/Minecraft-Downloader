@@ -1,10 +1,10 @@
 package net.hycrafthd.minecraft_downloader.util;
 
-public class FileConstant {
+public class VersionConstant {
 	
 	private final String constant;
 	
-	public FileConstant(String constant) {
+	public VersionConstant(String constant) {
 		this.constant = constant;
 	}
 	
