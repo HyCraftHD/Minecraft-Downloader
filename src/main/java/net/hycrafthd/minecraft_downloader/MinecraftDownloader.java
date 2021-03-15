@@ -17,13 +17,13 @@ import com.google.gson.GsonBuilder;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndex;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
@@ -215,7 +215,5 @@ public class MinecraftDownloader {
 			
 			Util.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
-		
-		Main.LOGGER.info(GSON.toJson(index));
 	}
 }
