@@ -23,7 +23,7 @@ import net.hycrafthd.minecraft_downloader.util.Util;
 
 public class MinecraftDownloader {
 	
-	static void launch(CurrentClientJson client, File output) {
+	static List<LibraryParser> launch(CurrentClientJson client, File output) {
 		Main.LOGGER.info("Start downloading library and asset files");
 		
 		final List<LibraryParser> parsedLibraries = parseLibraries(client);
@@ -35,6 +35,17 @@ public class MinecraftDownloader {
 		downloadLogger(client, output);
 		
 		Main.LOGGER.info("Finished downloading library and asset files");
+		
+		return parsedLibraries;
+	}
+	
+	private static List<LibraryParser> parseLibraries(CurrentClientJson client) {
+		Main.LOGGER.info("Parse required libraries");
+		
+		return client.getLibraries().stream() //
+				.map(LibraryParser::new) //
+				.filter(LibraryParser::isAllowedOnOs) //
+				.collect(Collectors.toList());
 	}
 	
 	private static void downloadClient(CurrentClientJson client, File output) {
@@ -47,15 +58,6 @@ public class MinecraftDownloader {
 		
 		Util.downloadFileException(clientJar.getUrl(), new File(output, Constants.CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
 		Util.downloadFileException(clientMappings.getUrl(), new File(output, Constants.CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
-	}
-	
-	private static List<LibraryParser> parseLibraries(CurrentClientJson client) {
-		Main.LOGGER.info("Parse required libraries");
-		
-		return client.getLibraries().stream() //
-				.map(LibraryParser::new) //
-				.filter(LibraryParser::isAllowedOnOs) //
-				.collect(Collectors.toList());
 	}
 	
 	private static void downloadLibraries(List<LibraryParser> parsedLibraries, File output) {

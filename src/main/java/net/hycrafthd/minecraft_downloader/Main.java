@@ -2,6 +2,7 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 
 public class Main {
@@ -49,9 +51,9 @@ public class Main {
 		}
 		
 		final CurrentClientJson client = MinecraftParser.launch(version, output);
-		MinecraftDownloader.launch(client, output);
+		final List<LibraryParser> parsedLibraries = MinecraftDownloader.launch(client, output);
 		if (launch) {
-			MinecraftLauncher.launch(client, output);
+			MinecraftLauncher.launch(client, parsedLibraries, output);
 		}
 	}
 	
