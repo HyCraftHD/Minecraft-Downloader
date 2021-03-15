@@ -1,11 +1,13 @@
 package net.hycrafthd.minecraft_downloader.mojang_api;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
+import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.NativesSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
 
 /**
@@ -498,27 +500,22 @@ public class CurrentClientJson {
 			
 		}
 		
+		@JsonAdapter(NativesSerializer.class)
 		public static class NativesJson {
 			
-			protected String linux;
-			protected String osx;
-			protected String windows;
+			protected Map<String, String> natives;
 			
-			public String getLinux() {
-				return linux;
+			public NativesJson(Map<String, String> natives) {
+				this.natives = natives;
 			}
 			
-			public String getOsx() {
-				return osx;
-			}
-			
-			public String getWindows() {
-				return windows;
+			public Map<String, String> getNatives() {
+				return natives;
 			}
 			
 			@Override
 			public String toString() {
-				return "NativesJson [linux=" + linux + ", osx=" + osx + ", windows=" + windows + "]";
+				return "NativesJson [natives=" + natives + "]";
 			}
 			
 		}
