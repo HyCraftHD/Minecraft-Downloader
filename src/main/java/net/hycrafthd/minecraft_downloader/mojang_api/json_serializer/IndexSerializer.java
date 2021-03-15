@@ -12,25 +12,25 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import net.hycrafthd.minecraft_downloader.mojang_api.Index;
-import net.hycrafthd.minecraft_downloader.mojang_api.Index.AssetObject;
+import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson.AssetObject;
 
-public class IndexSerializer implements JsonDeserializer<Index>, JsonSerializer<Index> {
+public class IndexSerializer implements JsonDeserializer<AssetIndexJson>, JsonSerializer<AssetIndexJson> {
 	
 	@Override
-	public JsonElement serialize(Index src, Type typeOfSrc, JsonSerializationContext context) {
+	public JsonElement serialize(AssetIndexJson src, Type typeOfSrc, JsonSerializationContext context) {
 		return null;
 	}
 	
 	@Override
-	public Index deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	public AssetIndexJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 		final Map<String, AssetObject> assets = json.getAsJsonObject() //
 				.get("objects") //
 				.getAsJsonObject() //
 				.entrySet() //
 				.parallelStream() //
 				.collect(Collectors.toMap(Entry::getKey, entry -> context.deserialize(entry.getValue(), AssetObject.class)));
-		return new Index(assets);
+		return new AssetIndexJson(assets);
 	}
 	
 }

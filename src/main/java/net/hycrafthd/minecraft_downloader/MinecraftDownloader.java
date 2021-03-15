@@ -23,7 +23,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Arguments.Value;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.AssetIndex;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
-import net.hycrafthd.minecraft_downloader.mojang_api.Index;
+import net.hycrafthd.minecraft_downloader.mojang_api.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
@@ -38,7 +38,7 @@ public class MinecraftDownloader {
 	
 	public static final String FILE_SEPERATOR = File.separator;
 	
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).registerTypeHierarchyAdapter(Index.class, new IndexSerializer()).create();
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(Arguments.class, new ArgumentsSerializer()).registerTypeHierarchyAdapter(Value.class, new ValueSerializer()).registerTypeHierarchyAdapter(AssetIndexJson.class, new IndexSerializer()).create();
 	
 	public static final String CLIENT_JSON = "client.json";
 	public static final String CLIENT_JAR = "client.jar";
@@ -196,14 +196,14 @@ public class MinecraftDownloader {
 		
 		final AssetIndex assetIndex = client.getAssetIndex();
 		
-		final Index index;
+		final AssetIndexJson index;
 		
 		try {
 			final File indexFile = new File(assets, "indexes" + FILE_SEPERATOR + assetIndex.getId() + ".json");
 			
 			Util.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
-			index = GSON.fromJson(Util.readText(indexFile), Index.class);
+			index = GSON.fromJson(Util.readText(indexFile), AssetIndexJson.class);
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}

@@ -8,29 +8,29 @@ import java.util.Map;
  * "https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets">https://minecraft-de.gamepedia.com/Standard-Ressourcen#.minecraft.2Fassets</a>
  * There is unfortunately only a german version on the minecraft wiki
  */
-public class Index {
+public class AssetIndexJson {
 	
-	private Map<String, AssetObject> assets;
+	private Map<String, AssetJson> assets;
 	
-	public Index(Map<String, AssetObject> assets) {
+	public AssetIndexJson(Map<String, AssetJson> assets) {
 		this.assets = assets;
 	}
 	
-	public Map<String, AssetObject> getAssets() {
+	public Map<String, AssetJson> getAssets() {
 		return assets;
 	}
 	
 	@Override
 	public String toString() {
-		return "Index [assets=" + assets + "]";
+		return "AssetIndexJson [assets=" + assets + "]";
 	}
 	
-	public static class AssetObject {
+	public static class AssetJson {
 		
 		private String hash;
 		private int size;
 		
-		public AssetObject(String hash, int size) {
+		public AssetJson(String hash, int size) {
 			this.hash = hash;
 			this.size = size;
 		}
@@ -45,7 +45,7 @@ public class Index {
 		
 		@Override
 		public String toString() {
-			return "AssetObject [hash=" + hash + ", size=" + size + "]";
+			return "AssetJson [hash=" + hash + ", size=" + size + "]";
 		}
 	}
 }
