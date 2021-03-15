@@ -25,7 +25,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads;
 import net.hycrafthd.minecraft_downloader.mojang_api.ClientJson.Downloads.Client;
 import net.hycrafthd.minecraft_downloader.mojang_api.Index;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json;
-import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.Version;
+import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestV2Json.VersionJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ArgumentsSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.IndexSerializer;
 import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerializer;
@@ -49,7 +49,7 @@ public class MinecraftDownloader {
 	public static final String ASSETS = "assets";
 	
 	static void launch(String version, File output) {
-		final Version foundVersion = getVersionOfManifest(version);
+		final VersionJson foundVersion = getVersionOfManifest(version);
 		final ClientJson client = getClientJson(foundVersion, output);
 		
 		final List<LibraryParser> parsedLibraries = parseLibraries(client);
@@ -60,7 +60,7 @@ public class MinecraftDownloader {
 		downloadAssets(client, output);
 	}
 	
-	private static Version getVersionOfManifest(String version) {
+	private static VersionJson getVersionOfManifest(String version) {
 		Main.LOGGER.info("Download and load version manifest");
 		
 		final VersionManifestV2Json manifest;
@@ -71,7 +71,7 @@ public class MinecraftDownloader {
 			throw new IllegalStateException("Could not download / parse version manifest json", ex);
 		}
 		
-		final Optional<Version> foundVersionOptional = manifest.getVersions().stream().filter(manifestVersion -> manifestVersion.getId().equals(version)).findAny();
+		final Optional<VersionJson> foundVersionOptional = manifest.getVersions().stream().filter(manifestVersion -> manifestVersion.getId().equals(version)).findAny();
 		
 		if (!foundVersionOptional.isPresent()) {
 			throw new IllegalArgumentException("The requested version {} was not found in the version manifest json");
@@ -80,7 +80,7 @@ public class MinecraftDownloader {
 		return foundVersionOptional.get();
 	}
 	
-	private static ClientJson getClientJson(Version foundVersion, File output) {
+	private static ClientJson getClientJson(VersionJson foundVersion, File output) {
 		Main.LOGGER.info("Download and extract client json");
 		
 		final ClientJson client;
