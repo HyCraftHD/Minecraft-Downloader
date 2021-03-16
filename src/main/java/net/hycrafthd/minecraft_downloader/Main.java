@@ -22,10 +22,18 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		final OptionParser parser = new OptionParser();
 		
+		// Default specs
 		final OptionSpec<Void> helpSpec = parser.accepts("help", "Show the help menu").forHelp();
 		final OptionSpec<String> versionSpec = parser.accepts("version", "Minecraft version to download").withRequiredArg();
 		final OptionSpec<File> outputSpec = parser.accepts("output", "Output folder").withRequiredArg().ofType(File.class);
+		
+		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
+		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
+		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg();
+		
+		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").requiredIf("height").withRequiredArg().ofType(Integer.class);
+		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
 		
 		final OptionSet set = parser.parse(args);
 		
@@ -36,10 +44,12 @@ public class Main {
 		
 		LOGGER.info("Starting Minecraft Downloader");
 		
+		// Get arguments
 		final String version = set.valueOf(versionSpec);
 		final File output = set.valueOf(outputSpec);
 		final boolean launch = set.has(launchSpec);
 		
+		// Create output folder
 		if (output.exists()) {
 			if (!output.canWrite()) {
 				LOGGER.fatal("Cannot write to the output folder");
