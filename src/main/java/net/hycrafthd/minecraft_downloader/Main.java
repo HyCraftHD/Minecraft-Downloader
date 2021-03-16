@@ -32,13 +32,13 @@ public class Main {
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg();
 		
-		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").requiredIf("height").withRequiredArg().ofType(Integer.class);
+		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
 		
 		final OptionSet set = parser.parse(args);
 		
 		if (set.has(helpSpec) || set.specs().size() < 2) {
-			parser.printHelpOn(IoBuilder.forLogger(LOGGER).setAutoFlush(true).setLevel(Level.INFO).buildPrintStream());
+			parser.printHelpOn(IoBuilder.forLogger(LOGGER).setAutoFlush(true).setLevel(Level.ERROR).buildPrintStream());
 			return;
 		}
 		
@@ -47,7 +47,14 @@ public class Main {
 		// Get arguments
 		final String version = set.valueOf(versionSpec);
 		final File output = set.valueOf(outputSpec);
+		
 		final boolean launch = set.has(launchSpec);
+		final String username = set.valueOf(usernameSpec);
+		final String password = set.valueOf(passwordSpec);
+		
+		final boolean customResolution = set.has(widthSpec) || set.has(heightSpec);
+		final int width = set.valueOf(widthSpec);
+		final int height = set.valueOf(heightSpec);
 		
 		// Create output folder
 		if (output.exists()) {
