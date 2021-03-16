@@ -17,11 +17,12 @@ public class Constants {
 	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	
+	public static final VersionConstant LIBRARIES = new VersionConstant("libraries");
+	public static final VersionConstant NATIVES = new VersionConstant("${version}-natives");
+	public static final VersionConstant ASSETS = new VersionConstant("assets");
+	
 	public static final VersionConstant CLIENT_JSON = new VersionConstant("${version}-client.json");
 	public static final VersionConstant CLIENT_JAR = new VersionConstant("${version}-client.jar");
 	public static final VersionConstant CLIENT_MAPPINGS = new VersionConstant("${version}-client.txt");
 	
-	public static final VersionConstant LIBRARIES = new VersionConstant("libraries");
-	public static final VersionConstant NATIVES = new VersionConstant("${version}-natives");
-	public static final VersionConstant ASSETS = new VersionConstant("assets");
 }
