@@ -7,27 +7,88 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.hycrafthd.minecraft_downloader.Constants;
+import net.hycrafthd.minecraft_downloader.util.FileUtil;
+
 public class ProvidedSettings {
 	
 	private final String version;
-	private final File output;
+	
+	private final File outputDirectory;
+	private final File runDirectory;
+	
+	private final File librariesDirectory;
+	private final File nativesDirectory;
+	private final File assetsDirectory;
+	
+	private final File clientJsonFile;
+	private final File clientJarFile;
+	private final File clientMappingsFile;
+	
+	private final SetupProperties setupProperties;
 	
 	private final Set<LauncherFeatures> features;
 	private final Map<LauncherVariables, String> variables;
 	
-	public ProvidedSettings(String version, File output) {
+	public ProvidedSettings(String version, File outputDirectory, File runDirectory) {
 		this.version = version;
-		this.output = output;
-		this.features = new HashSet<>();
-		this.variables = new HashMap<>();
+		this.outputDirectory = outputDirectory;
+		this.runDirectory = runDirectory;
+		
+		this.librariesDirectory = new File(outputDirectory, Constants.LIBRARIES.get(version));
+		this.nativesDirectory = new File(outputDirectory, Constants.NATIVES.get(version));
+		this.assetsDirectory = new File(outputDirectory, Constants.ASSETS.get(version));
+		
+		this.clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
+		this.clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
+		this.clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
+		
+		setupProperties = new SetupProperties();
+		features = new HashSet<>();
+		variables = new HashMap<>();
 	}
 	
 	public String getVersion() {
 		return version;
 	}
 	
-	public File getOutput() {
-		return output;
+	public File getOutputDirectory() {
+		return ensureDirectoryExists(outputDirectory);
+	}
+	
+	public File getRunDirectory() {
+		return ensureDirectoryExists(runDirectory);
+	}
+	
+	public File getLibrariesDirectory() {
+		return ensureDirectoryExists(librariesDirectory);
+	}
+	
+	public File getNativesDirectory() {
+		return ensureDirectoryExists(nativesDirectory);
+	}
+	
+	public File getAssetsDirectory() {
+		return ensureDirectoryExists(assetsDirectory);
+	}
+	
+	public File getClientJsonFile() {
+		ensureDirectoryExists(outputDirectory);
+		return clientJsonFile;
+	}
+	
+	public File getClientJarFile() {
+		ensureDirectoryExists(outputDirectory);
+		return clientJarFile;
+	}
+	
+	public File getClientMappingsFile() {
+		ensureDirectoryExists(outputDirectory);
+		return clientMappingsFile;
+	}
+	
+	public SetupProperties getSetupProperties() {
+		return setupProperties;
 	}
 	
 	public void addFeature(LauncherFeatures feature) {
@@ -51,4 +112,8 @@ public class ProvidedSettings {
 		return output;
 	}
 	
+	private File ensureDirectoryExists(File file) {
+		FileUtil.createFolders(file);
+		return file;
+	}
 }
