@@ -14,6 +14,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
+import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class Main {
 	
@@ -66,6 +67,9 @@ public class Main {
 			LOGGER.debug("Created output folder " + output.getAbsolutePath());
 			output.mkdirs();
 		}
+		
+		// Create provided settings
+		final ProvidedSettings settings = new ProvidedSettings(version, output);
 		
 		final CurrentClientJson client = MinecraftParser.launch(version, output);
 		final List<LibraryParser> parsedLibraries = MinecraftDownloader.launch(client, output);

@@ -22,6 +22,14 @@ public class ProvidedSettings {
 		this.variables = new HashMap<>();
 	}
 	
+	public String getVersion() {
+		return version;
+	}
+	
+	public File getOutput() {
+		return output;
+	}
+	
 	public void addFeature(LauncherFeatures feature) {
 		features.add(feature);
 	}
