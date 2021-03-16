@@ -25,7 +25,7 @@ public class ProvidedSettings {
 	private final File clientJarFile;
 	private final File clientMappingsFile;
 	
-	private final SetupProperties setupProperties;
+	private final GeneratedSettings generatedSettings;
 	
 	private final Set<LauncherFeatures> features;
 	private final Map<LauncherVariables, String> variables;
@@ -43,7 +43,7 @@ public class ProvidedSettings {
 		this.clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
 		this.clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
 		
-		setupProperties = new SetupProperties();
+		generatedSettings = new GeneratedSettings();
 		features = new HashSet<>();
 		variables = new HashMap<>();
 	}
@@ -87,8 +87,8 @@ public class ProvidedSettings {
 		return clientMappingsFile;
 	}
 	
-	public SetupProperties getSetupProperties() {
-		return setupProperties;
+	public GeneratedSettings getGeneratedSettings() {
+		return generatedSettings;
 	}
 	
 	public void addFeature(LauncherFeatures feature) {
