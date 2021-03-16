@@ -128,6 +128,10 @@ public class FileUtil {
 	public static void createFolders(File file) {
 		if (!file.exists()) {
 			file.mkdirs();
+		} else {
+			if (file.isFile() || !file.canWrite() || !file.canRead()) {
+				throw new IllegalStateException("Cannot create folders: " + file);
+			}
 		}
 	}
 	
