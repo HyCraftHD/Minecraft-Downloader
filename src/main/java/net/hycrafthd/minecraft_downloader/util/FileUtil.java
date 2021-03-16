@@ -120,8 +120,14 @@ public class FileUtil {
 	
 	public static void createParentFolders(File file) {
 		final File parent = file.getParentFile();
-		if (parent != null && !parent.exists()) {
-			parent.mkdirs();
+		if (parent != null) {
+			createFolders(parent);
+		}
+	}
+	
+	public static void createFolders(File file) {
+		if (!file.exists()) {
+			file.mkdirs();
 		}
 	}
 	
