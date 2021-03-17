@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import net.hycrafthd.minecraft_downloader.Constants;
@@ -15,7 +16,6 @@ public class ProvidedSettings {
 	private final String version;
 	
 	private final File outputDirectory;
-	private final File runDirectory;
 	
 	private final File librariesDirectory;
 	private final File nativesDirectory;
@@ -25,23 +25,26 @@ public class ProvidedSettings {
 	private final File clientJarFile;
 	private final File clientMappingsFile;
 	
+	private final Optional<File> runDirectoryOptional;
+	
 	private final GeneratedSettings generatedSettings;
 	
 	private final Set<LauncherFeatures> features;
 	private final Map<LauncherVariables, String> variables;
 	
-	public ProvidedSettings(String version, File outputDirectory, File runDirectory) {
+	public ProvidedSettings(String version, File outputDirectory, Optional<File> runDirectory) {
 		this.version = version;
 		this.outputDirectory = outputDirectory;
-		this.runDirectory = runDirectory;
 		
-		this.librariesDirectory = new File(outputDirectory, Constants.LIBRARIES.get(version));
-		this.nativesDirectory = new File(outputDirectory, Constants.NATIVES.get(version));
-		this.assetsDirectory = new File(outputDirectory, Constants.ASSETS.get(version));
+		librariesDirectory = new File(outputDirectory, Constants.LIBRARIES.get(version));
+		nativesDirectory = new File(outputDirectory, Constants.NATIVES.get(version));
+		assetsDirectory = new File(outputDirectory, Constants.ASSETS.get(version));
 		
-		this.clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
-		this.clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
-		this.clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
+		clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
+		clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
+		clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
+		
+		runDirectoryOptional = runDirectory;
 		
 		generatedSettings = new GeneratedSettings();
 		features = new HashSet<>();
@@ -54,10 +57,6 @@ public class ProvidedSettings {
 	
 	public File getOutputDirectory() {
 		return ensureDirectoryExists(outputDirectory);
-	}
-	
-	public File getRunDirectory() {
-		return ensureDirectoryExists(runDirectory);
 	}
 	
 	public File getLibrariesDirectory() {
@@ -85,6 +84,14 @@ public class ProvidedSettings {
 	public File getClientMappingsFile() {
 		ensureDirectoryExists(outputDirectory);
 		return clientMappingsFile;
+	}
+	
+	public boolean hasRunDirectory() {
+		return runDirectoryOptional.isPresent();
+	}
+	
+	public File getRunDirectory() {
+		return ensureDirectoryExists(runDirectoryOptional.orElseThrow(() -> new IllegalStateException("Run directory is not set")));
 	}
 	
 	public GeneratedSettings getGeneratedSettings() {
