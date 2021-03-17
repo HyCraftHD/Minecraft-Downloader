@@ -125,15 +125,17 @@ public class FileUtil {
 		}
 	}
 	
-	public static void createFolders(File file) {
+	public static boolean createFolders(File file) {
 		if (!file.exists()) {
 			if (!file.mkdirs()) {
 				throw new IllegalStateException("Cannot create directory: " + file.getAbsolutePath());
 			}
+			return true;
 		} else {
 			if (file.isFile() || !file.canWrite() || !file.canRead()) {
 				throw new IllegalStateException("Directory is not usable: " + file.getAbsolutePath());
 			}
+			return false;
 		}
 	}
 	
