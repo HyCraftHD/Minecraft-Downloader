@@ -2,11 +2,16 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
+import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.VersionManifestJson.VersionJson;
+import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
@@ -16,6 +21,7 @@ public class MinecraftParser {
 		Main.LOGGER.info("Start parsing json files");
 		
 		parseClientJson(extractVersionOfManifest(settings.getVersion()), settings);
+		parseLibraries(settings);
 		
 		Main.LOGGER.info("Finished parsing json files");
 	}
@@ -56,6 +62,22 @@ public class MinecraftParser {
 		}
 		
 		settings.getGeneratedSettings().setClientJson(client);
+	}
+	
+	private static void parseLibraries(ProvidedSettings settings) {
+		Main.LOGGER.info("Parse required libraries");
+		
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		
+		final List<DownloadableFile> downloadableFiles = generatedSettings.getClientJson() //
+				.getLibraries() //
+				.stream() //
+				.map(LibraryParser::new) //
+				.filter(LibraryParser::isAllowedOnOs) //
+				.flatMap(parser -> parser.getFiles().stream()) //
+				.collect(Collectors.toList());
+		
+		generatedSettings.setDownloadableFiles(downloadableFiles);
 	}
 	
 }
