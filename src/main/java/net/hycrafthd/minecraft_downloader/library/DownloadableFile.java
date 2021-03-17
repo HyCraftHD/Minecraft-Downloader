@@ -57,6 +57,55 @@ public class DownloadableFile {
 		return extractExclusion;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((extractExclusion == null) ? 0 : extractExclusion.hashCode());
+		result = prime * result + (isNative ? 1231 : 1237);
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((sha1 == null) ? 0 : sha1.hashCode());
+		result = prime * result + size;
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DownloadableFile other = (DownloadableFile) obj;
+		if (extractExclusion == null) {
+			if (other.extractExclusion != null)
+				return false;
+		} else if (!extractExclusion.equals(other.extractExclusion))
+			return false;
+		if (isNative != other.isNative)
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		if (sha1 == null) {
+			if (other.sha1 != null)
+				return false;
+		} else if (!sha1.equals(other.sha1))
+			return false;
+		if (size != other.size)
+			return false;
+		if (url == null) {
+			if (other.url != null)
+				return false;
+		} else if (!url.equals(other.url))
+			return false;
+		return true;
+	}
+	
 	public void setDownloadedFile(File downloadedFile) {
 		this.downloadedFile = downloadedFile;
 	}
