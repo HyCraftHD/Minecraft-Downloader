@@ -10,11 +10,10 @@ public class GeneratedSettings {
 		this.clientJson = clientJson;
 	}
 	
-	public boolean hasClientJson() {
-		return clientJson != null;
-	}
-	
 	public CurrentClientJson getClientJson() {
+		if (clientJson == null) {
+			throw new IllegalStateException("Client json is null");
+		}
 		return clientJson;
 	}
 	
