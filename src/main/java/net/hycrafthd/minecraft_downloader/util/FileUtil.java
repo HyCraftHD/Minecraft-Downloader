@@ -127,10 +127,12 @@ public class FileUtil {
 	
 	public static void createFolders(File file) {
 		if (!file.exists()) {
-			file.mkdirs();
+			if (!file.mkdirs()) {
+				throw new IllegalStateException("Cannot create directory: " + file.getAbsolutePath());
+			}
 		} else {
 			if (file.isFile() || !file.canWrite() || !file.canRead()) {
-				throw new IllegalStateException("Cannot create directory: " + file.getAbsolutePath());
+				throw new IllegalStateException("Directory is not usable: " + file.getAbsolutePath());
 			}
 		}
 	}
