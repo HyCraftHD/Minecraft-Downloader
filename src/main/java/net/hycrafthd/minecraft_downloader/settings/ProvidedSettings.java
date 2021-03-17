@@ -32,7 +32,7 @@ public class ProvidedSettings {
 	private final Set<LauncherFeatures> features;
 	private final Map<LauncherVariables, String> variables;
 	
-	public ProvidedSettings(String version, File outputDirectory, Optional<File> runDirectory) {
+	public ProvidedSettings(String version, File outputDirectory, File runDirectory) {
 		this.version = version;
 		this.outputDirectory = outputDirectory;
 		
@@ -44,7 +44,7 @@ public class ProvidedSettings {
 		clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
 		clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
 		
-		runDirectoryOptional = runDirectory;
+		runDirectoryOptional = Optional.ofNullable(runDirectory);
 		
 		generatedSettings = new GeneratedSettings();
 		features = new HashSet<>();

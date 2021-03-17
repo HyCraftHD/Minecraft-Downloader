@@ -2,7 +2,6 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -12,9 +11,8 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import net.hycrafthd.minecraft_downloader.library.LibraryParser;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
+import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class Main {
 	
@@ -26,10 +24,11 @@ public class Main {
 		// Default specs
 		final OptionSpec<Void> helpSpec = parser.accepts("help", "Show the help menu").forHelp();
 		final OptionSpec<String> versionSpec = parser.accepts("version", "Minecraft version to download").withRequiredArg();
-		final OptionSpec<File> outputSpec = parser.accepts("output", "Output folder").withRequiredArg().ofType(File.class);
+		final OptionSpec<File> outputSpec = parser.accepts("output", "Output directory for the downloaded files").withRequiredArg().ofType(File.class);
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
+		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg();
 		
@@ -50,6 +49,7 @@ public class Main {
 		final File output = set.valueOf(outputSpec);
 		
 		final boolean launch = set.has(launchSpec);
+		final File run = set.valueOf(runSpec);
 		final String username = set.valueOf(usernameSpec);
 		final String password = set.valueOf(passwordSpec);
 		
@@ -58,24 +58,20 @@ public class Main {
 		final int height = set.valueOf(heightSpec);
 		
 		// Create output folder
-		if (output.exists()) {
-			if (!output.canWrite()) {
-				LOGGER.fatal("Cannot write to the output folder");
-				return;
-			}
-		} else {
+		if (FileUtil.createFolders(output)) {
 			LOGGER.debug("Created output folder " + output.getAbsolutePath());
-			output.mkdirs();
 		}
 		
 		// Create provided settings
-		final ProvidedSettings settings = new ProvidedSettings(version, output);
+		final ProvidedSettings settings = new ProvidedSettings(version, output, run);
 		
-		final CurrentClientJson client = MinecraftParser.launch(version, output);
-		final List<LibraryParser> parsedLibraries = MinecraftDownloader.launch(client, output);
-		if (launch) {
-			MinecraftLauncher.launch(client, parsedLibraries, output);
-		}
+		MinecraftParser.launch(settings);
+		MinecraftDownloader.launch(settings);
+		
+		// final List<LibraryParser> parsedLibraries =
+		// if (launch) {
+		// MinecraftLauncher.launch(client, parsedLibraries, output);
+		// }
 	}
 	
 }
