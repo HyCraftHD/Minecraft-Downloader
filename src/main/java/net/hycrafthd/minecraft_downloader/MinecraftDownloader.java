@@ -5,70 +5,54 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
-import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
-import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
+import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class MinecraftDownloader {
 	
-	static List<LibraryParser> launch(CurrentClientJson client, File output) {
+	static void launch(ProvidedSettings settings) {
 		Main.LOGGER.info("Start downloading library and asset files");
 		
-		final List<LibraryParser> parsedLibraries = parseLibraries(client);
-		
-		downloadClient(client, output);
-		downloadLibraries(parsedLibraries, output);
-		extractNatives(parsedLibraries, output);
-		downloadAssets(client, output);
-		downloadLogger(client, output);
+		downloadClient(settings);
+		downloadLibraries(settings);
+		extractNatives(settings);
+		downloadAssets(settings);
+		downloadLogger(settings);
 		
 		Main.LOGGER.info("Finished downloading library and asset files");
-		
-		return parsedLibraries;
 	}
 	
-	private static List<LibraryParser> parseLibraries(CurrentClientJson client) {
-		Main.LOGGER.info("Parse required libraries");
-		
-		return client.getLibraries().stream() //
-				.map(LibraryParser::new) //
-				.filter(LibraryParser::isAllowedOnOs) //
-				.collect(Collectors.toList());
-	}
-	
-	private static void downloadClient(CurrentClientJson client, File output) {
+	private static void downloadClient(ProvidedSettings settings) {
 		Main.LOGGER.info("Download client jar and mappings");
 		
-		final DownloadsJson downloads = client.getDownloads();
+		final DownloadsJson downloads = settings.getGeneratedSettings().getClientJson().getDownloads();
 		
 		final ClientJson clientJar = downloads.getClient();
 		final ClientJson clientMappings = downloads.getClientMappings();
 		
-		FileUtil.downloadFileException(clientJar.getUrl(), new File(output, Constants.CLIENT_JAR), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
-		FileUtil.downloadFileException(clientMappings.getUrl(), new File(output, Constants.CLIENT_MAPPINGS), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
+		FileUtil.downloadFileException(clientJar.getUrl(), settings.getClientJarFile(), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
+		FileUtil.downloadFileException(clientMappings.getUrl(), settings.getClientMappingsFile(), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 	}
 	
-	private static void downloadLibraries(List<LibraryParser> parsedLibraries, File output) {
+	private static void downloadLibraries(ProvidedSettings settings) {
 		Main.LOGGER.info("Download required libraries");
 		
-		final File libraries = new File(output, Constants.LIBRARIES);
-		libraries.mkdir();
+		final File libraries = settings.getLibrariesDirectory();
 		
-		parsedLibraries.parallelStream() //
-				.flatMap(parser -> parser.getFiles().stream()) //
+		settings.getGeneratedSettings() //
+				.getDownloadableFiles() //
+				.parallelStream() //
 				.forEach(downloadableFile -> {
 					final File file = new File(libraries, downloadableFile.getPath());
 					
@@ -77,14 +61,14 @@ public class MinecraftDownloader {
 				});
 	}
 	
-	private static void extractNatives(List<LibraryParser> parsedLibraries, File output) {
+	private static void extractNatives(ProvidedSettings settings) {
 		Main.LOGGER.info("Extract native files from native jars");
 		
-		final File natives = new File(output, Constants.NATIVES);
-		natives.mkdir();
+		final File natives = settings.getNativesDirectory();
 		
-		parsedLibraries.stream() //
-				.flatMap(parser -> parser.getFiles().stream()) //
+		settings.getGeneratedSettings() //
+				.getDownloadableFiles() //
+				.stream() //
 				.filter(DownloadableFile::isNative) //
 				.filter(DownloadableFile::hasDownloadedFile) //
 				.forEach(downloadableFile -> {
@@ -130,13 +114,12 @@ public class MinecraftDownloader {
 				});
 	}
 	
-	public static void downloadAssets(CurrentClientJson client, File output) {
+	public static void downloadAssets(ProvidedSettings settings) {
 		Main.LOGGER.info("Download assets");
 		
-		final File assets = new File(output, Constants.ASSETS);
-		assets.mkdir();
+		final File assets = settings.getAssetsDirectory();
 		
-		final AssetIndexJson assetIndex = client.getAssetIndex();
+		final AssetIndexJson assetIndex = settings.getGeneratedSettings().getClientJson().getAssetIndex();
 		
 		final CurrentAssetIndexJson index;
 		
@@ -160,13 +143,12 @@ public class MinecraftDownloader {
 		});
 	}
 	
-	private static void downloadLogger(CurrentClientJson client, File output) {
+	private static void downloadLogger(ProvidedSettings settings) {
 		Main.LOGGER.info("Download logger file");
 		
-		final File assets = new File(output, Constants.ASSETS);
-		assets.mkdir();
+		final File assets = settings.getAssetsDirectory();
 		
-		final LoggingFileJson loggingFile = client.getLogging().getClient().getFile();
+		final LoggingFileJson loggingFile = settings.getGeneratedSettings().getClientJson().getLogging().getClient().getFile();
 		
 		FileUtil.downloadFileException(loggingFile.getUrl(), new File(assets, "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId()), loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
 	}
