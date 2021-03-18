@@ -13,12 +13,15 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
+import net.hycrafthd.minecraft_downloader.util.LoggingUtil;
 
 public class Main {
 	
 	public static final Logger LOGGER = LogManager.getLogger("Minecraft Downloader");
 	
 	public static void main(String[] args) throws IOException {
+		LoggingUtil.redirectPrintStreams();
+		
 		final OptionParser parser = new OptionParser();
 		
 		// Default specs
@@ -69,6 +72,7 @@ public class Main {
 		MinecraftDownloader.launch(settings);
 		
 		if (launch) {
+			MinecraftAuthenticator.launch(settings);
 			MinecraftLauncher.launch(settings);
 		}
 	}
