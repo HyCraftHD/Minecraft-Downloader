@@ -68,10 +68,8 @@ public class Main {
 		MinecraftParser.launch(settings);
 		MinecraftDownloader.launch(settings);
 		
-		// final List<LibraryParser> parsedLibraries =
-		// if (launch) {
-		// MinecraftLauncher.launch(client, parsedLibraries, output);
-		// }
+		if (launch) {
+			MinecraftLauncher.launch(settings);
+		}
 	}
-	
 }
