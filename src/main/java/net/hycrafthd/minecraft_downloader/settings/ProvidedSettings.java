@@ -111,6 +111,10 @@ public class ProvidedSettings {
 		features.add(feature);
 	}
 	
+	public void addVariable(LauncherVariables variable, File file) {
+		addVariable(variable, file.toString());
+	}
+	
 	public void addVariable(LauncherVariables variable, String value) {
 		variables.put(variable, value);
 	}
