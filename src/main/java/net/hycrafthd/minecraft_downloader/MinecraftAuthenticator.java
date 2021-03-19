@@ -1,6 +1,7 @@
 package net.hycrafthd.minecraft_downloader;
 
 import net.hycrafthd.minecraft_downloader.auth.api.MinecraftAuth;
+import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftAuthenticator {
@@ -16,10 +17,10 @@ public class MinecraftAuthenticator {
 			
 			auth.logIn();
 			
-			System.out.println(auth.getAuthenticatedToken());
-			System.out.println(auth.getUUID());
-			System.out.println(auth.getName());
-			System.out.println(auth.getUserType());
+			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, auth.getName());
+			settings.addVariable(LauncherVariables.AUTH_UUID, auth.getUUID());
+			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, auth.getAuthenticatedToken());
+			settings.addVariable(LauncherVariables.USER_TYPE, auth.getUserType());
 		} catch (Exception ex) {
 			throw new IllegalStateException("An exception occured during authentication", ex);
 		}
