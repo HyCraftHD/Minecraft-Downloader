@@ -11,6 +11,8 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.hycrafthd.minecraft_downloader.settings.LauncherFeatures;
+import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 import net.hycrafthd.minecraft_downloader.util.LoggingUtil;
@@ -33,7 +35,7 @@ public class Main {
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
-		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg();
+		final OptionSpec<char[]> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(char[].class);
 		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
@@ -54,9 +56,9 @@ public class Main {
 		final boolean launch = set.has(launchSpec);
 		final File run = set.valueOf(runSpec);
 		final String username = set.valueOf(usernameSpec);
-		final String password = set.valueOf(passwordSpec);
+		final char[] password = set.valueOf(passwordSpec);
 		
-		final boolean customResolution = set.has(widthSpec) || set.has(heightSpec);
+		final boolean customResolution = set.has(widthSpec) && set.has(heightSpec);
 		final Integer width = set.valueOf(widthSpec);
 		final Integer height = set.valueOf(heightSpec);
 		
@@ -72,7 +74,13 @@ public class Main {
 		MinecraftDownloader.launch(settings);
 		
 		if (launch) {
-			MinecraftAuthenticator.launch(settings);
+			if (customResolution) {
+				settings.addFeature(LauncherFeatures.HAS_CUSTOM_RESOLUTION);
+				settings.addVariable(LauncherVariables.RESOLUTION_WIDTH, width.toString());
+				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
+			}
+			
+			MinecraftAuthenticator.launch(settings, username, password);
 			MinecraftLauncher.launch(settings);
 		}
 	}
