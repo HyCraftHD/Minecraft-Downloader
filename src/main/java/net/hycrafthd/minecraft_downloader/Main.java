@@ -35,7 +35,7 @@ public class Main {
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
-		final OptionSpec<char[]> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(char[].class);
+		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
@@ -56,7 +56,7 @@ public class Main {
 		final boolean launch = set.has(launchSpec);
 		final File run = set.valueOf(runSpec);
 		final String username = set.valueOf(usernameSpec);
-		final char[] password = set.valueOf(passwordSpec);
+		final String password = set.valueOf(passwordSpec);
 		
 		final boolean customResolution = set.has(widthSpec) && set.has(heightSpec);
 		final Integer width = set.valueOf(widthSpec);
