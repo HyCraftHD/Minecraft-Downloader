@@ -1,6 +1,7 @@
 package net.hycrafthd.minecraft_downloader.settings;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
@@ -12,7 +13,9 @@ public class GeneratedSettings {
 	
 	private List<DownloadableFile> downloadableFiles;
 	
-	private URL[] classPath;
+	private List<URL> classPath;
+	
+	private ClassLoader classLoader;
 	
 	public void setClientJson(CurrentClientJson clientJson) {
 		this.clientJson = clientJson;
@@ -36,15 +39,26 @@ public class GeneratedSettings {
 		return downloadableFiles;
 	}
 	
-	public void setClassPath(URL[] classPath) {
+	public void setClassPath(List<URL> classPath) {
 		this.classPath = classPath;
 	}
 	
-	public URL[] getClassPath() {
+	public List<URL> getClassPath() {
 		if (classPath == null) {
 			throw new IllegalStateException("Classpath is not set");
 		}
-		return classPath;
+		return Collections.unmodifiableList(classPath);
+	}
+	
+	public void setClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
+	
+	public ClassLoader getClassLoader() {
+		if (classLoader == null) {
+			throw new IllegalStateException("Classloader is not set");
+		}
+		return classLoader;
 	}
 	
 }
