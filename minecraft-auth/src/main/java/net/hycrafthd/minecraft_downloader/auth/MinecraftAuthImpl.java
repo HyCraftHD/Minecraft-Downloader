@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.auth.impl;
+package net.hycrafthd.minecraft_downloader.auth;
 
 import java.net.Proxy;
 
@@ -7,7 +7,7 @@ import com.mojang.authlib.UserAuthentication;
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
-import net.hycrafthd.minecraft_downloader.auth.MinecraftAuth;
+import net.hycrafthd.minecraft_downloader.auth.api.MinecraftAuth;
 
 public class MinecraftAuthImpl implements MinecraftAuth {
 	

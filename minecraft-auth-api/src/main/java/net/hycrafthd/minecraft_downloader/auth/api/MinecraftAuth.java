@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.auth;
+package net.hycrafthd.minecraft_downloader.auth.api;
 
 public interface MinecraftAuth {
 	
