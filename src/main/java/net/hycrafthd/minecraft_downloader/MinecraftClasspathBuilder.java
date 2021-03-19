@@ -14,6 +14,8 @@ import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 public class MinecraftClasspathBuilder {
 	
 	static void launch(ProvidedSettings settings) {
+		Main.LOGGER.info("Start the classpath builder");
+		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
 		final List<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile()), generatedSettings.getDownloadableFiles() //
@@ -33,6 +35,8 @@ public class MinecraftClasspathBuilder {
 		
 		generatedSettings.setClassPath(classPath);
 		generatedSettings.setClassLoader(classLoader);
+		
+		Main.LOGGER.info("Finished the classpath builder");
 	}
 	
 }
