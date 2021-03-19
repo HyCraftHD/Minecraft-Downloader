@@ -5,11 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLDecoder;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,29 +46,25 @@ public class MinecraftClasspathBuilder {
 		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
-		final Set<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile(), settings.getAuthImplFile()), generatedSettings.getDownloadableFiles() //
+		final Set<File> classPath = Stream.concat(Stream.of(settings.getClientJarFile(), settings.getAuthImplFile()), generatedSettings.getDownloadableFiles() //
 				.stream() //
 				.filter(downloadableFile -> !downloadableFile.isNative()) //
 				.filter(DownloadableFile::hasDownloadedFile) //
 				.map(DownloadableFile::getDownloadedFile)) //
-				.map(file -> {
-					try {
-						return file.toURI().toURL();
-					} catch (MalformedURLException ex) {
-						throw new IllegalStateException("Cannot get url from file " + file, ex);
-					}
-				}).collect(Collectors.toSet());
+				.collect(Collectors.toSet());
 		
 		Main.LOGGER.debug("The classpath entries are: ");
-		classPath.forEach(url -> {
-			try {
-				Main.LOGGER.debug(" " + URLDecoder.decode(url.toString(), "UTF-8"));
-			} catch (UnsupportedEncodingException ex) {
-				throw new IllegalStateException("Charset UTF-8 was not found", ex);
-			}
+		classPath.forEach(file -> {
+			Main.LOGGER.debug(" " + file);
 		});
 		
-		final MinecraftClassLoader classLoader = new MinecraftClassLoader(classPath.stream().toArray(URL[]::new));
+		final MinecraftClassLoader classLoader = new MinecraftClassLoader(classPath.stream().map(file -> {
+			try {
+				return file.toURI().toURL();
+			} catch (MalformedURLException ex) {
+				throw new IllegalStateException("Cannot get url from file " + file, ex);
+			}
+		}).toArray(URL[]::new));
 		
 		generatedSettings.setClassPath(classPath);
 		generatedSettings.setClassLoader(classLoader);

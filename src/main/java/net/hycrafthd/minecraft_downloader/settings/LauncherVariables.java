@@ -18,9 +18,10 @@ public enum LauncherVariables {
 	RESOLUTION_WIDTH("resolution_width"),
 	RESOLUTION_HEIGHT("resolution_height"),
 	
-	NATIVE_DIRECTORY("natives_directory"),
 	LAUNCHER_NAME("launcher_name"),
 	LAUNCHER_VERSION("launcher_version"),
+	
+	NATIVE_DIRECTORY("natives_directory"),
 	CLASSPATH("classpath");
 	
 	private final String name;
