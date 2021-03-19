@@ -22,28 +22,6 @@ public class MinecraftLauncher {
 		Main.LOGGER.info("Start minecraft");
 		
 		setVariables(settings);
-		
-		//
-		// final ProvidedSettings settings = new ProvidedSettings();
-		//
-		// settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, "HyCraftHD");
-		// settings.addVariable(LauncherVariables.AUTH_UUID, "d9202ce0f6c14dc193412d9091764808");
-		// settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, "xyz-doesn-not-matter");
-		// settings.addVariable(LauncherVariables.USER_TYPE, "mojang");
-		//
-		// settings.addVariable(LauncherVariables.VERSION_NAME, client.getId());
-		// settings.addVariable(LauncherVariables.VERSION_TYPE, client.getType());
-		//
-		// settings.addVariable(LauncherVariables.GAME_DIRECTORY, new File(output, "game").toString());
-		//
-		// settings.addVariable(LauncherVariables.ASSET_ROOT, new File(output, "assets").toString());
-		// settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
-		//
-		// final ArgumentsParser parser = new ArgumentsParser(client.getArguments(), settings);
-		//
-		// launchInline(client, parsedLibraries, parser, output);
-		//
-		// Main.LOGGER.info("Stopping minecraft");
 	}
 	
 	private static void setVariables(ProvidedSettings settings) {
