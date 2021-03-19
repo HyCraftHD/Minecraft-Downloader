@@ -12,34 +12,60 @@ import net.hycrafthd.minecraft_downloader.launch.ArgumentsParser;
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
+import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftLauncher {
 	
-	static void launch(CurrentClientJson client, List<LibraryParser> parsedLibraries, File output) {
+	static void launch(ProvidedSettings settings) {
 		Main.LOGGER.info("Start minecraft");
 		
-		final ProvidedSettings settings = new ProvidedSettings();
+		setVariables(settings);
 		
-		settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, "HyCraftHD");
-		settings.addVariable(LauncherVariables.AUTH_UUID, "d9202ce0f6c14dc193412d9091764808");
-		settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, "xyz-doesn-not-matter");
-		settings.addVariable(LauncherVariables.USER_TYPE, "mojang");
+		//
+		// final ProvidedSettings settings = new ProvidedSettings();
+		//
+		// settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, "HyCraftHD");
+		// settings.addVariable(LauncherVariables.AUTH_UUID, "d9202ce0f6c14dc193412d9091764808");
+		// settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, "xyz-doesn-not-matter");
+		// settings.addVariable(LauncherVariables.USER_TYPE, "mojang");
+		//
+		// settings.addVariable(LauncherVariables.VERSION_NAME, client.getId());
+		// settings.addVariable(LauncherVariables.VERSION_TYPE, client.getType());
+		//
+		// settings.addVariable(LauncherVariables.GAME_DIRECTORY, new File(output, "game").toString());
+		//
+		// settings.addVariable(LauncherVariables.ASSET_ROOT, new File(output, "assets").toString());
+		// settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
+		//
+		// final ArgumentsParser parser = new ArgumentsParser(client.getArguments(), settings);
+		//
+		// launchInline(client, parsedLibraries, parser, output);
+		//
+		// Main.LOGGER.info("Stopping minecraft");
+	}
+	
+	private static void setVariables(ProvidedSettings settings) {
+		Main.LOGGER.info("Set variables for start");
+		
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		
+		final CurrentClientJson client = generatedSettings.getClientJson();
 		
 		settings.addVariable(LauncherVariables.VERSION_NAME, client.getId());
 		settings.addVariable(LauncherVariables.VERSION_TYPE, client.getType());
 		
-		settings.addVariable(LauncherVariables.GAME_DIRECTORY, new File(output, "game").toString());
+		settings.addVariable(LauncherVariables.GAME_DIRECTORY, settings.getRunDirectory());
 		
-		settings.addVariable(LauncherVariables.ASSET_ROOT, new File(output, "assets").toString());
+		settings.addVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
 		settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
 		
-		final ArgumentsParser parser = new ArgumentsParser(client.getArguments(), settings);
+		settings.addVariable(LauncherVariables.LAUNCHER_NAME, "Minecraft Downloader");
+		settings.addVariable(LauncherVariables.LAUNCHER_VERSION, "1.0.0");
 		
-		launchInline(client, parsedLibraries, parser, output);
-		
-		Main.LOGGER.info("Stopping minecraft");
+		settings.addVariable(LauncherVariables.NATIVE_DIRECTORY, settings.getNativesDirectory());
+		settings.addVariable(LauncherVariables.CLASSPATH, generatedSettings.getClassPath().stream().map(File::getAbsolutePath).collect(Collectors.joining(";")));
 	}
 	
 	private static void launchInline(CurrentClientJson client, List<LibraryParser> parsedLibraries, ArgumentsParser parser, File output) {
