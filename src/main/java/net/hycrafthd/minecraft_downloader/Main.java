@@ -80,6 +80,7 @@ public class Main {
 				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
 			}
 			
+			MinecraftClasspathBuilder.launch(settings);
 			MinecraftAuthenticator.launch(settings, username, password);
 			MinecraftLauncher.launch(settings);
 		}
