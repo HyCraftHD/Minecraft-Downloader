@@ -112,7 +112,7 @@ public class ProvidedSettings {
 	}
 	
 	public void addVariable(LauncherVariables variable, File file) {
-		addVariable(variable, file.toString());
+		addVariable(variable, file.getAbsolutePath());
 	}
 	
 	public void addVariable(LauncherVariables variable, String value) {
