@@ -21,7 +21,6 @@ public class MinecraftAuthenticator {
 			System.out.println(auth.getName());
 			System.out.println(auth.getUserType());
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			throw new IllegalStateException("An exception occured during authentication", ex);
 		}
 	}
