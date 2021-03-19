@@ -11,6 +11,7 @@ public class Constants {
 	
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
 	public static final String RESOURCES = "https://resources.download.minecraft.net";
+	public static final String AUTH_IMPL_JAR = "minecraft-auth-impl/minecraft-auth.jar";
 	
 	public static final String URL_SEPERATOR = "/";
 	public static final String FILE_SEPERATOR = File.separator;
