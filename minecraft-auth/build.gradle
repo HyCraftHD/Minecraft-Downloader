@@ -14,6 +14,11 @@ dependencies {
 	compileOnly "com.mojang:authlib:2.1.28"
 }
 
+task updateAuthJar(type: Copy, dependsOn: build) {
+	from(jar)
+	into "$rootDir/src/main/resources/minecraft-auth-impl"
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(8)
