@@ -26,6 +26,6 @@ public class Constants {
 	public static final VersionConstant CLIENT_JAR = new VersionConstant("${version}-client.jar");
 	public static final VersionConstant CLIENT_MAPPINGS = new VersionConstant("${version}-client.txt");
 	
-	public static final VersionConstant AUTH_IMPL = new VersionConstant("auth_impl.jar");
+	public static final VersionConstant AUTH_IMPL = new VersionConstant("minecraft_auth_impl.jar");
 	
 }
