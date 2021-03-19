@@ -57,8 +57,8 @@ public class Main {
 		final String password = set.valueOf(passwordSpec);
 		
 		final boolean customResolution = set.has(widthSpec) || set.has(heightSpec);
-		final int width = set.valueOf(widthSpec);
-		final int height = set.valueOf(heightSpec);
+		final Integer width = set.valueOf(widthSpec);
+		final Integer height = set.valueOf(heightSpec);
 		
 		// Create output folder
 		if (FileUtil.createFolders(output)) {
