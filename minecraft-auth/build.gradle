@@ -1,0 +1,19 @@
+plugins {
+    id "java-library"
+}
+
+repositories {
+    maven {
+		url = "https://libraries.minecraft.net"
+    }
+}
+
+dependencies {
+	compileOnly "com.mojang:authlib:2.1.28"
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
