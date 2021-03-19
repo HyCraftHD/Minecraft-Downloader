@@ -31,12 +31,25 @@ public class MinecraftClasspathBuilder {
 					}
 				}).collect(Collectors.toList());
 		
-		final ClassLoader classLoader = new URLClassLoader(classPath.stream().toArray(URL[]::new));
+		final ClassLoader classLoader = new MinecraftClassLoader(classPath.stream().toArray(URL[]::new));
 		
 		generatedSettings.setClassPath(classPath);
 		generatedSettings.setClassLoader(classLoader);
 		
 		Main.LOGGER.info("Finished the classpath builder");
+	}
+	
+	private static class MinecraftClassLoader extends URLClassLoader {
+		
+		public MinecraftClassLoader(URL[] urls) {
+			super(urls, ClassLoader.getSystemClassLoader());
+		}
+		
+		@Override
+		public void addURL(URL url) {
+			super.addURL(url);
+		}
+		
 	}
 	
 }
