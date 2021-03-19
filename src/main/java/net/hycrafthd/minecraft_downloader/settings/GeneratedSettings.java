@@ -18,6 +18,9 @@ public class GeneratedSettings {
 	private ClassLoader classLoader;
 	
 	public void setClientJson(CurrentClientJson clientJson) {
+		if (this.clientJson != null) {
+			throw new IllegalStateException("Client json was already set");
+		}
 		this.clientJson = clientJson;
 	}
 	
@@ -29,6 +32,9 @@ public class GeneratedSettings {
 	}
 	
 	public void setDownloadableFiles(List<DownloadableFile> downloadableFiles) {
+		if (this.downloadableFiles != null) {
+			throw new IllegalStateException("Downloadable files list was already set");
+		}
 		this.downloadableFiles = downloadableFiles;
 	}
 	
@@ -40,6 +46,9 @@ public class GeneratedSettings {
 	}
 	
 	public void setClassPath(List<URL> classPath) {
+		if (this.classPath != null) {
+			throw new IllegalStateException("Classpath was already set");
+		}
 		this.classPath = classPath;
 	}
 	
@@ -51,6 +60,9 @@ public class GeneratedSettings {
 	}
 	
 	public void setClassLoader(ClassLoader classLoader) {
+		if (this.classLoader != null) {
+			throw new IllegalStateException("Classloader was already set");
+		}
 		this.classLoader = classLoader;
 	}
 	
