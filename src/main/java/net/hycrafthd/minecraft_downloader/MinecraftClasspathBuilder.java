@@ -1,6 +1,5 @@
 package net.hycrafthd.minecraft_downloader;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,7 +18,7 @@ public class MinecraftClasspathBuilder {
 		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
-		final List<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile()), generatedSettings.getDownloadableFiles() //
+		final List<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile(), settings.getAuthImplFile()), generatedSettings.getDownloadableFiles() //
 				.stream() //
 				.filter(downloadableFile -> !downloadableFile.isNative()) //
 				.filter(DownloadableFile::hasDownloadedFile) //
@@ -33,13 +32,6 @@ public class MinecraftClasspathBuilder {
 				}).collect(Collectors.toList());
 		
 		final MinecraftClassLoader classLoader = new MinecraftClassLoader(classPath.stream().toArray(URL[]::new));
-		
-		// TODO REMOVE (ONLY DEBUG)
-		try {
-			classLoader.addURL(new File("D:\\Programmieren\\Java\\Forge\\U Team\\1.16.5 Projects\\Headless-Minecraft\\Minecraft-Downloader\\minecraft-auth\\build\\libs\\minecraft-auth.jar").toURI().toURL());
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
-		}
 		
 		generatedSettings.setClassPath(classPath);
 		generatedSettings.setClassLoader(classLoader);
@@ -61,7 +53,5 @@ public class MinecraftClasspathBuilder {
 		public void addURL(URL url) {
 			super.addURL(url);
 		}
-		
 	}
-	
 }
