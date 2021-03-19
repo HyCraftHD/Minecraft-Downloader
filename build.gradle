@@ -23,7 +23,7 @@ java {
 
 task runDownloader(type: JavaExec) {
 	main "net.hycrafthd.minecraft_downloader.Main"
-	args "--version 1.16.5 --output download --launch"
+	args "--version 1.16.5 --output download --launch --run game --username xyz --password xyz"
 	def run = new File("$rootDir/run")
 	if(!run.exists() ) {
 		run.mkdirs()
