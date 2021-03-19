@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-	compile project(":minecraft-auth-api")
-	compileOnly "com.mojang:authlib:2.1.28"
+	implementation project(":minecraft-auth-api")
+	implementation "com.mojang:authlib:2.1.28"
 }
 
 task updateAuthJar(type: Copy, dependsOn: build) {
