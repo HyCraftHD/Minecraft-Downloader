@@ -6,9 +6,11 @@ repositories {
     maven {
 		url = "https://libraries.minecraft.net"
     }
+    mavenCentral()
 }
 
 dependencies {
+	compile project(":minecraft-auth-api")
 	compileOnly "com.mojang:authlib:2.1.28"
 }
 
