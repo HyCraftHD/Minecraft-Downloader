@@ -5,10 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
+import java.net.URLDecoder;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +48,7 @@ public class MinecraftClasspathBuilder {
 		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
-		final List<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile(), settings.getAuthImplFile()), generatedSettings.getDownloadableFiles() //
+		final Set<URL> classPath = Stream.concat(Stream.of(settings.getClientJarFile(), settings.getAuthImplFile()), generatedSettings.getDownloadableFiles() //
 				.stream() //
 				.filter(downloadableFile -> !downloadableFile.isNative()) //
 				.filter(DownloadableFile::hasDownloadedFile) //
@@ -57,11 +59,15 @@ public class MinecraftClasspathBuilder {
 					} catch (MalformedURLException ex) {
 						throw new IllegalStateException("Cannot get url from file " + file, ex);
 					}
-				}).collect(Collectors.toList());
+				}).collect(Collectors.toSet());
 		
 		Main.LOGGER.debug("The classpath entries are: ");
 		classPath.forEach(url -> {
-			Main.LOGGER.debug(" " + url);
+			try {
+				Main.LOGGER.debug(" " + URLDecoder.decode(url.toString(), "UTF-8"));
+			} catch (UnsupportedEncodingException ex) {
+				throw new IllegalStateException("Charset UTF-8 was not found", ex);
+			}
 		});
 		
 		final MinecraftClassLoader classLoader = new MinecraftClassLoader(classPath.stream().toArray(URL[]::new));
