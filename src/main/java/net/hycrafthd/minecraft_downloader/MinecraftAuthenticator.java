@@ -11,12 +11,8 @@ public class MinecraftAuthenticator {
 		final ClassLoader classLoader = settings.getGeneratedSettings().getClassLoader();
 		
 		try {
-			final Class<? extends MinecraftAuth> authImplClass = Class.forName("net.hycrafthd.minecraft_downloader.auth.impl.MinecraftAuthImpl2", true, classLoader).asSubclass(MinecraftAuth.class);
+			final Class<? extends MinecraftAuth> authImplClass = Class.forName("net.hycrafthd.minecraft_downloader.auth.MinecraftAuthImpl", true, classLoader).asSubclass(MinecraftAuth.class);
 			final MinecraftAuth auth = authImplClass.getConstructor(String.class, String.class).newInstance(username, password);
-			
-			System.out.println(authImplClass.getClassLoader());
-			System.out.println(auth.getClass().getClassLoader());
-			System.out.println(Class.forName("net.hycrafthd.minecraft_downloader.auth.impl.MinecraftAuthImpl2", false, classLoader));
 			
 			auth.logIn();
 			
