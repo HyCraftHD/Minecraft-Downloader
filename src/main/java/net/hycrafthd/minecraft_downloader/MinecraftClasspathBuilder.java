@@ -87,10 +87,5 @@ public class MinecraftClasspathBuilder {
 			}
 			return super.loadClass(name);
 		}
-		
-		@Override
-		public void addURL(URL url) {
-			super.addURL(url);
-		}
 	}
 }
