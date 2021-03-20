@@ -77,7 +77,15 @@ public class MinecraftClasspathBuilder {
 		}
 		
 		public MinecraftClassLoader(URL[] urls) {
-			super(urls, ClassLoader.getSystemClassLoader());
+			super(urls, ClassLoader.getPlatformClassLoader());
+		}
+		
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			if (name.startsWith("net.hycrafthd.minecraft_downloader.auth.api")) {
+				return ClassLoader.getSystemClassLoader().loadClass(name);
+			}
+			return super.loadClass(name);
 		}
 		
 		@Override
