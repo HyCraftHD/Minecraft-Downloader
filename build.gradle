@@ -48,6 +48,9 @@ tasks.named("jar") {
 	archiveClassifier = ""
 	
 	from "LICENSE"
+	
+	jar.dependsOn ":minecraft-auth-api:build"
+	from "minecraft-auth-api/build/classes/java/main"
 		
 	manifest {
 		attributes(
