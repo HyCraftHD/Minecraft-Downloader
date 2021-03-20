@@ -70,12 +70,16 @@ public class MinecraftLauncher {
 		System.setProperty("jna.library.path", settings.getNativesDirectory().getAbsolutePath());
 		System.setProperty("org.lwjgl.librarypath", settings.getNativesDirectory().getAbsolutePath());
 		
+		// Does not seem to work (TODO fix config file reload in minecraft)
+		System.setProperty("log4j.configurationFile", new File(settings.getAssetsDirectory(), "log_configs/client-1.12.xml").getAbsolutePath());
+		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
 		Main.LOGGER.info("Launch minecraft with inline launch");
 		
 		try {
 			final Class<?> mainClass = Class.forName(generatedSettings.getClientJson().getMainClass(), true, generatedSettings.getClassLoader());
+			
 			final Method entryPoint = mainClass.getMethod("main", String[].class);
 			
 			entryPoint.invoke(null, new Object[] { parser.getGameArgs().stream().toArray(String[]::new) });
