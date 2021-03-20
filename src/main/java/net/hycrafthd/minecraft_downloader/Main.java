@@ -33,6 +33,7 @@ public class Main {
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
+		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process (May be buggy)");
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
@@ -56,6 +57,7 @@ public class Main {
 		final File output = set.valueOf(outputSpec);
 		
 		final boolean launch = set.has(launchSpec);
+		final boolean inlineLaunch = set.has(inlineLaunchSpec);
 		final File run = set.valueOf(runSpec);
 		final String username = set.valueOf(usernameSpec);
 		final String password = set.valueOf(passwordSpec);
@@ -90,7 +92,7 @@ public class Main {
 			
 			MinecraftClasspathBuilder.launch(settings);
 			MinecraftAuthenticator.launch(settings, username, password);
-			MinecraftLauncher.launch(settings);
+			MinecraftLauncher.launch(settings, inlineLaunch);
 		}
 	}
 }
