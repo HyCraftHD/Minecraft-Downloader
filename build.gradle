@@ -113,7 +113,9 @@ publishing {
 						name = "Luc_ZZ"
 					}
 				}
-			}.withXml {
+			}
+			
+			pom.withXml {
 				Node pomNode = asNode()
 				pomNode.dependencies."*".findAll() {
 					it.artifactId.text() == "minecraft-auth-api"
