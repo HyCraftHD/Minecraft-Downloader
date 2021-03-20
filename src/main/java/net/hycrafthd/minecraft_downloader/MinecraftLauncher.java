@@ -2,15 +2,9 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import net.hycrafthd.minecraft_downloader.launch.ArgumentsParser;
-import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
-import net.hycrafthd.minecraft_downloader.library.LibraryParser;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
@@ -22,6 +16,7 @@ public class MinecraftLauncher {
 		Main.LOGGER.info("Start minecraft");
 		
 		setVariables(settings);
+		launchInline(settings);
 	}
 	
 	private static void setVariables(ProvidedSettings settings) {
@@ -39,60 +34,35 @@ public class MinecraftLauncher {
 		settings.addVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
 		settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
 		
-		settings.addVariable(LauncherVariables.LAUNCHER_NAME, "Minecraft Downloader");
-		settings.addVariable(LauncherVariables.LAUNCHER_VERSION, "1.0.0");
+		settings.addVariable(LauncherVariables.LAUNCHER_NAME, Constants.NAME);
+		settings.addVariable(LauncherVariables.LAUNCHER_VERSION, Constants.VERSION);
 		
 		settings.addVariable(LauncherVariables.NATIVE_DIRECTORY, settings.getNativesDirectory());
 		settings.addVariable(LauncherVariables.CLASSPATH, generatedSettings.getClassPath().stream().map(File::getAbsolutePath).collect(Collectors.joining(";")));
 	}
 	
-	private static void launchInline(CurrentClientJson client, List<LibraryParser> parsedLibraries, ArgumentsParser parser, File output) {
+	private static void launchInline(ProvidedSettings settings) {
+		final ArgumentsParser parser = new ArgumentsParser(settings);
 		
-		System.setProperty("os.name", "Windows 10");
-		System.setProperty("os.version", "10.0");
+		// Set properties for inline launch
+		parser.getJvmArgs().stream().filter(arg -> arg.startsWith("-D")).forEach(propertyArgument -> {
+			final String[] array = propertyArgument.split("=", 2);
+			
+			if (array.length != 2) {
+				return;
+			}
+			
+			final String property = array[0].substring(2);
+			final String value = array[1];
+			
+			System.setProperty(property, value);
+		});
 		
-		// Use org.lwjgl.librarypath instead of java.library.path (only works for lwjgl natives)
-		System.setProperty("org.lwjgl.librarypath", new File(output, "natives").toString());
-		
-		System.setProperty("minecraft.launcher.brand", "Minecraft-Downloader");
-		System.setProperty("minecraft.launcher.version", "1.0.0");
-		
-		final List<URL> libraries = parsedLibraries.stream() //
-				.flatMap(libraryParser -> libraryParser.getFiles().stream()) //
-				.filter(downloadableFile -> !downloadableFile.isNative()) //
-				.filter(DownloadableFile::hasDownloadedFile) //
-				.map(downloadableFile -> {
-					try {
-						return downloadableFile.getDownloadedFile().toURI().toURL();
-					} catch (MalformedURLException ex) {
-						throw new IllegalStateException("Cannot get url from file " + downloadableFile.getDownloadedFile(), ex);
-					}
-				}) //
-				.collect(Collectors.toList());
-		
-		final URL[] classPath = new URL[libraries.size() + 1];
-		
-		final File file = new File(output, "client.jar");
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
 		try {
-			classPath[0] = file.toURI().toURL();
-		} catch (MalformedURLException ex) {
-			throw new IllegalStateException("Cannot create url from client jar file " + file, ex);
-		}
-		
-		for (int index = 0; index < libraries.size(); index++) {
-			classPath[index + 1] = libraries.get(index);
-		}
-		
-		final URLClassLoader classloader = new URLClassLoader(classPath, null);
-		
-		try {
-			
-			Main.LOGGER.info("Library path is: " + System.getProperty("java.library.path"));
-			
-			final Class<?> mainClass = Class.forName(client.getMainClass(), true, classloader);
+			final Class<?> mainClass = Class.forName(generatedSettings.getClientJson().getMainClass(), true, generatedSettings.getClassLoader());
 			final Method entryPoint = mainClass.getMethod("main", String[].class);
-			
 			entryPoint.invoke(null, new Object[] { parser.getGameArgs() });
 		} catch (Exception ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
