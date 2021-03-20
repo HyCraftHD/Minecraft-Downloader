@@ -1,18 +1,24 @@
 package net.hycrafthd.minecraft_downloader.util.logging;
 
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.util.StackLocatorUtil;
 
 public class LoggingUtil {
 	
 	static Set<String> REMOVE_FROM_LOG = new HashSet<>();
+	
+	private static Map<org.apache.logging.log4j.core.Logger, Level> LOGGER_ORIGINAL_LEVELS;
 	
 	public static void redirectPrintStreams(Logger logger) {
 		System.setErr(new LoggingPrintStream(logger, Level.ERROR, MarkerManager.getMarker("STDERR"), System.err));
@@ -25,6 +31,23 @@ public class LoggingUtil {
 	
 	public static void addRemoveFromLog(String removeFromLog) {
 		REMOVE_FROM_LOG.add(removeFromLog);
+	}
+	
+	public static void disableLogging() {
+		final LoggerContext context = (LoggerContext) LogManager.getContext(false);
+		LOGGER_ORIGINAL_LEVELS = new HashMap<>();
+		context.getLoggers().forEach(logger -> {
+			LOGGER_ORIGINAL_LEVELS.put(logger, logger.getLevel());
+			logger.setLevel(Level.OFF);
+		});
+	}
+	
+	public static void enableLogging() {
+		if (LOGGER_ORIGINAL_LEVELS != null) {
+			LOGGER_ORIGINAL_LEVELS.forEach((logger, level) -> {
+				logger.setLevel(level);
+			});
+		}
 	}
 	
 	private static class LoggingPrintStream extends PrintStream {
