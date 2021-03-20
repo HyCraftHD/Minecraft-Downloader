@@ -77,7 +77,7 @@ public class MinecraftClasspathBuilder {
 		}
 		
 		public MinecraftClassLoader(URL[] urls) {
-			super(urls, ClassLoader.getPlatformClassLoader());
+			super(urls, ClassLoader.getSystemClassLoader());
 		}
 		
 		@Override
