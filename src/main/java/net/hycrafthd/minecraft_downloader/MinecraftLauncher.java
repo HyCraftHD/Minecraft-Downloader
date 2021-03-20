@@ -65,7 +65,8 @@ public class MinecraftLauncher {
 		try {
 			final Class<?> mainClass = Class.forName(generatedSettings.getClientJson().getMainClass(), true, generatedSettings.getClassLoader());
 			final Method entryPoint = mainClass.getMethod("main", String[].class);
-			entryPoint.invoke(null, new Object[] { parser.getGameArgs() });
+			
+			entryPoint.invoke(null, new Object[] { parser.getGameArgs().stream().toArray(String[]::new) });
 		} catch (Exception ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
