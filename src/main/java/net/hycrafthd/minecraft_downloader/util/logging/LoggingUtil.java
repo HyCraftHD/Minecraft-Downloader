@@ -1,6 +1,8 @@
 package net.hycrafthd.minecraft_downloader.util.logging;
 
 import java.io.PrintStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +12,8 @@ import org.apache.logging.log4j.util.StackLocatorUtil;
 
 public class LoggingUtil {
 	
+	static Set<String> REMOVE_FROM_LOG = new HashSet<>();
+	
 	public static void redirectPrintStreams(Logger logger) {
 		System.setErr(new LoggingPrintStream(logger, Level.ERROR, MarkerManager.getMarker("STDERR"), System.err));
 		System.setOut(new LoggingPrintStream(logger, Level.INFO, MarkerManager.getMarker("STDOUT"), System.out));
@@ -17,6 +21,10 @@ public class LoggingUtil {
 		Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
 			logger.atFatal().withThrowable(throwable).log("A fatal exception occured :");
 		});
+	}
+	
+	public static void addRemoveFromLog(String removeFromLog) {
+		REMOVE_FROM_LOG.add(removeFromLog);
 	}
 	
 	private static class LoggingPrintStream extends PrintStream {
