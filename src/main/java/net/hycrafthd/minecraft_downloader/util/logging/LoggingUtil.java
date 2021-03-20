@@ -8,16 +8,14 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.util.StackLocatorUtil;
 
-import net.hycrafthd.minecraft_downloader.Main;
-
 public class LoggingUtil {
 	
-	public static void redirectPrintStreams() {
-		System.setErr(new LoggingPrintStream(Main.LOGGER, Level.ERROR, MarkerManager.getMarker("STDERR"), System.err));
-		System.setOut(new LoggingPrintStream(Main.LOGGER, Level.INFO, MarkerManager.getMarker("STDOUT"), System.out));
+	public static void redirectPrintStreams(Logger logger) {
+		System.setErr(new LoggingPrintStream(logger, Level.ERROR, MarkerManager.getMarker("STDERR"), System.err));
+		System.setOut(new LoggingPrintStream(logger, Level.INFO, MarkerManager.getMarker("STDOUT"), System.out));
 		
 		Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-			Main.LOGGER.atFatal().withThrowable(throwable).log("A fatal exception occured :");
+			logger.atFatal().withThrowable(throwable).log("A fatal exception occured :");
 		});
 	}
 	

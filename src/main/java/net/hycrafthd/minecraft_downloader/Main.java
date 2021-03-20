@@ -22,7 +22,7 @@ public class Main {
 	public static final Logger LOGGER = LogManager.getLogger("Minecraft Downloader");
 	
 	public static void main(String[] args) throws IOException {
-		LoggingUtil.redirectPrintStreams();
+		LoggingUtil.redirectPrintStreams(LOGGER);
 		
 		final OptionParser parser = new OptionParser();
 		
