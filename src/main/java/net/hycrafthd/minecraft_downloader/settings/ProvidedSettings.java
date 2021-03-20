@@ -119,6 +119,10 @@ public class ProvidedSettings {
 		variables.put(variable, value);
 	}
 	
+	public boolean hasFeature(LauncherFeatures feature) {
+		return features.contains(feature);
+	}
+	
 	public String replaceVariable(String string) {
 		String output = string;
 		
