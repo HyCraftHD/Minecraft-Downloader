@@ -14,6 +14,8 @@ public class GeneratedSettings {
 	
 	private List<DownloadableFile> downloadableFiles;
 	
+	private File logFile;
+	
 	private Set<File> classPath;
 	
 	private ClassLoader classLoader;
@@ -44,6 +46,20 @@ public class GeneratedSettings {
 			throw new IllegalStateException("Downloadable files list is not set");
 		}
 		return downloadableFiles;
+	}
+	
+	public void setLogFile(File logFile) {
+		if (this.logFile != null) {
+			throw new IllegalStateException("Logfile was already set");
+		}
+		this.logFile = logFile;
+	}
+	
+	public File getLogFile() {
+		if (logFile == null) {
+			throw new IllegalStateException("Logfile is not set");
+		}
+		return logFile;
 	}
 	
 	public void setClassPath(Set<File> classPath) {

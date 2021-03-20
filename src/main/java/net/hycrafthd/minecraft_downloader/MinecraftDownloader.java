@@ -15,6 +15,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetInde
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
+import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 import net.hycrafthd.minecraft_downloader.util.StringUtil;
@@ -146,10 +147,12 @@ public class MinecraftDownloader {
 	private static void downloadLogger(ProvidedSettings settings) {
 		Main.LOGGER.info("Download logger file");
 		
-		final File assets = settings.getAssetsDirectory();
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		final LoggingFileJson loggingFile = generatedSettings.getClientJson().getLogging().getClient().getFile();
 		
-		final LoggingFileJson loggingFile = settings.getGeneratedSettings().getClientJson().getLogging().getClient().getFile();
+		final File logFile = new File(settings.getAssetsDirectory(), "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId());
+		FileUtil.downloadFileException(loggingFile.getUrl(), logFile, loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
 		
-		FileUtil.downloadFileException(loggingFile.getUrl(), new File(assets, "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId()), loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
+		generatedSettings.setLogFile(logFile);
 	}
 }
