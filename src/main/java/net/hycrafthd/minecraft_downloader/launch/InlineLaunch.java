@@ -1,6 +1,5 @@
 package net.hycrafthd.minecraft_downloader.launch;
 
-import java.io.File;
 import java.lang.reflect.Method;
 
 import net.hycrafthd.minecraft_downloader.Main;
@@ -13,6 +12,8 @@ public class InlineLaunch {
 		Main.LOGGER.info("Prepare inline launch");
 		
 		final ArgumentsParser parser = new ArgumentsParser(settings);
+		
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
 		// Set properties for inline launch
 		parser.getJvmArgs().stream().filter(arg -> arg.startsWith("-D")).forEach(propertyArgument -> {
@@ -39,9 +40,7 @@ public class InlineLaunch {
 		System.setProperty("org.lwjgl.librarypath", settings.getNativesDirectory().getAbsolutePath());
 		
 		// Does not seem to work (TODO fix config file reload in minecraft)
-		System.setProperty("log4j.configurationFile", new File(settings.getAssetsDirectory(), "log_configs/client-1.12.xml").getAbsolutePath());
-		
-		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		System.setProperty("log4j.configurationFile", generatedSettings.getLogFile().getAbsolutePath());
 		
 		Main.LOGGER.info("Launch minecraft with inline launch");
 		
