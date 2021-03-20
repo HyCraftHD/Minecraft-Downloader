@@ -37,6 +37,8 @@ public class Main {
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
+		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode");
+		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
 		
@@ -58,6 +60,8 @@ public class Main {
 		final String username = set.valueOf(usernameSpec);
 		final String password = set.valueOf(passwordSpec);
 		
+		final boolean demo = set.has(demoSpec);
+		
 		final boolean customResolution = set.has(widthSpec) && set.has(heightSpec);
 		final Integer width = set.valueOf(widthSpec);
 		final Integer height = set.valueOf(heightSpec);
@@ -74,6 +78,10 @@ public class Main {
 		MinecraftDownloader.launch(settings);
 		
 		if (launch) {
+			if (demo) {
+				settings.addFeature(LauncherFeatures.DEMO_USER);
+			}
+			
 			if (customResolution) {
 				settings.addFeature(LauncherFeatures.HAS_CUSTOM_RESOLUTION);
 				settings.addVariable(LauncherVariables.RESOLUTION_WIDTH, width.toString());
