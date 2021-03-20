@@ -3,19 +3,29 @@ package net.hycrafthd.minecraft_downloader;
 import net.hycrafthd.minecraft_downloader.auth.api.MinecraftAuth;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
+import net.hycrafthd.minecraft_downloader.util.logging.LoggingUtil;
 
 public class MinecraftAuthenticator {
 	
 	static void launch(ProvidedSettings settings, String username, String password) {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
-		final ClassLoader classLoader = settings.getGeneratedSettings().getClassLoader();
-		
 		try {
+			final ClassLoader classLoader = settings.getGeneratedSettings().getClassLoader();
+			
 			final Class<? extends MinecraftAuth> authImplClass = Class.forName("net.hycrafthd.minecraft_downloader.auth.MinecraftAuthImpl", true, classLoader).asSubclass(MinecraftAuth.class);
 			final MinecraftAuth auth = authImplClass.getConstructor(String.class, String.class).newInstance(username, password);
 			
+			LoggingUtil.addRemoveFromLog(username);
+			LoggingUtil.addRemoveFromLog(password);
+			
+			LoggingUtil.disableLogging();
+			
 			auth.logIn();
+			
+			LoggingUtil.enableLogging();
+			
+			LoggingUtil.addRemoveFromLog(auth.getAuthenticatedToken());
 			
 			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, auth.getName());
 			settings.addVariable(LauncherVariables.AUTH_UUID, auth.getUUID());
