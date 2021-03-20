@@ -22,14 +22,18 @@ import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class MinecraftDownloader {
 	
-	static void launch(ProvidedSettings settings) {
+	static void launch(ProvidedSettings settings, boolean skipAssets) {
 		Main.LOGGER.info("Start downloading library and asset files");
 		
 		downloadClient(settings);
 		downloadLibraries(settings);
 		extractNatives(settings);
-		downloadAssets(settings);
-		downloadLogger(settings);
+		if (!skipAssets) {
+			downloadAssets(settings);
+			downloadLogger(settings);
+		} else {
+			Main.LOGGER.info("Skiped assets and logger");
+		}
 		
 		Main.LOGGER.info("Finished downloading library and asset files");
 	}

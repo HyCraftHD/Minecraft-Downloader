@@ -44,6 +44,9 @@ public class Main {
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
 		
+		// Special specs
+		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skipAssets", "Skip the assets downloader").availableUnless(launchSpec);
+		
 		final OptionSet set = parser.parse(args);
 		
 		if (set.has(helpSpec) || set.specs().size() < 2) {
@@ -70,6 +73,8 @@ public class Main {
 		final Integer width = set.valueOf(widthSpec);
 		final Integer height = set.valueOf(heightSpec);
 		
+		final boolean skipAssets = set.has(skipAssetsSpec);
+		
 		// Create output folder
 		if (FileUtil.createFolders(output)) {
 			LOGGER.debug("Created output folder " + output.getAbsolutePath());
@@ -79,7 +84,7 @@ public class Main {
 		final ProvidedSettings settings = new ProvidedSettings(version, output, run);
 		
 		MinecraftParser.launch(settings);
-		MinecraftDownloader.launch(settings);
+		MinecraftDownloader.launch(settings, skipAssets);
 		
 		if (launch) {
 			if (demo) {
