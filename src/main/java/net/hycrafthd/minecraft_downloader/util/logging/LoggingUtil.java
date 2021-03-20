@@ -1,4 +1,4 @@
-package net.hycrafthd.minecraft_downloader.util;
+package net.hycrafthd.minecraft_downloader.util.logging;
 
 import java.io.PrintStream;
 

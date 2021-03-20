@@ -15,7 +15,7 @@ import net.hycrafthd.minecraft_downloader.settings.LauncherFeatures;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
-import net.hycrafthd.minecraft_downloader.util.LoggingUtil;
+import net.hycrafthd.minecraft_downloader.util.logging.LoggingUtil;
 
 public class Main {
 	
