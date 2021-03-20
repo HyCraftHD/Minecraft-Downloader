@@ -2,27 +2,55 @@ package net.hycrafthd.minecraft_downloader.launch;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.Constants;
+import net.hycrafthd.minecraft_downloader.Main;
+import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
 public class ProcessLaunch {
 	
+	// TODO make them accessible in the arguments
+	private static final String STANDARD_JVM_ARGS = "-Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M";
+	
 	public static void launch(ProvidedSettings settings, File javaExec) {
+		Main.LOGGER.info("Prepare process launch");
 		
-		System.out.println(findJavaExecutable(javaExec));
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
-		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-version");
+		final ArgumentsParser parser = new ArgumentsParser(settings);
+		final String java = findJavaExecutable(javaExec);
 		
+		// Build command for process builder
+		final List<String> commands = new ArrayList<>();
+		commands.add(java);
+		commands.addAll(parser.getJvmArgs());
+		Stream.of(STANDARD_JVM_ARGS.split(" ")).forEach(commands::add);
+		commands.add(generatedSettings.getClientJson().getLogging().getClient().getArgument().replace("${path}", generatedSettings.getLogFile().getAbsolutePath())); // TODO move this to argument parser
+		commands.add(generatedSettings.getClientJson().getMainClass());
+		commands.addAll(parser.getGameArgs());
+		
+		final ProcessBuilder processBuilder = new ProcessBuilder(commands);
+		processBuilder.directory(settings.getRunDirectory());
 		processBuilder.inheritIO();
 		
+		Main.LOGGER.debug("Process starts with commands:");
+		processBuilder.command().forEach(command -> {
+			Main.LOGGER.debug(" " + command);
+		});
+		
 		try {
-			Process process = processBuilder.start();
-			System.out.println(process.waitFor());
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
+			final Process process = processBuilder.start();
+			process.waitFor();
+			
+			Main.LOGGER.info("Close minecraft");
+		} catch (IOException | InterruptedException ex) {
+			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
 	}
 	
