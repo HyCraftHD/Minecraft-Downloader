@@ -113,6 +113,13 @@ publishing {
 						name = "Luc_ZZ"
 					}
 				}
+			}.withXml {
+				Node pomNode = asNode()
+				pomNode.dependencies."*".findAll() {
+					it.artifactId.text() == "minecraft-auth-api"
+				}.each() {
+					it.parent().remove(it)
+				}
 			}
 		}
 	}
