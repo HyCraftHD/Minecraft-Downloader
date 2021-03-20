@@ -24,5 +24,7 @@ public class MinecraftAuthenticator {
 		} catch (Exception ex) {
 			throw new IllegalStateException("An exception occured during authentication", ex);
 		}
+		
+		Main.LOGGER.info("Logged into minecraft account");
 	}
 }
