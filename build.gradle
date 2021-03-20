@@ -1,8 +1,8 @@
 plugins {
     id "java-library"
     id "eclipse"
-    id "com.palantir.launch-config" version "1.2.0"
     id "maven-publish"
+    id "com.palantir.launch-config" version "1.2.0"
 }
 
 repositories {
@@ -15,12 +15,6 @@ dependencies {
 	implementation "net.sf.jopt-simple:jopt-simple:5.0.4"
 	implementation "org.apache.logging.log4j:log4j-core:2.14.1"
 	implementation "org.apache.logging.log4j:log4j-iostreams:2.14.1"
-}
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
-	}
 }
 
 task runDownloader(type: JavaExec) {
@@ -38,16 +32,30 @@ group = "net.hycrafthd"
 archivesBaseName = "minecraft_downloader"
 version = "1.0.0-SNAPSHOT"
 
-jar {
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+	withSourcesJar()
+	withJavadocJar()
+}
+
+tasks.named("jar") {
 	archiveClassifier = ""
 	
 	from "LICENSE"
 		
-	manifest attributes(
-		"Implementation-Version": project.version,
-		"Implementation-Vendor": "HyCraftHD, Luc_ZZ",
-        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-	)
+	manifest {
+		attributes(
+			"Implementation-Version": project.version,
+			"Implementation-Vendor": "HyCraftHD, Luc_ZZ",
+	        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        )
+	}
 }
 
 tasks.withType(PublishToMavenRepository) {
@@ -58,7 +66,7 @@ tasks.withType(PublishToMavenRepository) {
 
 publishing {
 	publish.dependsOn build
-	
+
 	repositories {
 		maven {
 			url "https://repo.u-team.info"
@@ -70,7 +78,7 @@ publishing {
 	}
 	publications {
 		mavenJava(MavenPublication) {
-			artifact jar
+			from components.java
 			
 			groupId = project.group
 			artifactId = project.archivesBaseName
@@ -108,4 +116,16 @@ publishing {
 			}
 		}
 	}
+}
+
+def getValue(name) {
+	def envVariable = System.getenv(name)
+	if(envVariable != null) {
+		return envVariable
+	} else {
+		if (project.hasProperty(name)) {
+			return project.getProperty(name)
+		}
+	}
+	return null;
 }
