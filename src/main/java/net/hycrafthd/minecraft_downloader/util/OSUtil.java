@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 public class OSUtil {
 	
 	public static final OS CURRENT_OS;
+	public static final String CURRENT_VERSION;
+	public static final String CURRENT_ARCH;
 	
 	static {
 		final String system = System.getProperty("os.name").toLowerCase(Locale.ROOT);
@@ -24,6 +26,9 @@ public class OSUtil {
 		} else {
 			CURRENT_OS = OS.LINUX;
 		}
+		
+		CURRENT_VERSION = System.getProperty("os.version").toLowerCase(Locale.ROOT);
+		CURRENT_ARCH = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
 	}
 	
 	public enum OS {
