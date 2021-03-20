@@ -33,8 +33,8 @@ public class Main {
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
-		final OptionSpec<File> jreSpec = parser.accepts("jre", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").withRequiredArg().ofType(File.class);
-		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableUnless(jreSpec);
+		final OptionSpec<File> javaExecSpec = parser.accepts("javaExec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").withRequiredArg().ofType(File.class);
+		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableUnless(javaExecSpec);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
@@ -58,7 +58,7 @@ public class Main {
 		final File output = set.valueOf(outputSpec);
 		
 		final boolean launch = set.has(launchSpec);
-		final File jre = set.valueOf(jreSpec);
+		final File javaExec = set.valueOf(javaExecSpec);
 		final boolean inlineLaunch = set.has(inlineLaunchSpec);
 		final File run = set.valueOf(runSpec);
 		final String username = set.valueOf(usernameSpec);
@@ -94,7 +94,7 @@ public class Main {
 			
 			MinecraftClasspathBuilder.launch(settings);
 			MinecraftAuthenticator.launch(settings, username, password);
-			MinecraftLauncher.launch(settings, jre, inlineLaunch);
+			MinecraftLauncher.launch(settings, javaExec, inlineLaunch);
 		}
 	}
 }

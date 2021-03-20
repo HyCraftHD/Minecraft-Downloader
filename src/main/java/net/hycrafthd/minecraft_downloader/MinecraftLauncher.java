@@ -12,14 +12,14 @@ import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftLauncher {
 	
-	static void launch(ProvidedSettings settings, File jre, boolean inlineLaunch) {
+	static void launch(ProvidedSettings settings, File javaExec, boolean inlineLaunch) {
 		Main.LOGGER.info("Start minecraft");
 		
 		setVariables(settings);
 		if (inlineLaunch) {
 			InlineLaunch.launch(settings);
 		} else {
-			ProcessLaunch.launch(settings, jre);
+			ProcessLaunch.launch(settings, javaExec);
 		}
 	}
 	
