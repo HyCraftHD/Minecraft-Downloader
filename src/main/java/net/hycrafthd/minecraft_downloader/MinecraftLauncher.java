@@ -42,6 +42,8 @@ public class MinecraftLauncher {
 	}
 	
 	private static void launchInline(ProvidedSettings settings) {
+		Main.LOGGER.info("Start inline launch");
+		
 		final ArgumentsParser parser = new ArgumentsParser(settings);
 		
 		// Set properties for inline launch
