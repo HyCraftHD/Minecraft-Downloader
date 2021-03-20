@@ -42,7 +42,7 @@ public class MinecraftLauncher {
 	}
 	
 	private static void launchInline(ProvidedSettings settings) {
-		Main.LOGGER.info("Start inline launch");
+		Main.LOGGER.info("Prepare inline launch");
 		
 		final ArgumentsParser parser = new ArgumentsParser(settings);
 		
@@ -57,10 +57,22 @@ public class MinecraftLauncher {
 			final String property = array[0].substring(2);
 			final String value = array[1];
 			
+			// Do not change library path (see comment below)
+			if (property.equals("java.library.path")) {
+				return;
+			}
+			
 			System.setProperty(property, value);
 		});
 		
+		// Set library paths. Should replace java.library.path as this path cannot be set after startup without very hacky
+		// reflections
+		System.setProperty("jna.library.path", settings.getNativesDirectory().getAbsolutePath());
+		System.setProperty("org.lwjgl.librarypath", settings.getNativesDirectory().getAbsolutePath());
+		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		
+		Main.LOGGER.info("Launch minecraft with inline launch");
 		
 		try {
 			final Class<?> mainClass = Class.forName(generatedSettings.getClientJson().getMainClass(), true, generatedSettings.getClassLoader());
