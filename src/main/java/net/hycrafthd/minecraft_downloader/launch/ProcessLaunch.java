@@ -44,14 +44,14 @@ public class ProcessLaunch {
 			Main.LOGGER.debug(" " + command);
 		});
 		
+		Main.LOGGER.info("Launch minecraft as a new process");
 		try {
 			final Process process = processBuilder.start();
 			process.waitFor();
-			
-			Main.LOGGER.info("Close minecraft");
 		} catch (IOException | InterruptedException ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
+		Main.LOGGER.info("Close minecraft");
 	}
 	
 	private static String findJavaExecutable(File javaExec) {

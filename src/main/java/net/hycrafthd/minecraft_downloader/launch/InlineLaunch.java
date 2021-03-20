@@ -43,7 +43,6 @@ public class InlineLaunch {
 		System.setProperty("log4j.configurationFile", generatedSettings.getLogFile().getAbsolutePath());
 		
 		Main.LOGGER.info("Launch minecraft with inline launch");
-		
 		try {
 			final Class<?> mainClass = Class.forName(generatedSettings.getClientJson().getMainClass(), true, generatedSettings.getClassLoader());
 			
@@ -53,6 +52,7 @@ public class InlineLaunch {
 		} catch (Exception ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
+		Main.LOGGER.info("Close minecraft");
 	}
 	
 }
