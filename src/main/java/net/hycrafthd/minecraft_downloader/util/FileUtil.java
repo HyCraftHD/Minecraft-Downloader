@@ -1,6 +1,7 @@
 package net.hycrafthd.minecraft_downloader.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +18,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.Main;
 
@@ -115,6 +119,12 @@ public class FileUtil {
 	public static String readText(InputStream inputStream) throws IOException {
 		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			return reader.lines().collect(Collectors.joining("\n"));
+		}
+	}
+	
+	public static void writeText(Stream<String> textLines, File file) throws IOException {
+		try (final PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
+			textLines.forEach(writer::println);
 		}
 	}
 	
