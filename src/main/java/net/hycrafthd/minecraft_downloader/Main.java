@@ -39,13 +39,18 @@ public class Main {
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
-		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode");
+		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
 		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
 		
 		// Special specs
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skipAssets", "Skip the assets downloader").availableUnless(launchSpec);
+		
+		// Information specs
+		final OptionSpec<Void> informationSpec = parser.accepts("extraInformation", "Should extra information be extracted");
+		final OptionSpec<File> libraryListSpec = parser.accepts("libraryList", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<File> libraryListNativesSpec = parser.accepts("libraryListNatives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		
 		final OptionSet set = parser.parse(args);
 		
@@ -75,6 +80,10 @@ public class Main {
 		
 		final boolean skipAssets = set.has(skipAssetsSpec);
 		
+		final boolean information = set.has(informationSpec);
+		final File libraryList = set.valueOf(libraryListSpec);
+		final File libraryListNatives = set.valueOf(libraryListNativesSpec);
+		
 		// Create output folder
 		if (FileUtil.createFolders(output)) {
 			LOGGER.debug("Created output folder " + output.getAbsolutePath());
@@ -85,6 +94,10 @@ public class Main {
 		
 		MinecraftParser.launch(settings);
 		MinecraftDownloader.launch(settings, skipAssets);
+		
+		if (information) {
+			MinecraftInformation.launch(settings, libraryList, libraryListNatives);
+		}
 		
 		if (launch) {
 			if (demo) {
