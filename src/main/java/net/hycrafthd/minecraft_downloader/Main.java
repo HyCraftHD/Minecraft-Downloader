@@ -33,16 +33,16 @@ public class Main {
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
-		final OptionSpec<File> javaExecSpec = parser.accepts("javaExec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").withRequiredArg().ofType(File.class);
-		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableUnless(javaExecSpec);
-		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").requiredIf(launchSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
-		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
+		final OptionSpec<File> javaExecSpec = parser.accepts("javaExec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableIf(launchSpec).availableUnless(javaExecSpec);
+		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg();
+		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
 		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
 		
-		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").withRequiredArg().ofType(Integer.class);
-		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").withRequiredArg().ofType(Integer.class);
+		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
+		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		
 		// Special specs
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skipAssets", "Skip the assets downloader").availableUnless(launchSpec);
