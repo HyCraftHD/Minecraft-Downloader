@@ -89,7 +89,7 @@ public class MinecraftDownloader {
 						entryStream //
 								.filter(jarEntry -> !jarEntry.isDirectory()) //
 								.filter(jarEntry -> {
-									for (String exclusion : downloadableFile.getExtractExclusion()) {
+									for (final String exclusion : downloadableFile.getExtractExclusion()) {
 										if (jarEntry.getName().startsWith(exclusion)) {
 											return false;
 										}
@@ -105,7 +105,7 @@ public class MinecraftDownloader {
 									try (final InputStream inputStream = jarFile.getInputStream(jarEntry); //
 											final OutputStream outputStream = new FileOutputStream(file)) {
 										FileUtil.copy(inputStream, outputStream, buffer);
-									} catch (IOException ex) {
+									} catch (final IOException ex) {
 										throw new IllegalStateException("Could not extract jar entry " + jarEntry.getName(), ex);
 									}
 									
@@ -113,7 +113,7 @@ public class MinecraftDownloader {
 								});
 								
 						Main.LOGGER.debug("Extracted files from {}", downloadedFile);
-					} catch (IOException ex) {
+					} catch (final IOException ex) {
 						throw new IllegalStateException("Could not extract native library of file " + downloadedFile, ex);
 					}
 				});
@@ -134,7 +134,7 @@ public class MinecraftDownloader {
 			FileUtil.downloadFile(assetIndex.getUrl(), indexFile, assetIndex.getSize(), assetIndex.getSha1());
 			
 			index = Constants.GSON.fromJson(FileUtil.readText(indexFile), CurrentAssetIndexJson.class);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not download / parse asset index", ex);
 		}
 		

@@ -35,7 +35,7 @@ public class LibraryParser {
 		final Set<OS> os = new HashSet<>();
 		
 		// Check if allow rule is there.
-		for (LibraryRuleJson rule : rules) {
+		for (final LibraryRuleJson rule : rules) {
 			// If os is not defined in allow then add all os
 			if (ALLOW.equals(rule.getAction())) {
 				if (rule.getOs() != null) {

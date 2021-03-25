@@ -130,7 +130,7 @@ public class ProvidedSettings {
 	public String replaceVariable(String string) {
 		String output = string;
 		
-		for (Entry<LauncherVariables, String> entry : variables.entrySet()) {
+		for (final Entry<LauncherVariables, String> entry : variables.entrySet()) {
 			final LauncherVariables variable = entry.getKey();
 			final String value = entry.getValue();
 			

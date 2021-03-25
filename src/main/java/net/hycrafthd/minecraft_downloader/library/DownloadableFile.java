@@ -78,7 +78,7 @@ public class DownloadableFile {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DownloadableFile other = (DownloadableFile) obj;
+		final DownloadableFile other = (DownloadableFile) obj;
 		if (extractExclusion == null) {
 			if (other.extractExclusion != null)
 				return false;

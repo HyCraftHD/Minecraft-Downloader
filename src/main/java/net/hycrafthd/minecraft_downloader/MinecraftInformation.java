@@ -39,7 +39,7 @@ public class MinecraftInformation {
 		
 		try {
 			FileUtil.writeText(Stream.of(playerName, uuid, accessToken, userType), userData);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not write access token file", ex);
 		}
 	}
@@ -58,7 +58,7 @@ public class MinecraftInformation {
 		
 		try {
 			FileUtil.writeText(libraries, libraryList);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not write library list info file", ex);
 		}
 	}
@@ -77,7 +77,7 @@ public class MinecraftInformation {
 		
 		try {
 			FileUtil.writeText(libraries, libraryList);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not write library list native info file", ex);
 		}
 	}

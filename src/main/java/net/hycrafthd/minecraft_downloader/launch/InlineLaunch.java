@@ -49,7 +49,7 @@ public class InlineLaunch {
 			final Method entryPoint = mainClass.getMethod("main", String[].class);
 			
 			entryPoint.invoke(null, new Object[] { parser.getGameArgs().stream().toArray(String[]::new) });
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
 		Main.LOGGER.info("Close minecraft");

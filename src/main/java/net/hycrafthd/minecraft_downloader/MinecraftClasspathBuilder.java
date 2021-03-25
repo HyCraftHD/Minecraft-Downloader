@@ -36,7 +36,7 @@ public class MinecraftClasspathBuilder {
 		try (final InputStream inputStream = MinecraftClasspathBuilder.class.getResourceAsStream("/" + Constants.AUTH_IMPL_JAR); //
 				final OutputStream outputStream = new FileOutputStream(file)) {
 			FileUtil.copy(inputStream, outputStream, new byte[2048]);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not extract minecraft auth impl to " + file, ex);
 		}
 	}
@@ -61,7 +61,7 @@ public class MinecraftClasspathBuilder {
 		final MinecraftClassLoader classLoader = new MinecraftClassLoader(classPath.stream().map(file -> {
 			try {
 				return file.toURI().toURL();
-			} catch (MalformedURLException ex) {
+			} catch (final MalformedURLException ex) {
 				throw new IllegalStateException("Cannot get url from file " + file, ex);
 			}
 		}).toArray(URL[]::new));

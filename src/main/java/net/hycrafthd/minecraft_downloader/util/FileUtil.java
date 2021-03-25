@@ -38,7 +38,7 @@ public class FileUtil {
 	public static void downloadFileException(String url, File output, int expectedSize, String expectedSha1, String exception) {
 		try {
 			downloadFile(url, output, expectedSize, expectedSha1);
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new FileDownloadFailedException(exception, url, output, ex);
 		}
 	}
