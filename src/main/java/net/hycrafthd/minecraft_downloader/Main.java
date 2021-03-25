@@ -33,8 +33,8 @@ public class Main {
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
-		final OptionSpec<File> javaExecSpec = parser.accepts("javaExec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableIf(launchSpec).availableUnless(javaExecSpec);
+		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inline-launch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableIf(launchSpec).availableUnless(javaExecSpec);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		
 		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
@@ -47,13 +47,13 @@ public class Main {
 		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
 		// Special specs
-		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skipAssets", "Skip the assets downloader").availableUnless(launchSpec);
+		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skip-assets", "Skip the assets downloader").availableUnless(launchSpec);
 		
 		// Information specs
-		final OptionSpec<Void> informationSpec = parser.accepts("extraInformation", "Should extra information be extracted");
-		final OptionSpec<File> userDataSpec = parser.accepts("userData", "Create a file with the user information login").availableIf(informationSpec).availableIf(usernameSpec, passwordSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<File> libraryListSpec = parser.accepts("libraryList", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<File> libraryListNativesSpec = parser.accepts("libraryListNatives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<Void> informationSpec = parser.accepts("extra-information", "Should extra information be extracted");
+		final OptionSpec<File> userDataSpec = parser.accepts("user-data", "Create a file with the user information login").availableIf(informationSpec).availableIf(usernameSpec, passwordSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<File> libraryListSpec = parser.accepts("library-list", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<File> libraryListNativesSpec = parser.accepts("library-list-natives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		
 		final OptionSet set = parser.parse(args);
 		
