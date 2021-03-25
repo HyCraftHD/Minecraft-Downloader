@@ -1,9 +1,9 @@
 package net.hycrafthd.minecraft_downloader;
 
+import net.hycrafthd.logging_util.LoggingUtil;
 import net.hycrafthd.minecraft_downloader.auth.api.MinecraftAuth;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
-import net.hycrafthd.minecraft_downloader.util.logging.LoggingUtil;
 
 public class MinecraftAuthenticator {
 	

@@ -11,11 +11,11 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.hycrafthd.logging_util.LoggingUtil;
 import net.hycrafthd.minecraft_downloader.settings.LauncherFeatures;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
-import net.hycrafthd.minecraft_downloader.util.logging.LoggingUtil;
 
 public class Main {
 	
