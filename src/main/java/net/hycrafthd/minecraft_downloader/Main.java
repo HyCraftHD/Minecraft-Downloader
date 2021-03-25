@@ -36,19 +36,22 @@ public class Main {
 		final OptionSpec<File> javaExecSpec = parser.accepts("javaExec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inlineLaunch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableIf(launchSpec).availableUnless(javaExecSpec);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg();
-		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(String.class);
 		
 		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
 		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		
+		// Login specs
+		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
+		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
+		
 		// Special specs
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skipAssets", "Skip the assets downloader").availableUnless(launchSpec);
 		
 		// Information specs
 		final OptionSpec<Void> informationSpec = parser.accepts("extraInformation", "Should extra information be extracted");
+		final OptionSpec<File> accessTokenSpec = parser.accepts("accessToken", "Create a file with the access token of the login").availableIf(informationSpec).availableIf(usernameSpec, passwordSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListSpec = parser.accepts("libraryList", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListNativesSpec = parser.accepts("libraryListNatives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		
@@ -69,8 +72,6 @@ public class Main {
 		final File javaExec = set.valueOf(javaExecSpec);
 		final boolean inlineLaunch = set.has(inlineLaunchSpec);
 		final File run = set.valueOf(runSpec);
-		final String username = set.valueOf(usernameSpec);
-		final String password = set.valueOf(passwordSpec);
 		
 		final boolean demo = set.has(demoSpec);
 		
@@ -78,9 +79,13 @@ public class Main {
 		final Integer width = set.valueOf(widthSpec);
 		final Integer height = set.valueOf(heightSpec);
 		
+		final String username = set.valueOf(usernameSpec);
+		final String password = set.valueOf(passwordSpec);
+		
 		final boolean skipAssets = set.has(skipAssetsSpec);
 		
 		final boolean information = set.has(informationSpec);
+		final File accessToken = set.valueOf(accessTokenSpec);
 		final File libraryList = set.valueOf(libraryListSpec);
 		final File libraryListNatives = set.valueOf(libraryListNativesSpec);
 		
@@ -95,8 +100,13 @@ public class Main {
 		MinecraftParser.launch(settings);
 		MinecraftDownloader.launch(settings, skipAssets);
 		
+		if (launch || accessToken != null) {
+			MinecraftClasspathBuilder.launch(settings);
+			MinecraftAuthenticator.launch(settings, username, password);
+		}
+		
 		if (information) {
-			MinecraftInformation.launch(settings, libraryList, libraryListNatives);
+			MinecraftInformation.launch(settings, accessToken, libraryList, libraryListNatives);
 		}
 		
 		if (launch) {
@@ -109,9 +119,6 @@ public class Main {
 				settings.addVariable(LauncherVariables.RESOLUTION_WIDTH, width.toString());
 				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
 			}
-			
-			MinecraftClasspathBuilder.launch(settings);
-			MinecraftAuthenticator.launch(settings, username, password);
 			MinecraftLauncher.launch(settings, javaExec, inlineLaunch);
 		}
 	}

@@ -5,13 +5,18 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
+import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftInformation {
 	
-	static void launch(ProvidedSettings settings, File libraryList, File libraryListNatives) {
+	static void launch(ProvidedSettings settings, File accessToken, File libraryList, File libraryListNatives) {
 		Main.LOGGER.info("Start information extractor");
+		
+		if (accessToken != null) {
+			writeAccessTokenInfo(settings, accessToken);
+		}
 		
 		if (libraryList != null) {
 			writeLibraryListInfo(settings, libraryList);
@@ -22,6 +27,16 @@ public class MinecraftInformation {
 		}
 		
 		Main.LOGGER.info("Finished information extractor");
+	}
+	
+	private static void writeAccessTokenInfo(ProvidedSettings settings, File accessToken) {
+		Main.LOGGER.info("Extract access token");
+		
+		try {
+			FileUtil.writeText(Stream.of(settings.getVariable(LauncherVariables.AUTH_ACCESS_TOKEN)), accessToken);
+		} catch (IOException ex) {
+			throw new IllegalStateException("Could not write access token file", ex);
+		}
 	}
 	
 	private static void writeLibraryListInfo(ProvidedSettings settings, File libraryList) {
