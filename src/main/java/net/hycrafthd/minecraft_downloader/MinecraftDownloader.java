@@ -119,7 +119,7 @@ public class MinecraftDownloader {
 				});
 	}
 	
-	public static void downloadAssets(ProvidedSettings settings) {
+	private static void downloadAssets(ProvidedSettings settings) {
 		Main.LOGGER.info("Download assets");
 		
 		final File assets = settings.getAssetsDirectory();
