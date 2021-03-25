@@ -51,7 +51,7 @@ public class Main {
 		
 		// Information specs
 		final OptionSpec<Void> informationSpec = parser.accepts("extraInformation", "Should extra information be extracted");
-		final OptionSpec<File> accessTokenSpec = parser.accepts("accessToken", "Create a file with the access token of the login").availableIf(informationSpec).availableIf(usernameSpec, passwordSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<File> userDataSpec = parser.accepts("userData", "Create a file with the user information login").availableIf(informationSpec).availableIf(usernameSpec, passwordSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListSpec = parser.accepts("libraryList", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListNativesSpec = parser.accepts("libraryListNatives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		
@@ -85,7 +85,7 @@ public class Main {
 		final boolean skipAssets = set.has(skipAssetsSpec);
 		
 		final boolean information = set.has(informationSpec);
-		final File accessToken = set.valueOf(accessTokenSpec);
+		final File userData = set.valueOf(userDataSpec);
 		final File libraryList = set.valueOf(libraryListSpec);
 		final File libraryListNatives = set.valueOf(libraryListNativesSpec);
 		
@@ -100,13 +100,13 @@ public class Main {
 		MinecraftParser.launch(settings);
 		MinecraftDownloader.launch(settings, skipAssets);
 		
-		if (launch || accessToken != null) {
+		if (launch || userData != null) {
 			MinecraftClasspathBuilder.launch(settings);
 			MinecraftAuthenticator.launch(settings, username, password);
 		}
 		
 		if (information) {
-			MinecraftInformation.launch(settings, accessToken, libraryList, libraryListNatives);
+			MinecraftInformation.launch(settings, userData, libraryList, libraryListNatives);
 		}
 		
 		if (launch) {

@@ -11,11 +11,11 @@ import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftInformation {
 	
-	static void launch(ProvidedSettings settings, File accessToken, File libraryList, File libraryListNatives) {
+	static void launch(ProvidedSettings settings, File userData, File libraryList, File libraryListNatives) {
 		Main.LOGGER.info("Start information extractor");
 		
-		if (accessToken != null) {
-			writeAccessTokenInfo(settings, accessToken);
+		if (userData != null) {
+			writeUserDataInfo(settings, userData);
 		}
 		
 		if (libraryList != null) {
@@ -29,11 +29,16 @@ public class MinecraftInformation {
 		Main.LOGGER.info("Finished information extractor");
 	}
 	
-	private static void writeAccessTokenInfo(ProvidedSettings settings, File accessToken) {
-		Main.LOGGER.info("Extract access token");
+	private static void writeUserDataInfo(ProvidedSettings settings, File userData) {
+		Main.LOGGER.info("Extract user information");
+		
+		final String playerName = settings.getVariable(LauncherVariables.AUTH_PLAYER_NAME);
+		final String uuid = settings.getVariable(LauncherVariables.AUTH_UUID);
+		final String accessToken = settings.getVariable(LauncherVariables.AUTH_ACCESS_TOKEN);
+		final String userType = settings.getVariable(LauncherVariables.USER_TYPE);
 		
 		try {
-			FileUtil.writeText(Stream.of(settings.getVariable(LauncherVariables.AUTH_ACCESS_TOKEN)), accessToken);
+			FileUtil.writeText(Stream.of(playerName, uuid, accessToken, userType), userData);
 		} catch (IOException ex) {
 			throw new IllegalStateException("Could not write access token file", ex);
 		}
