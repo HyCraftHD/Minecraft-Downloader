@@ -7,7 +7,7 @@ import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftAuthenticator {
 	
-	static void launch(ProvidedSettings settings, String username, String password) {
+	public static void launch(ProvidedSettings settings, String username, String password) {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
 		try {

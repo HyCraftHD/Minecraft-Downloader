@@ -11,7 +11,7 @@ import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftInformation {
 	
-	static void launch(ProvidedSettings settings, File userData, File libraryList, File libraryListNatives) {
+	public static void launch(ProvidedSettings settings, File userData, File libraryList, File libraryListNatives) {
 		Main.LOGGER.info("Start information extractor");
 		
 		if (userData != null) {

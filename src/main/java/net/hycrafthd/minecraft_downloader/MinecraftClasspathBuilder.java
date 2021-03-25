@@ -19,7 +19,7 @@ import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftClasspathBuilder {
 	
-	static void launch(ProvidedSettings settings) {
+	public static void launch(ProvidedSettings settings) {
 		Main.LOGGER.info("Start the classpath builder");
 		
 		extractAuthImpl(settings);

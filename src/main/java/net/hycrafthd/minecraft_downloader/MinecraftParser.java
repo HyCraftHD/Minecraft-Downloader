@@ -17,7 +17,7 @@ import net.hycrafthd.minecraft_downloader.util.FileUtil;
 
 public class MinecraftParser {
 	
-	static void launch(ProvidedSettings settings) {
+	public static void launch(ProvidedSettings settings) {
 		Main.LOGGER.info("Start parsing json files");
 		
 		parseClientJson(extractVersionOfManifest(settings.getVersion()), settings);
