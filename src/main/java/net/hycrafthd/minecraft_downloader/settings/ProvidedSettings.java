@@ -111,6 +111,10 @@ public class ProvidedSettings {
 		features.add(feature);
 	}
 	
+	public boolean hasFeature(LauncherFeatures feature) {
+		return features.contains(feature);
+	}
+	
 	public void addVariable(LauncherVariables variable, File file) {
 		addVariable(variable, file.getAbsolutePath());
 	}
@@ -119,8 +123,8 @@ public class ProvidedSettings {
 		variables.put(variable, value);
 	}
 	
-	public boolean hasFeature(LauncherFeatures feature) {
-		return features.contains(feature);
+	public String getVariable(LauncherVariables variable) {
+		return variables.get(variable);
 	}
 	
 	public String replaceVariable(String string) {
