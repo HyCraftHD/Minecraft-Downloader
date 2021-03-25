@@ -123,6 +123,7 @@ public class FileUtil {
 	}
 	
 	public static void writeText(Stream<String> textLines, File file) throws IOException {
+		createParentFolders(file);
 		try (final PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
 			textLines.forEach(writer::println);
 		}
