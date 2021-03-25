@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" shutdownHook="disable" packages="net.hycrafthd.minecraft_downloader.util.logging">
+<Configuration status="warn" shutdownHook="disable">
 	<Appenders>
 		<Console name="Console">
 			<PatternLayout pattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx" />
