@@ -16,11 +16,8 @@ dependencies {
 	compileOnly project(":minecraft-auth-api")
 	implementation "com.google.code.gson:gson:2.8.6"
 	implementation "net.sf.jopt-simple:jopt-simple:5.0.4"
-	implementation ("net.hycrafthd:logging_util:1.0.0") {
-		transitive = false
-	}
-	implementation "org.apache.logging.log4j:log4j-core:2.14.1"
-	implementation "org.apache.logging.log4j:log4j-iostreams:2.14.1"
+	implementation "net.hycrafthd:logging_util:1.0.0"
+	implementation "org.apache.logging.log4j:log4j-iostreams:2.8.1"
 }
 
 task runDownloader(type: JavaExec) {
