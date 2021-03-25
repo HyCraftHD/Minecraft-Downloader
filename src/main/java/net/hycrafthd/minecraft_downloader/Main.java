@@ -44,7 +44,7 @@ public class Main {
 		
 		// Login specs
 		final OptionSpec<String> usernameSpec = parser.accepts("username", "Username / Email for login").requiredIf(launchSpec).withRequiredArg();
-		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg().ofType(String.class);
+		final OptionSpec<String> passwordSpec = parser.accepts("password", "Password for login").requiredIf(launchSpec).withRequiredArg();
 		
 		// Special specs
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skip-assets", "Skip the assets downloader").availableUnless(launchSpec);
