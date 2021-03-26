@@ -32,6 +32,7 @@ public class MinecraftAuthenticator {
 			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, auth.getAuthenticatedToken());
 			settings.addVariable(LauncherVariables.USER_TYPE, auth.getUserType());
 		} catch (final Exception ex) {
+			LoggingUtil.enableLogging();
 			throw new IllegalStateException("An exception occured during authentication", ex);
 		}
 		
