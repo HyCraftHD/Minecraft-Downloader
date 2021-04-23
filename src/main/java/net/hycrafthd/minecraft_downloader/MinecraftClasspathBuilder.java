@@ -5,11 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.Set;
+import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,7 +81,7 @@ public class MinecraftClasspathBuilder {
 		private final ClassLoader ourClassLoader = getClass().getClassLoader();
 		
 		public MinecraftClassLoader(URL[] urls) {
-			super(urls, getParentClassLoader());
+			super(urls, ClassLoader.getSystemClassLoader());
 		}
 		
 		@Override
@@ -91,19 +92,31 @@ public class MinecraftClasspathBuilder {
 			return super.loadClass(name);
 		}
 		
-		public static ClassLoader getParentClassLoader() {
-			try {
-				final Method method = ClassLoader.class.getMethod("getPlatformClassLoader");
-				
-				try {
-					return (ClassLoader) method.invoke(null);
-				} catch (Exception ex) {
-					throw new IllegalStateException("Method getPlatformClassLoader could not be invoked", ex);
-				}
-			} catch (NoSuchMethodException ex) {
-				// Okay as the method is only useful for jdk9+. For jdk8 we return null
-				return null;
+		@Override
+		public URL getResource(String name) {
+			final URL url = super.getResource(name);
+			if (url == null) {
+				return ourClassLoader.getResource(name);
 			}
+			return url;
+		}
+		
+		@Override
+		public Enumeration<URL> getResources(String name) throws IOException {
+			final Enumeration<URL> first = super.getResources(name);
+			final Enumeration<URL> second = ourClassLoader.getResources(name);
+			
+			final Vector<URL> vector = new Vector<>();
+			
+			while (first.hasMoreElements()) {
+				vector.add(first.nextElement());
+			}
+			
+			while (second.hasMoreElements()) {
+				vector.add(second.nextElement());
+			}
+			
+			return vector.elements();
 		}
 	}
 }
