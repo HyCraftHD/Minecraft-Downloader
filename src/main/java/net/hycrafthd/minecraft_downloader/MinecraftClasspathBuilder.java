@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -76,16 +77,33 @@ public class MinecraftClasspathBuilder {
 			ClassLoader.registerAsParallelCapable();
 		}
 		
+		private final ClassLoader ourClassLoader = getClass().getClassLoader();
+		
 		public MinecraftClassLoader(URL[] urls) {
-			super(urls, ClassLoader.getSystemClassLoader());
+			super(urls, getParentClassLoader());
 		}
 		
 		@Override
 		public Class<?> loadClass(String name) throws ClassNotFoundException {
 			if (name.startsWith("net.hycrafthd.minecraft_downloader.auth.api")) {
-				return ClassLoader.getSystemClassLoader().loadClass(name);
+				return ourClassLoader.loadClass(name);
 			}
 			return super.loadClass(name);
+		}
+		
+		public static ClassLoader getParentClassLoader() {
+			try {
+				final Method method = ClassLoader.class.getMethod("getPlatformClassLoader");
+				
+				try {
+					return (ClassLoader) method.invoke(null);
+				} catch (Exception ex) {
+					throw new IllegalStateException("Method getPlatformClassLoader could not be invoked", ex);
+				}
+			} catch (NoSuchMethodException ex) {
+				// Okay as the method is only useful for jdk9+. For jdk8 we return null
+				return null;
+			}
 		}
 	}
 }
