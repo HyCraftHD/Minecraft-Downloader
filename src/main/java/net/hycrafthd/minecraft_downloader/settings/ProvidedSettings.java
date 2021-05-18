@@ -25,8 +25,6 @@ public class ProvidedSettings {
 	private final File clientJarFile;
 	private final File clientMappingsFile;
 	
-	private final File authImplFile;
-	
 	private final Optional<File> runDirectoryOptional;
 	
 	private final GeneratedSettings generatedSettings;
@@ -45,8 +43,6 @@ public class ProvidedSettings {
 		clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
 		clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
 		clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
-		
-		authImplFile = new File(outputDirectory, Constants.AUTH_IMPL.get(version));
 		
 		runDirectoryOptional = Optional.ofNullable(runDirectory);
 		
@@ -88,11 +84,6 @@ public class ProvidedSettings {
 	public File getClientMappingsFile() {
 		ensureDirectoryExists(outputDirectory);
 		return clientMappingsFile;
-	}
-	
-	public File getAuthImplFile() {
-		ensureDirectoryExists(outputDirectory);
-		return authImplFile;
 	}
 	
 	public boolean hasRunDirectory() {
