@@ -13,7 +13,6 @@ repositories {
 }
 
 dependencies {
-	compileOnly project(":minecraft-auth-api")
 	implementation "com.google.code.gson:gson:2.8.6"
 	implementation "net.sf.jopt-simple:jopt-simple:5.0.4"
 	implementation "net.hycrafthd:logging_util:1.0.0"
@@ -52,9 +51,6 @@ tasks.named("jar") {
 	
 	from "LICENSE"
 	
-	jar.dependsOn ":minecraft-auth-api:build"
-	from "minecraft-auth-api/build/classes/java/main"
-		
 	manifest {
 		attributes(
 			"Implementation-Version": project.version,
