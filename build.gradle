@@ -1,3 +1,14 @@
+buildscript {
+
+	ext.buildProps = file "build.properties"
+
+	buildProps.withReader {
+		def prop = new Properties()
+		prop.load(it)
+		ext.config = new ConfigSlurper().parse prop
+	}
+}
+
 plugins {
     id "java-library"
     id "eclipse"
@@ -13,21 +24,12 @@ repositories {
 }
 
 dependencies {
-	implementation "com.google.code.gson:gson:2.8.6"
-	implementation "net.sf.jopt-simple:jopt-simple:5.0.4"
-	implementation "net.hycrafthd:logging_util:1.0.0"
-	implementation "org.apache.logging.log4j:log4j-iostreams:2.8.1"
-}
+	implementation group: "net.sf.jopt-simple", name: "jopt-simple", version: config.jopt_simple.version
+	
+	implementation group: "net.hycrafthd", name: "logging_util", version: config.logging_util.version
+	implementation group: "org.apache.logging.log4j", name: "log4j-iostreams", version: config.log4j.version
 
-task runDownloader(type: JavaExec) {
-	main "net.hycrafthd.minecraft_downloader.Main"
-	args "--version", "1.16.5", "--output", "download", "--launch", "--run", "game", "--username", "xyz", "--password", "xyz"
-	classpath sourceSets.main.runtimeClasspath
-	def run = new File("$rootDir/run")
-	if(!run.exists() ) {
-		run.mkdirs()
-	}
-	workingDir run
+	implementation group: "com.google.code.gson", name: "gson", version: config.gson.version
 }
 
 group = "net.hycrafthd"
@@ -58,6 +60,21 @@ tasks.named("jar") {
 	        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         )
 	}
+}
+
+task runDownloader(type: JavaExec) {
+	main "net.hycrafthd.minecraft_downloader.Main"
+	args "--version", "1.16.5", "--output", "download", "--launch", "--run", "game", "--username", "xyz", "--password", "xyz"
+	classpath sourceSets.main.runtimeClasspath
+	def run = new File("$rootDir/run")
+	if(!run.exists() ) {
+		run.mkdirs()
+	}
+	workingDir run
+}
+
+launchConfig {
+	includedTasks "runDownloader"
 }
 
 tasks.withType(PublishToMavenRepository) {
