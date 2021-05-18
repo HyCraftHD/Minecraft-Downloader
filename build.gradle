@@ -30,6 +30,8 @@ dependencies {
 	implementation group: "org.apache.logging.log4j", name: "log4j-iostreams", version: config.log4j.version
 
 	implementation group: "com.google.code.gson", name: "gson", version: config.gson.version
+	
+	implementation group: "net.hycrafthd", name: "minecraft_authenticator", version: config.minecraft_authenticator.version
 }
 
 group = "net.hycrafthd"
