@@ -1,4 +1,1 @@
-include "minecraft-auth-api"
-include "minecraft-auth"
-
 rootProject.name = "Minecraft-Downloader"
