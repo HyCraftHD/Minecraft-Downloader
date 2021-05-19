@@ -11,7 +11,6 @@ public class Constants {
 	
 	public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
 	public static final String RESOURCES = "https://resources.download.minecraft.net";
-	public static final String AUTH_IMPL_JAR = "minecraft-auth-impl/minecraft-auth.jar";
 	
 	public static final String NAME = "Minecraft Downloader";
 	public static final String VERSION = "1.0.0";
