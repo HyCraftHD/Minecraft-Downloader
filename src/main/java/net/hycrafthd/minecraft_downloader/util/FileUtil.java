@@ -28,8 +28,8 @@ public class FileUtil {
 	
 	public static String downloadText(String url) throws IOException {
 		final URLConnection urlConnection = new URL(url).openConnection();
-		urlConnection.setConnectTimeout(5000);
-		urlConnection.setReadTimeout(5000);
+		urlConnection.setConnectTimeout(15000);
+		urlConnection.setReadTimeout(15000);
 		urlConnection.connect();
 		
 		return readText(urlConnection.getInputStream());
