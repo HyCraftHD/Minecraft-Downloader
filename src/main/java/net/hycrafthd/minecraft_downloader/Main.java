@@ -108,7 +108,12 @@ public class Main {
 		}
 		
 		if (launch) {
-			if (demo) { // TODO add when authentication fails
+			if (demo) {
+				settings.addFeature(LauncherFeatures.DEMO_USER);
+			}
+			
+			if (settings.getVariable(LauncherVariables.AUTH_ACCESS_TOKEN) == null) {
+				LOGGER.info("User authentication was not found. Set game into demo mode");
 				settings.addFeature(LauncherFeatures.DEMO_USER);
 			}
 			
