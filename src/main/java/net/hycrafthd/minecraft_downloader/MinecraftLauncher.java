@@ -3,7 +3,6 @@ package net.hycrafthd.minecraft_downloader;
 import java.io.File;
 import java.util.stream.Collectors;
 
-import net.hycrafthd.minecraft_downloader.launch.InlineLaunch;
 import net.hycrafthd.minecraft_downloader.launch.ProcessLaunch;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
@@ -12,15 +11,11 @@ import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftLauncher {
 	
-	public static void launch(ProvidedSettings settings, File javaExec, boolean inlineLaunch) {
+	public static void launch(ProvidedSettings settings, File javaExec) {
 		Main.LOGGER.info("Start minecraft");
 		
 		setVariables(settings);
-		if (inlineLaunch) {
-			InlineLaunch.launch(settings);
-		} else {
-			ProcessLaunch.launch(settings, javaExec);
-		}
+		ProcessLaunch.launch(settings, javaExec);
 	}
 	
 	private static void setVariables(ProvidedSettings settings) {

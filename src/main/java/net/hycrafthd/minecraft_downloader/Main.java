@@ -34,7 +34,6 @@ public class Main {
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
 		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
-		final OptionSpec<Void> inlineLaunchSpec = parser.accepts("inline-launch", "Should minecraft be launched in the current jvm process. Ignores the jre parameter (May be buggy)").availableIf(launchSpec).availableUnless(javaExecSpec);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		
 		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
@@ -70,7 +69,6 @@ public class Main {
 		
 		final boolean launch = set.has(launchSpec);
 		final File javaExec = set.valueOf(javaExecSpec);
-		final boolean inlineLaunch = set.has(inlineLaunchSpec);
 		final File run = set.valueOf(runSpec);
 		
 		final boolean demo = set.has(demoSpec);
@@ -119,7 +117,7 @@ public class Main {
 				settings.addVariable(LauncherVariables.RESOLUTION_WIDTH, width.toString());
 				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
 			}
-			MinecraftLauncher.launch(settings, javaExec, inlineLaunch);
+			MinecraftLauncher.launch(settings, javaExec);
 		}
 	}
 }
