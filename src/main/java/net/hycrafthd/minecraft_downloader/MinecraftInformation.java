@@ -52,7 +52,8 @@ public class MinecraftInformation {
 				.stream() //
 				.filter(file -> !file.isNative()) //
 				.filter(DownloadableFile::hasDownloadedFile) //
-				.map(file -> file.getDownloadedFile().getAbsolutePath());
+				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
+				.distinct();
 		
 		FileUtil.createParentFolders(libraryList);
 		
@@ -71,7 +72,8 @@ public class MinecraftInformation {
 				.stream() //
 				.filter(DownloadableFile::isNative) //
 				.filter(DownloadableFile::hasDownloadedFile) //
-				.map(file -> file.getDownloadedFile().getAbsolutePath());
+				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
+				.distinct();
 		
 		FileUtil.createParentFolders(libraryList);
 		
