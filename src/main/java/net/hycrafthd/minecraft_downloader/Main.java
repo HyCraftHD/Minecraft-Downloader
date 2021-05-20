@@ -99,7 +99,7 @@ public class Main {
 		MinecraftParser.launch(settings);
 		MinecraftDownloader.launch(settings, skipAssets);
 		
-		if (launch || userData != null) {
+		if ((launch || userData != null) && authFile != null) {
 			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateType);
 		}
 		
