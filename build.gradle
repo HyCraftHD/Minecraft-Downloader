@@ -7,6 +7,13 @@ buildscript {
 		prop.load(it)
 		ext.config = new ConfigSlurper().parse prop
 	}
+	
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: "org.eclipse.jgit", name: "org.eclipse.jgit", version: "5.11.1.202105131744-r"
+	}
 }
 
 plugins {
@@ -36,7 +43,7 @@ dependencies {
 
 group = "net.hycrafthd"
 archivesBaseName = "minecraft_downloader"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -121,8 +128,8 @@ publishing {
 				}
 				licenses {
 					license {
-						name = "ARR"
-						url = ""
+						name = "Apache License 2.0"
+						url = "https://github.com/HyCraftHD/Minecraft-Downloader/blob/main/LICENSE"
 						distribution = "repo"
 					}
 				}
@@ -149,4 +156,16 @@ def getValue(name) {
 		}
 	}
 	return null;
+}
+
+task release {
+	tasks.release.dependsOn build
+	tasks.release.dependsOn publish
+	doLast {
+		def git = org.eclipse.jgit.api.Git.open(file("${rootDir}"))
+		if(git != null) {
+			git.tag().setName(project.version).setForceUpdate(true).call()
+		}
+		println "Released, Need to push tags"
+	}
 }
