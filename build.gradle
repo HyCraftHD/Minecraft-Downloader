@@ -66,7 +66,7 @@ tasks.named("jar") {
 
 task runDownloader(type: JavaExec) {
 	main "net.hycrafthd.minecraft_downloader.Main"
-	args "--version", "1.16.5", "--output", "download", "--launch", "--run", "game", "--username", "xyz", "--password", "xyz"
+	args "--version", "1.16.5", "--output", "download", "--launch", "--run", "game", "--extra-information", "--user-data", "login-data.txt", "--library-list", "libraries.txt", "--library-list-natives", "native-libraries.txt", "--auth-file", "auth.json", "--authenticate", "console"
 	classpath sourceSets.main.runtimeClasspath
 	def run = new File("$rootDir/run")
 	if(!run.exists() ) {
