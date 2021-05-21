@@ -65,7 +65,7 @@ public class MinecraftInformation {
 	}
 	
 	private static void writeLibraryListNativesInfo(ProvidedSettings settings, File libraryList) {
-		Main.LOGGER.info("Extract library list");
+		Main.LOGGER.info("Extract native library list");
 		
 		final Stream<String> libraries = settings.getGeneratedSettings() //
 				.getDownloadableFiles() //
