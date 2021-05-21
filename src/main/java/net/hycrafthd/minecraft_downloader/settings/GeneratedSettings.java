@@ -18,8 +18,6 @@ public class GeneratedSettings {
 	
 	private Set<File> classPath;
 	
-	private ClassLoader classLoader;
-	
 	public void setClientJson(CurrentClientJson clientJson) {
 		if (this.clientJson != null) {
 			throw new IllegalStateException("Client json was already set");
@@ -75,19 +73,4 @@ public class GeneratedSettings {
 		}
 		return Collections.unmodifiableSet(classPath);
 	}
-	
-	public void setClassLoader(ClassLoader classLoader) {
-		if (this.classLoader != null) {
-			throw new IllegalStateException("Classloader was already set");
-		}
-		this.classLoader = classLoader;
-	}
-	
-	public ClassLoader getClassLoader() {
-		if (classLoader == null) {
-			throw new IllegalStateException("Classloader is not set");
-		}
-		return classLoader;
-	}
-	
 }
