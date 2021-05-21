@@ -3,6 +3,7 @@ package net.hycrafthd.minecraft_downloader;
 import java.io.File;
 import java.io.IOException;
 
+import net.hycrafthd.logging_util.LoggingUtil;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationFile;
 import net.hycrafthd.minecraft_authenticator.login.Authenticator;
@@ -33,6 +34,8 @@ public class MinecraftAuthenticator {
 			}
 			
 			final User user = authenticator.getUser().get();
+			
+			LoggingUtil.addRemoveFromLog(user.getAccessToken());
 			
 			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.getName());
 			settings.addVariable(LauncherVariables.AUTH_UUID, user.getUuid());
