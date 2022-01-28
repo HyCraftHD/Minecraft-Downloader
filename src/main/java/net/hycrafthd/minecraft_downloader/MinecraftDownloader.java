@@ -50,7 +50,7 @@ public class MinecraftDownloader {
 		if (clientMappings != null) {
 			FileUtil.downloadFileException(clientMappings.getUrl(), settings.getClientMappingsFile(), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
 		} else {
-			Main.LOGGER.info("Skip client mappings as they are not avaiable for this minecraft version.");
+			Main.LOGGER.info("Skip client mappings as they are not avaiable for this minecraft version");
 		}
 	}
 	
