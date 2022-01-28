@@ -57,7 +57,9 @@ public class LibraryParser {
 		
 		// Add main artifact
 		final ArtifactJson mainArtifact = downloads.getArtifact();
-		files.add(new DownloadableFile(mainArtifact.getUrl(), mainArtifact.getPath(), mainArtifact.getSize(), mainArtifact.getSha1()));
+		if (mainArtifact != null) {
+			files.add(new DownloadableFile(mainArtifact.getUrl(), mainArtifact.getPath(), mainArtifact.getSize(), mainArtifact.getSha1()));
+		}
 		
 		// Check for native library
 		final NativesJson natives = library.getNatives();
