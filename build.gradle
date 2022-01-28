@@ -1,5 +1,4 @@
 buildscript {
-
 	ext.buildProps = file "build.properties"
 
 	buildProps.withReader {
@@ -7,7 +6,7 @@ buildscript {
 		prop.load(it)
 		ext.config = new ConfigSlurper().parse prop
 	}
-	
+
 	repositories {
 		mavenCentral()
 	}
@@ -17,14 +16,14 @@ buildscript {
 }
 
 plugins {
-    id "java-library"
-    id "eclipse"
-    id "maven-publish"
-    id "com.palantir.launch-config" version "1.2.0"
+	id "java-library"
+	id "eclipse"
+	id "maven-publish"
+	id "com.palantir.launch-config" version "1.2.0"
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 	maven {
 		url "https://repo.u-team.info"
 	}
@@ -32,12 +31,12 @@ repositories {
 
 dependencies {
 	implementation group: "net.sf.jopt-simple", name: "jopt-simple", version: config.jopt_simple.version
-	
+
 	implementation group: "net.hycrafthd", name: "logging_util", version: config.logging_util.version
 	implementation group: "org.apache.logging.log4j", name: "log4j-iostreams", version: config.log4j.version
 
 	implementation group: "com.google.code.gson", name: "gson", version: config.gson.version
-	
+
 	implementation group: "net.hycrafthd", name: "minecraft_authenticator", version: config.minecraft_authenticator.version
 }
 
@@ -46,7 +45,7 @@ archivesBaseName = "minecraft_downloader"
 version = "1.0.0"
 
 tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+	options.encoding = "UTF-8"
 }
 
 java {
@@ -59,15 +58,15 @@ java {
 
 tasks.named("jar") {
 	archiveClassifier = ""
-	
+
 	from "LICENSE"
-	
+
 	manifest {
 		attributes(
-			"Implementation-Version": project.version,
-			"Implementation-Vendor": "HyCraftHD, Luc_ZZ",
-	        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        )
+				"Implementation-Version": project.version,
+				"Implementation-Vendor": "HyCraftHD, Luc_ZZ",
+				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+				)
 	}
 }
 
@@ -107,11 +106,11 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
-			
+
 			groupId = project.group
 			artifactId = project.archivesBaseName
 			version = project.version
-			
+
 			pom {
 				name = project.archivesBaseName
 				description = "Minecraft-Downloader"
@@ -121,7 +120,7 @@ publishing {
 					connection = "scm:git:git://github.com/HyCraftHD/Minecraft-Downloader.git"
 					developerConnection = "scm:git:git@github.com:HyCraftHD/Minecraft-Downloader.git"
 				}
-				
+
 				issueManagement {
 					system = "github"
 					url = "https://github.com/HyCraftHD/Minecraft-Downloader/issues"
