@@ -25,12 +25,13 @@ public class CurrentClientJson {
 	protected ArrayList<LibraryJson> libraries;
 	protected LoggingJson logging;
 	protected String mainClass;
+	protected String minecraftArguments; // Null in newer versions
 	protected int minimumLauncherVersion;
 	protected String releaseTime;
 	protected String time;
 	protected String type;
 	
-	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, LoggingJson logging, String mainClass, int minimumLauncherVersion, String releaseTime, String time, String type) {
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, LoggingJson logging, String mainClass, String minecraftArguments, int minimumLauncherVersion, String releaseTime, String time, String type) {
 		this.arguments = arguments;
 		this.assetIndex = assetIndex;
 		this.assets = assets;
@@ -40,6 +41,7 @@ public class CurrentClientJson {
 		this.libraries = libraries;
 		this.logging = logging;
 		this.mainClass = mainClass;
+		this.minecraftArguments = minecraftArguments;
 		this.minimumLauncherVersion = minimumLauncherVersion;
 		this.releaseTime = releaseTime;
 		this.time = time;
@@ -80,6 +82,10 @@ public class CurrentClientJson {
 	
 	public String getMainClass() {
 		return mainClass;
+	}
+	
+	public String getMinecraftArguments() {
+		return minecraftArguments;
 	}
 	
 	public int getMinimumLauncherVersion() {
