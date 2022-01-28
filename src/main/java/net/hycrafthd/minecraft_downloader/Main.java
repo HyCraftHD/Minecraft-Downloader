@@ -42,15 +42,15 @@ public class Main {
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		
 		// Login specs
-		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading and updating authentication data").withRequiredArg().ofType(File.class);
-		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Shows an interactive console login for mojang and microsoft accounts (soon a gui solution may be implemented)").availableIf(authFileSpec).withOptionalArg();
+		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data").withRequiredArg().ofType(File.class);
+		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login a mojang or microsoft accounts to create an authentication file. Currently console is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
 		
 		// Special specs
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skip-assets", "Skip the assets downloader").availableUnless(launchSpec);
 		
 		// Information specs
 		final OptionSpec<Void> informationSpec = parser.accepts("extra-information", "Should extra information be extracted");
-		final OptionSpec<File> userDataSpec = parser.accepts("user-data", "Create a file with the user information login").availableIf(informationSpec).availableIf(authFileSpec).withRequiredArg().ofType(File.class);
+		final OptionSpec<File> userDataSpec = parser.accepts("user-data", "Create a file with the user login information").availableIf(informationSpec).availableIf(authFileSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListSpec = parser.accepts("library-list", "Create a library list file with all library excluding natives").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> libraryListNativesSpec = parser.accepts("library-list-natives", "Create a library list file with only native libraries").availableIf(informationSpec).withRequiredArg().ofType(File.class);
 		
