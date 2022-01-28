@@ -47,7 +47,11 @@ public class MinecraftDownloader {
 		final ClientJson clientMappings = downloads.getClientMappings();
 		
 		FileUtil.downloadFileException(clientJar.getUrl(), settings.getClientJarFile(), clientJar.getSize(), clientJar.getSha1(), "Failed to download client jar");
-		FileUtil.downloadFileException(clientMappings.getUrl(), settings.getClientMappingsFile(), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
+		if (clientMappings != null) {
+			FileUtil.downloadFileException(clientMappings.getUrl(), settings.getClientMappingsFile(), clientMappings.getSize(), clientMappings.getSha1(), "Failed to download client mappings");
+		} else {
+			Main.LOGGER.info("Skip client mappings as they are not avaiable for this minecraft version.");
+		}
 	}
 	
 	private static void downloadLibraries(ProvidedSettings settings) {
