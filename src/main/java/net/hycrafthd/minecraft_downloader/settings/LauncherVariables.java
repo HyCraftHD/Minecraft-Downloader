@@ -1,5 +1,7 @@
 package net.hycrafthd.minecraft_downloader.settings;
 
+import net.hycrafthd.minecraft_downloader.util.StringUtil;
+
 public enum LauncherVariables {
 	
 	AUTH_PLAYER_NAME("auth_player_name"),
@@ -25,22 +27,16 @@ public enum LauncherVariables {
 	CLASSPATH("classpath");
 	
 	private final String name;
-	private final String replace;
 	
 	private LauncherVariables(String name) {
 		this.name = name;
-		replace = "${" + name + "}";
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public String getReplace() {
-		return replace;
-	}
-	
 	public String replaceVariable(String string, String value) {
-		return string.replace(replace, value);
+		return StringUtil.replaceVariable(name, string, value);
 	}
 }
