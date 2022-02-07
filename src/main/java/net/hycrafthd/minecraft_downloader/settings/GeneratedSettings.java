@@ -54,9 +54,6 @@ public class GeneratedSettings {
 	}
 	
 	public File getLogFile() {
-		if (logFile == null) {
-			throw new IllegalStateException("Logfile is not set");
-		}
 		return logFile;
 	}
 	

@@ -14,6 +14,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LoggingJson.LoggingClientJson.LoggingFileJson;
 import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
@@ -156,11 +157,17 @@ public class MinecraftDownloader {
 		Main.LOGGER.info("Download logger file");
 		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
-		final LoggingFileJson loggingFile = generatedSettings.getClientJson().getLogging().getClient().getFile();
+		final LoggingJson logging = generatedSettings.getClientJson().getLogging();
 		
-		final File logFile = new File(settings.getAssetsDirectory(), "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId());
-		FileUtil.downloadFileException(loggingFile.getUrl(), logFile, loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
-		
-		generatedSettings.setLogFile(logFile);
+		if (logging != null) {
+			final LoggingFileJson loggingFile = generatedSettings.getClientJson().getLogging().getClient().getFile();
+			
+			final File logFile = new File(settings.getAssetsDirectory(), "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId());
+			FileUtil.downloadFileException(loggingFile.getUrl(), logFile, loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
+			
+			generatedSettings.setLogFile(logFile);
+		} else {
+			Main.LOGGER.info("Skip logger file as it is not avaiable for this minecraft version");
+		}
 	}
 }

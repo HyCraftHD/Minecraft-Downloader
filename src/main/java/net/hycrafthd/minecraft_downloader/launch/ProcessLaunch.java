@@ -31,7 +31,9 @@ public class ProcessLaunch {
 		commands.add(java);
 		commands.addAll(parser.getJvmArgs());
 		Stream.of(STANDARD_JVM_ARGS.split(" ")).forEach(commands::add);
-		commands.add(generatedSettings.getClientJson().getLogging().getClient().getArgument().replace("${path}", generatedSettings.getLogFile().getAbsolutePath())); // TODO move this to argument parser
+		if (generatedSettings.getLogFile() != null) {
+			commands.add(generatedSettings.getClientJson().getLogging().getClient().getArgument().replace("${path}", generatedSettings.getLogFile().getAbsolutePath())); // TODO move this to argument parser
+		}
 		commands.add(generatedSettings.getClientJson().getMainClass());
 		commands.addAll(parser.getGameArgs());
 		

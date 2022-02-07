@@ -1,10 +1,12 @@
 package net.hycrafthd.minecraft_downloader.launch;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalGameArgumentJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalJvmArgumentJson;
@@ -19,10 +21,32 @@ public class ArgumentsParser {
 	private final List<String> jvmArgs;
 	
 	public ArgumentsParser(ProvidedSettings settings) {
-		final ArgumentsJson argumentsJson = settings.getGeneratedSettings().getClientJson().getArguments();
+		final CurrentClientJson clientJson = settings.getGeneratedSettings().getClientJson();
 		
-		gameArgs = replaceVariables(Stream.concat(argumentsJson.getGameArguments().stream(), conditionalGameArg(argumentsJson.getConditionalGameArguments().stream(), settings)), settings).collect(Collectors.toList());
-		jvmArgs = replaceVariables(Stream.concat(conditionalJvmArg(argumentsJson.getConditionalJvmArguments().stream(), settings), argumentsJson.getJvmArguments().stream()), settings).collect(Collectors.toList());
+		final ArgumentsJson argumentsJson = clientJson.getArguments();
+		final String minecraftArguments = clientJson.getMinecraftArguments();
+		
+		if (argumentsJson != null) {
+			gameArgs = replaceVariables(Stream.concat(argumentsJson.getGameArguments().stream(), conditionalGameArg(argumentsJson.getConditionalGameArguments().stream(), settings)), settings).collect(Collectors.toList());
+			jvmArgs = replaceVariables(Stream.concat(conditionalJvmArg(argumentsJson.getConditionalJvmArguments().stream(), settings), argumentsJson.getJvmArguments().stream()), settings).collect(Collectors.toList());
+		} else if (minecraftArguments != null) {
+			gameArgs = replaceVariables(Stream.of(minecraftArguments.replace("${user_properties}", "{}").split(" ")), settings).collect(Collectors.toList());
+			
+			final ArrayList<String> preJvmArgs = new ArrayList<>(); // TODO clean up, and make modular
+			preJvmArgs.add("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
+			preJvmArgs.add("-Dos.name=Windows 10");
+			preJvmArgs.add("-Dos.version=10.0");
+			preJvmArgs.add("-Djava.library.path=${natives_directory}");
+			preJvmArgs.add("-Dminecraft.launcher.brand=${launcher_name}");
+			preJvmArgs.add("-Dminecraft.launcher.version=${launcher_version}");
+			preJvmArgs.add("-Dminecraft.client.jar=" + settings.getClientJarFile().getAbsolutePath());
+			preJvmArgs.add("-cp");
+			preJvmArgs.add("${classpath}");
+			
+			jvmArgs = replaceVariables(preJvmArgs.stream(), settings).collect(Collectors.toList());
+		} else {
+			throw new IllegalStateException("Client json does not contains arguments on how to launch the game.s");
+		}
 	}
 	
 	private final Stream<String> replaceVariables(Stream<String> arguments, ProvidedSettings settings) {

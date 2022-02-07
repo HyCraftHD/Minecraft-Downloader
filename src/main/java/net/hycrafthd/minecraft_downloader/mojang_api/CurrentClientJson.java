@@ -16,7 +16,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.ValueSerial
  */
 public class CurrentClientJson {
 	
-	protected ArgumentsJson arguments;
+	protected ArgumentsJson arguments; // Null in older versions
 	protected AssetIndexJson assetIndex;
 	protected String assets;
 	protected DownloadsJson downloads;
