@@ -23,17 +23,23 @@ import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class MinecraftDownloader {
 	
-	public static void launch(ProvidedSettings settings, boolean skipAssets) {
+	public static void launch(ProvidedSettings settings, boolean defaultLog, boolean skipNatives, boolean skipAssets) {
 		Main.LOGGER.info("Start downloading library and asset files");
 		
 		downloadClient(settings);
 		downloadLibraries(settings);
-		extractNatives(settings);
+		if (!skipNatives) {
+			extractNatives(settings);
+		} else {
+			Main.LOGGER.info("Skipped extracting natives");
+		}
 		if (!skipAssets) {
 			downloadAssets(settings);
-			downloadLogger(settings);
+			if (defaultLog) {
+				downloadLogger(settings);
+			}
 		} else {
-			Main.LOGGER.info("Skiped assets and logger");
+			Main.LOGGER.info("Skipped assets and logger");
 		}
 		
 		Main.LOGGER.info("Finished downloading library and asset files");
@@ -167,7 +173,7 @@ public class MinecraftDownloader {
 			
 			generatedSettings.setLogFile(logFile);
 		} else {
-			Main.LOGGER.info("Skip logger file as it is not avaiable for this minecraft version");
+			Main.LOGGER.info("Skip logger file as it is not available for this minecraft version");
 		}
 	}
 }

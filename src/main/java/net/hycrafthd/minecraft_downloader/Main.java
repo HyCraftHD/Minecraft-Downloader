@@ -36,6 +36,9 @@ public class Main {
 		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
 		
+		final OptionSpec<Void> defaultLogSpec = parser.accepts("default-log-config", "Use vanilla supplied log4j configuration").availableIf(launchSpec);
+		final OptionSpec<File> logFileSpec = parser.accepts("log-config", "Use the specified file as log4j configuration").availableIf(launchSpec).availableUnless(defaultLogSpec).withRequiredArg().ofType(File.class);
+		
 		final OptionSpec<Void> demoSpec = parser.accepts("demo", "Start the demo mode").availableIf(launchSpec);
 		
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
@@ -46,6 +49,7 @@ public class Main {
 		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login a mojang or microsoft accounts to create an authentication file. Currently console is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
 		
 		// Special specs
+		final OptionSpec<Void> skipNativesSpec = parser.accepts("skip-natives", "Skip extracting natives").availableUnless(launchSpec);
 		final OptionSpec<Void> skipAssetsSpec = parser.accepts("skip-assets", "Skip the assets downloader").availableUnless(launchSpec);
 		
 		// Information specs
@@ -71,6 +75,9 @@ public class Main {
 		final File javaExec = set.valueOf(javaExecSpec);
 		final File run = set.valueOf(runSpec);
 		
+		final boolean defaultLog = set.has(defaultLogSpec);
+		final File logFile = set.valueOf(logFileSpec);
+		
 		final boolean demo = set.has(demoSpec);
 		
 		final boolean customResolution = set.has(widthSpec) && set.has(heightSpec);
@@ -81,6 +88,7 @@ public class Main {
 		final boolean authenticate = set.has(authenticateSpec);
 		final String authenticateType = set.valueOf(authenticateSpec);
 		
+		final boolean skipNatives = set.has(skipNativesSpec);
 		final boolean skipAssets = set.has(skipAssetsSpec);
 		
 		final boolean information = set.has(informationSpec);
@@ -97,7 +105,7 @@ public class Main {
 		final ProvidedSettings settings = new ProvidedSettings(version, output, run);
 		
 		MinecraftParser.launch(settings);
-		MinecraftDownloader.launch(settings, skipAssets);
+		MinecraftDownloader.launch(settings, defaultLog, skipNatives, skipAssets);
 		
 		if ((launch || userData != null) && authFile != null) {
 			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateType);
