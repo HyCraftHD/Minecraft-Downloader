@@ -55,8 +55,6 @@ public class MinecraftInformation {
 				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
 				.distinct();
 		
-		FileUtil.createParentFolders(libraryList);
-		
 		try {
 			FileUtil.writeText(libraries, libraryList);
 		} catch (final IOException ex) {
@@ -74,8 +72,6 @@ public class MinecraftInformation {
 				.filter(DownloadableFile::hasDownloadedFile) //
 				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
 				.distinct();
-		
-		FileUtil.createParentFolders(libraryList);
 		
 		try {
 			FileUtil.writeText(libraries, libraryList);
