@@ -23,7 +23,7 @@ import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class MinecraftDownloader {
 	
-	public static void launch(ProvidedSettings settings, boolean defaultLog, boolean skipNatives, boolean skipAssets) {
+	public static void launch(ProvidedSettings settings, boolean defaultLog, File logFile, boolean skipNatives, boolean skipAssets) {
 		Main.LOGGER.info("Start downloading library and asset files");
 		
 		downloadClient(settings);
@@ -35,9 +35,7 @@ public class MinecraftDownloader {
 		}
 		if (!skipAssets) {
 			downloadAssets(settings);
-			if (defaultLog) {
-				downloadLogger(settings);
-			}
+			chooseLogger(settings, defaultLog, logFile);
 		} else {
 			Main.LOGGER.info("Skipped assets and logger");
 		}
@@ -159,21 +157,50 @@ public class MinecraftDownloader {
 		});
 	}
 	
-	private static void downloadLogger(ProvidedSettings settings) {
-		Main.LOGGER.info("Download logger file");
-		
+	private static void chooseLogger(ProvidedSettings settings, boolean defaultLog, File logFile) {
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		final LoggingJson logging = generatedSettings.getClientJson().getLogging();
 		
 		if (logging != null) {
-			final LoggingFileJson loggingFile = generatedSettings.getClientJson().getLogging().getClient().getFile();
-			
-			final File logFile = new File(settings.getAssetsDirectory(), "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId());
-			FileUtil.downloadFileException(loggingFile.getUrl(), logFile, loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
-			
-			generatedSettings.setLogFile(logFile);
+			if (defaultLog) {
+				downloadLogger(settings);
+			} else if (logFile != null) {
+				Main.LOGGER.info("Use supplied log4j file {}", logFile);
+				generatedSettings.setLogFile(logFile);
+			} else {
+				extractShippedLogger(settings);
+			}
 		} else {
-			Main.LOGGER.info("Skip logger file as it is not available for this minecraft version");
+			Main.LOGGER.info("Skip log4j file as it is not available for this minecraft version");
 		}
+	}
+	
+	private static void downloadLogger(ProvidedSettings settings) {
+		Main.LOGGER.info("Download log4j file");
+		
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		final LoggingJson logging = generatedSettings.getClientJson().getLogging();
+		
+		final LoggingFileJson loggingFile = logging.getClient().getFile();
+		
+		final File logFile = new File(settings.getAssetsDirectory(), "log_configs" + Constants.FILE_SEPERATOR + loggingFile.getId());
+		FileUtil.downloadFileException(loggingFile.getUrl(), logFile, loggingFile.getSize(), loggingFile.getSha1(), "Failed to download logger file");
+		
+		generatedSettings.setLogFile(logFile);
+	}
+	
+	private static void extractShippedLogger(ProvidedSettings settings) {
+		Main.LOGGER.info("Extract shipped log4j file");
+		
+		final File logFile = new File(settings.getOutputDirectory(), Constants.SHIPPED_LOG4J_CONFIG);
+		
+		try (final InputStream inputStream = MinecraftDownloader.class.getResourceAsStream(Constants.URL_SEPERATOR + Constants.SHIPPED_LOG4J_CONFIG); //
+				final OutputStream outputStream = new FileOutputStream(logFile)) {
+			FileUtil.copy(inputStream, outputStream, new byte[2048]);
+		} catch (final IOException ex) {
+			throw new IllegalStateException("Could not extract shipped log4j file", ex);
+		}
+		
+		settings.getGeneratedSettings().setLogFile(logFile);
 	}
 }

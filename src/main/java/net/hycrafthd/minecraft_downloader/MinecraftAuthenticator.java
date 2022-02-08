@@ -60,6 +60,15 @@ public class MinecraftAuthenticator {
 			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, user.getAccessToken());
 			settings.addVariable(LauncherVariables.USER_TYPE, user.getType());
 			
+			// TODO populate client id and xuid
+			// settings.addVariable(LauncherVariables.AUTH_XUID, "-");
+			// settings.addVariable(LauncherVariables.CLIENT_ID, "-");
+			
+			// TODO Populate with right values
+			// settings.addVariable(LauncherVariables.AUTH_SESSION, "-");
+			// settings.addVariable(LauncherVariables.USER_PROPERTIES, "{}");
+			// settings.addVariable(LauncherVariables.USER_PROPERTY_MAP, "{}");
+			
 			Main.LOGGER.info("Logged into minecraft account");
 		} catch (AuthenticationException | IOException | NoSuchElementException ex) {
 			Main.LOGGER.info("An error occured while trying to log into minecraft account", ex);

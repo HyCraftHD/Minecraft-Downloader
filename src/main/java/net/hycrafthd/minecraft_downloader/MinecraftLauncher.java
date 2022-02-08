@@ -1,6 +1,7 @@
 package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import net.hycrafthd.minecraft_downloader.launch.ProcessLaunch;
@@ -25,10 +26,25 @@ public class MinecraftLauncher {
 		
 		final CurrentClientJson client = generatedSettings.getClientJson();
 		
+		// Add default auth variables if some are not set in authentication
+		settings.addDefaultVariable(LauncherVariables.AUTH_PLAYER_NAME, "NotAuthUser");
+		settings.addDefaultVariable(LauncherVariables.AUTH_UUID, UUID.randomUUID().toString());
+		settings.addDefaultVariable(LauncherVariables.AUTH_ACCESS_TOKEN, "-");
+		settings.addDefaultVariable(LauncherVariables.USER_TYPE, "legacy");
+		
+		settings.addDefaultVariable(LauncherVariables.AUTH_XUID, "-");
+		settings.addDefaultVariable(LauncherVariables.CLIENT_ID, "-");
+		
+		settings.addDefaultVariable(LauncherVariables.AUTH_SESSION, "-");
+		settings.addDefaultVariable(LauncherVariables.USER_PROPERTIES, "{}");
+		settings.addDefaultVariable(LauncherVariables.USER_PROPERTY_MAP, "{}");
+		
+		// Add variables for version
 		settings.addVariable(LauncherVariables.VERSION_NAME, client.getId());
 		settings.addVariable(LauncherVariables.VERSION_TYPE, client.getType());
 		
 		settings.addVariable(LauncherVariables.GAME_DIRECTORY, settings.getRunDirectory());
+		settings.addVariable(LauncherVariables.GAME_ASSETS, settings.getAssetsDirectory());
 		
 		settings.addVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
 		settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());

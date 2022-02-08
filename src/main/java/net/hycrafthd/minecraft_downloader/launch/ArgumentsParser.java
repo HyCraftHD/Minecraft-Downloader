@@ -20,7 +20,7 @@ public class ArgumentsParser {
 	private final List<String> gameArgs;
 	private final List<String> jvmArgs;
 	
-	public ArgumentsParser(ProvidedSettings settings) {
+	public ArgumentsParser(ProvidedSettings settings, String standardJvmArgs) {
 		final CurrentClientJson clientJson = settings.getGeneratedSettings().getClientJson();
 		
 		final ArgumentsJson argumentsJson = clientJson.getArguments();

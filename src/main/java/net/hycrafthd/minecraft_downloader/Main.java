@@ -105,7 +105,7 @@ public class Main {
 		final ProvidedSettings settings = new ProvidedSettings(version, output, run);
 		
 		MinecraftParser.launch(settings);
-		MinecraftDownloader.launch(settings, defaultLog, skipNatives, skipAssets);
+		MinecraftDownloader.launch(settings, defaultLog, logFile, skipNatives, skipAssets);
 		
 		if ((launch || userData != null) && authFile != null) {
 			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateType);

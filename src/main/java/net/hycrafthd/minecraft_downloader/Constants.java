@@ -28,4 +28,6 @@ public class Constants {
 	public static final VersionConstant CLIENT_JAR = new VersionConstant("${version}-client.jar");
 	public static final VersionConstant CLIENT_MAPPINGS = new VersionConstant("${version}-client.txt");
 	
+	public static final String SHIPPED_LOG4J_CONFIG = "default_log4j_minecraft_config.xml";
+	
 }

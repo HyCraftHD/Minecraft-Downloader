@@ -23,7 +23,10 @@
 	</Appenders>
 	<Loggers>
 		<Root level="all">
-			<AppenderRef ref="Console" level="debug" />
+			<filters>
+				<MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+			</filters>
+			<AppenderRef ref="Console" level="info" />
 			<AppenderRef ref="File" level="info" />
 			<AppenderRef ref="DebugFile" level="debug" />
 		</Root>
