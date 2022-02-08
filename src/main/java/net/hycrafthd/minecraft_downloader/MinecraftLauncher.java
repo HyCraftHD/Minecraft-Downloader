@@ -44,7 +44,8 @@ public class MinecraftLauncher {
 		settings.addDefaultVariable(LauncherVariables.VERSION_TYPE, client.getType());
 		
 		settings.addDefaultVariable(LauncherVariables.GAME_DIRECTORY, settings.getRunDirectory());
-		settings.addDefaultVariable(LauncherVariables.GAME_ASSETS, settings.getAssetsDirectory());
+		
+		settings.addDefaultVariable(LauncherVariables.GAME_ASSETS, generatedSettings.getVirtualAssets() != null ? generatedSettings.getVirtualAssets() : new File(settings.getAssetsDirectory(), "dummy"));
 		
 		settings.addDefaultVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
 		settings.addDefaultVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());

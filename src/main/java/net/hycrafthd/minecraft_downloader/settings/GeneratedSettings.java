@@ -14,6 +14,8 @@ public class GeneratedSettings {
 	
 	private List<DownloadableFile> downloadableFiles;
 	
+	private File virtualAssets;
+	
 	private File logFile;
 	
 	private Set<File> classPath;
@@ -44,6 +46,17 @@ public class GeneratedSettings {
 			throw new IllegalStateException("Downloadable files list is not set");
 		}
 		return downloadableFiles;
+	}
+	
+	public void setVirtualAssets(File virtualAssets) {
+		if (this.virtualAssets != null) {
+			throw new IllegalStateException("Virtual assets was already set");
+		}
+		this.virtualAssets = virtualAssets;
+	}
+	
+	public File getVirtualAssets() {
+		return virtualAssets;
 	}
 	
 	public void setLogFile(File logFile) {

@@ -31,18 +31,32 @@ public class CurrentAssetIndexSerializer implements JsonDeserializer<CurrentAsse
 				});
 		
 		json.add("objects", objects);
+		
+		if (assetIndex.isVirtual()) {
+			json.addProperty("virtual", assetIndex.isVirtual());
+		}
+		
 		return json;
 	}
 	
 	@Override
 	public CurrentAssetIndexJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-		final Map<String, AssetJson> assets = json.getAsJsonObject() //
-				.get("objects") //
+		final JsonObject object = json.getAsJsonObject();
+		
+		final Map<String, AssetJson> assets = object.get("objects") //
 				.getAsJsonObject() //
 				.entrySet() //
 				.stream() //
 				.collect(Collectors.toMap(Entry::getKey, entry -> context.deserialize(entry.getValue(), AssetJson.class)));
-		return new CurrentAssetIndexJson(assets);
+		
+		final boolean virtual;
+		if (object.has("virtual")) {
+			virtual = object.get("virtual").getAsBoolean();
+		} else {
+			virtual = false;
+		}
+		
+		return new CurrentAssetIndexJson(assets, virtual);
 	}
 	
 }

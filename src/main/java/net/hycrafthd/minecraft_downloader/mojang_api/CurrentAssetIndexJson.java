@@ -15,10 +15,16 @@ import net.hycrafthd.minecraft_downloader.mojang_api.json_serializer.CurrentAsse
 @JsonAdapter(CurrentAssetIndexSerializer.class)
 public class CurrentAssetIndexJson {
 	
+	protected boolean virtual;
 	protected Map<String, AssetJson> assets;
 	
-	public CurrentAssetIndexJson(Map<String, AssetJson> assets) {
+	public CurrentAssetIndexJson(Map<String, AssetJson> assets, boolean virtual) {
 		this.assets = assets;
+		this.virtual = virtual;
+	}
+	
+	public boolean isVirtual() {
+		return virtual;
 	}
 	
 	public Map<String, AssetJson> getAssets() {

@@ -5,12 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
+import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson.AssetJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.AssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.DownloadsJson.ClientJson;
@@ -155,6 +158,33 @@ public class MinecraftDownloader {
 			
 			FileUtil.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
+		
+		if (index.isVirtual()) {
+			Main.LOGGER.info("Virtual assets found. Unhash them");
+			
+			final File virtualAssets = new File(assets, "legacy_virtual" + Constants.FILE_SEPERATOR + assetIndex.getId());
+			FileUtil.createFolders(virtualAssets);
+			
+			index.getAssets().entrySet().parallelStream().forEach(entry -> {
+				final String name = entry.getKey();
+				final AssetJson assetObject = entry.getValue();
+				
+				final String first2HashLetters = StringUtil.first2Letters(assetObject.getHash());
+				
+				final File hashedFile = new File(assets, "objects" + Constants.FILE_SEPERATOR + first2HashLetters + Constants.FILE_SEPERATOR + assetObject.getHash());
+				final File unhashedFile = new File(virtualAssets, name);
+				FileUtil.createParentFolders(unhashedFile);
+				
+				try {
+					Files.copy(hashedFile.toPath(), unhashedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				} catch (final IOException ex) {
+					throw new IllegalStateException("Could not copy file " + hashedFile + " to virtual assets index " + unhashedFile, ex);
+				}
+				Main.LOGGER.debug("Copied file from {} to {}", hashedFile, unhashedFile);
+			});
+			
+			settings.getGeneratedSettings().setVirtualAssets(virtualAssets);
+		}
 	}
 	
 	private static void chooseLogger(ProvidedSettings settings, boolean defaultLog, File logFile) {
