@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.io.IoBuilder;
 
 import net.hycrafthd.minecraft_downloader.Constants;
 import net.hycrafthd.minecraft_downloader.Main;
@@ -53,12 +54,13 @@ public class ProcessLaunch {
 			final Process process = processBuilder.start();
 			
 			final Thread ioThread = new Thread(() -> {
-				final Scanner scanner = new Scanner(process.getInputStream());
-				while (scanner.hasNextLine()) {
-					Main.LOGGER.info(LAUNCH_MARKER, scanner.nextLine());
+				try {
+					process.getInputStream().transferTo(IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).setMarker(LAUNCH_MARKER).buildOutputStream());
+				} catch (IOException ex) {
+					Main.LOGGER.error("Cannot print minecraft log", ex);
 				}
 			});
-			ioThread.setDaemon(true);
+			ioThread.setName("Minecraft Logger");
 			ioThread.start();
 			
 			final int exitCode = process.waitFor();
