@@ -11,6 +11,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
+import net.hycrafthd.minecraft_downloader.legacy.IconAssetFix;
 import net.hycrafthd.minecraft_downloader.library.DownloadableFile;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentAssetIndexJson.AssetJson;
@@ -160,7 +161,7 @@ public class MinecraftDownloader {
 		});
 		
 		if (index.isMapToResources() || index.isVirtual()) {
-			Main.LOGGER.info("Virtual assets found. Reconstruct assets");
+			Main.LOGGER.info("Legacy assets found. Reconstruct assets");
 			
 			final File resources = new File(settings.getRunDirectory(), "resources");
 			final File virtualAssets = new File(assets, "legacy_virtual" + Constants.FILE_SEPERATOR + assetIndex.getId());
@@ -192,6 +193,9 @@ public class MinecraftDownloader {
 				}
 				Main.LOGGER.debug("Copied file from {} to {}", hashedFile, unhashedFile);
 			});
+			
+			// Fix pre-1.6 icons
+			IconAssetFix.fix(assetIndex, virtualAssets);
 			
 			settings.getGeneratedSettings().setVirtualAssets(virtualAssets);
 		}
