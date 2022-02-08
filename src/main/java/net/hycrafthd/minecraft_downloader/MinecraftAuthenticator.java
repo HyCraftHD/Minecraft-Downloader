@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import net.hycrafthd.logging_util.LoggingUtil;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
 import net.hycrafthd.minecraft_authenticator.login.Authenticator;
 import net.hycrafthd.minecraft_authenticator.login.User;
@@ -52,8 +51,6 @@ public class MinecraftAuthenticator {
 			}
 			
 			final User user = authenticator.getUser().get();
-			
-			LoggingUtil.addRemoveFromLog(user.getAccessToken());
 			
 			// Set base login information
 			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.getName());

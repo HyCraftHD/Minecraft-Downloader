@@ -11,7 +11,6 @@ import org.apache.logging.log4j.io.IoBuilder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import net.hycrafthd.logging_util.LoggingUtil;
 import net.hycrafthd.minecraft_downloader.settings.LauncherFeatures;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
@@ -22,8 +21,6 @@ public class Main {
 	public static final Logger LOGGER = LogManager.getLogger("Minecraft Downloader");
 	
 	public static void main(String[] args) throws IOException {
-		LoggingUtil.redirectPrintStreams(LOGGER);
-		
 		final OptionParser parser = new OptionParser();
 		
 		// Default specs
