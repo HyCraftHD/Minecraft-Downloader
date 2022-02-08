@@ -2,10 +2,18 @@
 <Configuration status="warn" shutdownHook="disable">
 	<Appenders>
 		<Console name="Console">
-			<PatternLayout pattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx" />
+			<PatternLayout>
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				</MarkerPatternSelector>
+			</PatternLayout>
 		</Console>
 		<RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
-			<PatternLayout pattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx" />
+			<PatternLayout>
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				</MarkerPatternSelector>
+			</PatternLayout>
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 				<OnStartupTriggeringPolicy />
@@ -13,7 +21,11 @@
 			<DefaultRolloverStrategy max="10" fileIndex="min" />
 		</RollingRandomAccessFile>
 		<RollingRandomAccessFile name="DebugFile" fileName="logs/debug.log" filePattern="logs/debug-%i.log.gz">
-			<PatternLayout pattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx" />
+			<PatternLayout>
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				</MarkerPatternSelector>
+			</PatternLayout>
 			<Policies>
 				<OnStartupTriggeringPolicy />
 				<SizeBasedTriggeringPolicy size="200MB" />

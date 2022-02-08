@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import net.hycrafthd.minecraft_downloader.Constants;
 import net.hycrafthd.minecraft_downloader.Main;
@@ -13,6 +17,8 @@ import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
 public class ProcessLaunch {
+	
+	private static final Marker LAUNCH_MARKER = MarkerManager.getMarker("LAUNCH");
 	
 	// TODO make them accessible in the arguments
 	private static final String STANDARD_JVM_ARGS = "-Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M";
@@ -35,7 +41,7 @@ public class ProcessLaunch {
 		// Process builder
 		final ProcessBuilder processBuilder = new ProcessBuilder(commands);
 		processBuilder.directory(settings.getRunDirectory());
-		processBuilder.inheritIO();
+		processBuilder.redirectErrorStream(true);
 		
 		Main.LOGGER.debug("Process starts with commands:");
 		processBuilder.command().forEach(command -> {
@@ -45,7 +51,19 @@ public class ProcessLaunch {
 		Main.LOGGER.info("Launch minecraft as a new process");
 		try {
 			final Process process = processBuilder.start();
-			process.waitFor();
+			
+			final Thread ioThread = new Thread(() -> {
+				final Scanner scanner = new Scanner(process.getInputStream());
+				while (scanner.hasNextLine()) {
+					Main.LOGGER.info(LAUNCH_MARKER, scanner.nextLine());
+				}
+			});
+			ioThread.setDaemon(true);
+			ioThread.start();
+			
+			final int exitCode = process.waitFor();
+			
+			Main.LOGGER.info("Minecraft closed with exit code {}", exitCode);
 		} catch (final IOException | InterruptedException ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
@@ -56,9 +74,9 @@ public class ProcessLaunch {
 		if (javaExec == null || !javaExec.canRead()) {
 			final String javaFile;
 			if (OSUtil.CURRENT_OS == OS.WINDOWS) {
-				javaFile = "java.exe";
+				javaFile = "javaw.exe";
 			} else {
-				javaFile = "java";
+				javaFile = "javaw";
 			}
 			
 			return new File(System.getProperty("java.home"), "bin" + Constants.FILE_SEPERATOR + javaFile).getAbsolutePath();
