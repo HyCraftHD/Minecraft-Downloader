@@ -40,7 +40,7 @@ public class MinecraftParser {
 		final Optional<VersionJson> foundVersionOptional = manifest.getVersions().stream().filter(manifestVersion -> manifestVersion.getId().equals(version)).findAny();
 		
 		if (!foundVersionOptional.isPresent()) {
-			throw new IllegalArgumentException("The requested version {} was not found in the version manifest json");
+			throw new IllegalArgumentException("The requested version " + version + " was not found in the version manifest json");
 		}
 		
 		return foundVersionOptional.get();
