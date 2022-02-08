@@ -52,8 +52,7 @@ public class MinecraftInformation {
 				.stream() //
 				.filter(file -> !file.isNative()) //
 				.filter(DownloadableFile::hasDownloadedFile) //
-				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
-				.distinct();
+				.map(file -> file.getDownloadedFile().getAbsolutePath());
 		
 		try {
 			FileUtil.writeText(libraries, libraryList);
@@ -70,8 +69,7 @@ public class MinecraftInformation {
 				.stream() //
 				.filter(DownloadableFile::isNative) //
 				.filter(DownloadableFile::hasDownloadedFile) //
-				.map(file -> file.getDownloadedFile().getAbsolutePath()) //
-				.distinct();
+				.map(file -> file.getDownloadedFile().getAbsolutePath());
 		
 		try {
 			FileUtil.writeText(libraries, libraryList);

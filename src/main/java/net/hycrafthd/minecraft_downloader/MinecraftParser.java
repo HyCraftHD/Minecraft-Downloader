@@ -75,6 +75,7 @@ public class MinecraftParser {
 				.map(LibraryParser::new) //
 				.filter(LibraryParser::isAllowedOnOs) //
 				.flatMap(parser -> parser.getFiles().stream()) //
+				.distinct() //
 				.collect(Collectors.toList());
 		
 		generatedSettings.setDownloadableFiles(downloadableFiles);

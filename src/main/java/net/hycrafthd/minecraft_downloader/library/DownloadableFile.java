@@ -14,7 +14,7 @@ public class DownloadableFile {
 	private final boolean isNative;
 	private final List<String> extractExclusion;
 	
-	private File downloadedFile;
+	private transient File downloadedFile;
 	
 	public DownloadableFile(String url, String path, int size, String sha1) {
 		this(url, path, size, sha1, false);
