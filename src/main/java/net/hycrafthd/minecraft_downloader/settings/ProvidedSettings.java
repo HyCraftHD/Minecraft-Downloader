@@ -110,12 +110,16 @@ public class ProvidedSettings {
 		addVariable(variable, file.getAbsolutePath());
 	}
 	
-	public void addDefaultVariable(LauncherVariables variable, String value) {
-		variables.putIfAbsent(variable, value);
-	}
-	
 	public void addVariable(LauncherVariables variable, String value) {
 		variables.put(variable, value);
+	}
+	
+	public void addDefaultVariable(LauncherVariables variable, File file) {
+		variables.putIfAbsent(variable, file.getAbsolutePath());
+	}
+	
+	public void addDefaultVariable(LauncherVariables variable, String value) {
+		variables.putIfAbsent(variable, value);
 	}
 	
 	public String getVariable(LauncherVariables variable) {

@@ -3,7 +3,6 @@ package net.hycrafthd.minecraft_downloader.launch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson;
@@ -21,32 +20,24 @@ public class ArgumentsParser {
 	private final List<String> jvmArgs;
 	
 	public ArgumentsParser(ProvidedSettings settings, String standardJvmArgs) {
+		this.gameArgs = new ArrayList<>();
+		this.jvmArgs = new ArrayList<>();
+		
 		final CurrentClientJson clientJson = settings.getGeneratedSettings().getClientJson();
 		
 		final ArgumentsJson argumentsJson = clientJson.getArguments();
 		final String minecraftArguments = clientJson.getMinecraftArguments();
 		
 		if (argumentsJson != null) {
-			gameArgs = replaceVariables(Stream.concat(argumentsJson.getGameArguments().stream(), conditionalGameArg(argumentsJson.getConditionalGameArguments().stream(), settings)), settings).collect(Collectors.toList());
-			jvmArgs = replaceVariables(Stream.concat(conditionalJvmArg(argumentsJson.getConditionalJvmArguments().stream(), settings), argumentsJson.getJvmArguments().stream()), settings).collect(Collectors.toList());
+			buildArguments(settings, argumentsJson);
 		} else if (minecraftArguments != null) {
-			gameArgs = replaceVariables(Stream.of(minecraftArguments.replace("${user_properties}", "{}").split(" ")), settings).collect(Collectors.toList());
-			
-			final ArrayList<String> preJvmArgs = new ArrayList<>(); // TODO clean up, and make modular
-			preJvmArgs.add("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
-			preJvmArgs.add("-Dos.name=Windows 10");
-			preJvmArgs.add("-Dos.version=10.0");
-			preJvmArgs.add("-Djava.library.path=${natives_directory}");
-			preJvmArgs.add("-Dminecraft.launcher.brand=${launcher_name}");
-			preJvmArgs.add("-Dminecraft.launcher.version=${launcher_version}");
-			preJvmArgs.add("-Dminecraft.client.jar=" + settings.getClientJarFile().getAbsolutePath());
-			preJvmArgs.add("-cp");
-			preJvmArgs.add("${classpath}");
-			
-			jvmArgs = replaceVariables(preJvmArgs.stream(), settings).collect(Collectors.toList());
+			buildLegacyArguments(settings, minecraftArguments);
 		} else {
-			throw new IllegalStateException("Client json does not contains arguments on how to launch the game.s");
+			throw new IllegalStateException("Client json does not contains arguments on how to launch the game");
 		}
+		
+		// Add standard jvm args
+		Stream.of(standardJvmArgs.split(" ")).forEach(jvmArgs::add);
 	}
 	
 	private final Stream<String> replaceVariables(Stream<String> arguments, ProvidedSettings settings) {
@@ -106,6 +97,47 @@ public class ArgumentsParser {
 				return returnValue;
 			});
 		}).flatMap(argument -> argument.getValue().getValue().stream());
+	}
+	
+	private void buildArguments(ProvidedSettings settings, ArgumentsJson argumentsJson) {
+		// Add game args
+		replaceVariables(Stream.concat(argumentsJson.getGameArguments().stream(), conditionalGameArg(argumentsJson.getConditionalGameArguments().stream(), settings)), settings).forEach(gameArgs::add);
+		
+		// Add jvm args
+		replaceVariables(Stream.concat(conditionalJvmArg(argumentsJson.getConditionalJvmArguments().stream(), settings), argumentsJson.getJvmArguments().stream()), settings).forEach(jvmArgs::add);
+	}
+	
+	private void buildLegacyArguments(ProvidedSettings settings, String minecraftArguments) {
+		// Add game args
+		final List<String> preGameArgs = new ArrayList<String>();
+		
+		Stream.of(minecraftArguments.split(" ")).forEach(preGameArgs::add);
+		if (settings.hasFeature(LauncherFeatures.DEMO_USER)) {
+			gameArgs.add("--demo");
+		}
+		if (settings.hasFeature(LauncherFeatures.HAS_CUSTOM_RESOLUTION)) {
+			gameArgs.add("--width");
+			gameArgs.add("${resolution_width}");
+			gameArgs.add("${height}");
+			gameArgs.add("${resolution_height}");
+		}
+		
+		replaceVariables(preGameArgs.stream(), settings).forEach(gameArgs::add);
+		
+		// Add jvm args
+		final ArrayList<String> preJvmArgs = new ArrayList<>();
+		
+		preJvmArgs.add("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
+		preJvmArgs.add("-Dos.name=Windows 10");
+		preJvmArgs.add("-Dos.version=10.0");
+		preJvmArgs.add("-Djava.library.path=${natives_directory}");
+		preJvmArgs.add("-Dminecraft.launcher.brand=${launcher_name}");
+		preJvmArgs.add("-Dminecraft.launcher.version=${launcher_version}");
+		preJvmArgs.add("-Dminecraft.client.jar=${primary_jar}");
+		preJvmArgs.add("-cp");
+		preJvmArgs.add("${classpath}");
+		
+		replaceVariables(preJvmArgs.stream(), settings).forEach(jvmArgs::add);
 	}
 	
 	public List<String> getGameArgs() {

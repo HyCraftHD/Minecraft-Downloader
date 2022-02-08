@@ -40,19 +40,21 @@ public class MinecraftLauncher {
 		settings.addDefaultVariable(LauncherVariables.USER_PROPERTY_MAP, "{}");
 		
 		// Add variables for version
-		settings.addVariable(LauncherVariables.VERSION_NAME, client.getId());
-		settings.addVariable(LauncherVariables.VERSION_TYPE, client.getType());
+		settings.addDefaultVariable(LauncherVariables.VERSION_NAME, client.getId());
+		settings.addDefaultVariable(LauncherVariables.VERSION_TYPE, client.getType());
 		
-		settings.addVariable(LauncherVariables.GAME_DIRECTORY, settings.getRunDirectory());
-		settings.addVariable(LauncherVariables.GAME_ASSETS, settings.getAssetsDirectory());
+		settings.addDefaultVariable(LauncherVariables.GAME_DIRECTORY, settings.getRunDirectory());
+		settings.addDefaultVariable(LauncherVariables.GAME_ASSETS, settings.getAssetsDirectory());
 		
-		settings.addVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
-		settings.addVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
+		settings.addDefaultVariable(LauncherVariables.ASSET_ROOT, settings.getAssetsDirectory());
+		settings.addDefaultVariable(LauncherVariables.ASSET_INDEX_NAME, client.getAssetIndex().getId());
 		
-		settings.addVariable(LauncherVariables.LAUNCHER_NAME, Constants.NAME);
-		settings.addVariable(LauncherVariables.LAUNCHER_VERSION, Constants.VERSION);
+		settings.addDefaultVariable(LauncherVariables.LAUNCHER_NAME, Constants.NAME);
+		settings.addDefaultVariable(LauncherVariables.LAUNCHER_VERSION, Constants.VERSION);
 		
-		settings.addVariable(LauncherVariables.NATIVE_DIRECTORY, settings.getNativesDirectory());
-		settings.addVariable(LauncherVariables.CLASSPATH, generatedSettings.getClassPath().stream().map(File::getAbsolutePath).collect(Collectors.joining(";")));
+		settings.addDefaultVariable(LauncherVariables.NATIVE_DIRECTORY, settings.getNativesDirectory());
+		settings.addDefaultVariable(LauncherVariables.CLASSPATH, generatedSettings.getClassPath().stream().map(File::getAbsolutePath).collect(Collectors.joining(";")));
+		
+		settings.addDefaultVariable(LauncherVariables.PRIMARY_JAR, settings.getClientJarFile());
 	}
 }

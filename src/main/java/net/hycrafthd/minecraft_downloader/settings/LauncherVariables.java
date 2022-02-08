@@ -30,7 +30,9 @@ public enum LauncherVariables {
 	LAUNCHER_VERSION("launcher_version"),
 	
 	NATIVE_DIRECTORY("natives_directory"),
-	CLASSPATH("classpath");
+	CLASSPATH("classpath"),
+	
+	PRIMARY_JAR("primary_jar");
 	
 	private final String name;
 	
