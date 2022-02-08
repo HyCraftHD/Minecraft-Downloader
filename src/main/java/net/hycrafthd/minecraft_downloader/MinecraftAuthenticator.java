@@ -55,6 +55,7 @@ public class MinecraftAuthenticator {
 			
 			LoggingUtil.addRemoveFromLog(user.getAccessToken());
 			
+			// Set base login information
 			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.getName());
 			settings.addVariable(LauncherVariables.AUTH_UUID, user.getUuid());
 			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, user.getAccessToken());
@@ -65,9 +66,11 @@ public class MinecraftAuthenticator {
 			// settings.addVariable(LauncherVariables.CLIENT_ID, "-");
 			
 			// TODO Populate with right values
-			// settings.addVariable(LauncherVariables.AUTH_SESSION, "-");
 			// settings.addVariable(LauncherVariables.USER_PROPERTIES, "{}");
 			// settings.addVariable(LauncherVariables.USER_PROPERTY_MAP, "{}");
+			
+			// Set legacy auth session
+			settings.addVariable(LauncherVariables.AUTH_SESSION, "token:" + user.getAccessToken() + ":" + user.getUuid());
 			
 			Main.LOGGER.info("Logged into minecraft account");
 		} catch (AuthenticationException | IOException | NoSuchElementException ex) {
