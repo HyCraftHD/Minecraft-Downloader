@@ -46,10 +46,10 @@ public class ProcessLaunch {
 		try {
 			final Process process = processBuilder.start();
 			process.waitFor();
-		} catch (IOException | InterruptedException ex) {
+		} catch (final IOException | InterruptedException ex) {
 			throw new IllegalStateException("Failed to run minecraft", ex);
 		}
-		Main.LOGGER.info("Closed minecraft. Closing minecraft downloader");
+		Main.LOGGER.info("Closing minecraft downloader");
 	}
 	
 	private static String findJavaExecutable(File javaExec) {
