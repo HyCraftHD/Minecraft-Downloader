@@ -3,15 +3,15 @@
 	<Appenders>
 		<Console name="Console">
 			<PatternLayout>
-				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
-					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %msg{nolookups}%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%msg{nolookups}%n%xEx" />
 				</MarkerPatternSelector>
 			</PatternLayout>
 		</Console>
 		<RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
 			<PatternLayout>
-				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
-					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %msg{nolookups}%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%msg{nolookups}%n%xEx" />
 				</MarkerPatternSelector>
 			</PatternLayout>
 			<Policies>
@@ -22,8 +22,8 @@
 		</RollingRandomAccessFile>
 		<RollingRandomAccessFile name="DebugFile" fileName="logs/debug.log" filePattern="logs/debug-%i.log.gz">
 			<PatternLayout>
-				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %hide%n%xEx">
-					<PatternMatch key="LAUNCH" pattern="%hide%n%xEx" />
+				<MarkerPatternSelector defaultPattern="[%d{ddMMMyyyy HH:mm:ss.SSS}] [%t/%level] [%logger/%markerSimpleName]: %msg{nolookups}%n%xEx">
+					<PatternMatch key="LAUNCH" pattern="%msg{nolookups}%n%xEx" />
 				</MarkerPatternSelector>
 			</PatternLayout>
 			<Policies>
