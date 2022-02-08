@@ -42,7 +42,7 @@ public class ArgumentsParser {
 		// Add standard jvm args
 		Stream.of(standardJvmArgs.split(" ")).forEach(jvmArgs::add);
 		
-		// Add log file argument
+		// Add log4j config file
 		if (generatedSettings.getLogFile() != null && clientJson.getLogging() != null) {
 			jvmArgs.add(StringUtil.replaceVariable("path", clientJson.getLogging().getClient().getArgument(), generatedSettings.getLogFile().getAbsolutePath()));
 		}
