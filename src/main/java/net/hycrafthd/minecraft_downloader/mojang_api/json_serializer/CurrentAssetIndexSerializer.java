@@ -32,6 +32,10 @@ public class CurrentAssetIndexSerializer implements JsonDeserializer<CurrentAsse
 		
 		json.add("objects", objects);
 		
+		if (assetIndex.isMapToResources()) {
+			json.addProperty("map_to_resources", assetIndex.isMapToResources());
+		}
+		
 		if (assetIndex.isVirtual()) {
 			json.addProperty("virtual", assetIndex.isVirtual());
 		}
@@ -49,6 +53,13 @@ public class CurrentAssetIndexSerializer implements JsonDeserializer<CurrentAsse
 				.stream() //
 				.collect(Collectors.toMap(Entry::getKey, entry -> context.deserialize(entry.getValue(), AssetJson.class)));
 		
+		final boolean mapToResources;
+		if (object.has("map_to_resources")) {
+			mapToResources = object.get("map_to_resources").getAsBoolean();
+		} else {
+			mapToResources = false;
+		}
+		
 		final boolean virtual;
 		if (object.has("virtual")) {
 			virtual = object.get("virtual").getAsBoolean();
@@ -56,7 +67,7 @@ public class CurrentAssetIndexSerializer implements JsonDeserializer<CurrentAsse
 			virtual = false;
 		}
 		
-		return new CurrentAssetIndexJson(assets, virtual);
+		return new CurrentAssetIndexJson(assets, mapToResources, virtual);
 	}
 	
 }

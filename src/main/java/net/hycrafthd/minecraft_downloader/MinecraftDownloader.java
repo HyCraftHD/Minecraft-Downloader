@@ -159,11 +159,21 @@ public class MinecraftDownloader {
 			FileUtil.downloadFileException(url, file, assetObject.getSize(), assetObject.getHash(), "Failed to download asset");
 		});
 		
-		if (index.isVirtual()) {
-			Main.LOGGER.info("Virtual assets found. Unhash them");
+		if (index.isMapToResources() || index.isVirtual()) {
+			Main.LOGGER.info("Virtual assets found. Reconstruct assets");
 			
+			final File resources = new File(settings.getRunDirectory(), "resources");
 			final File virtualAssets = new File(assets, "legacy_virtual" + Constants.FILE_SEPERATOR + assetIndex.getId());
-			FileUtil.createFolders(virtualAssets);
+			
+			final File unhashedFolder;
+			
+			if (index.isMapToResources()) {
+				unhashedFolder = resources;
+			} else {
+				unhashedFolder = virtualAssets;
+			}
+			
+			FileUtil.createFolders(unhashedFolder);
 			
 			index.getAssets().entrySet().parallelStream().forEach(entry -> {
 				final String name = entry.getKey();
@@ -172,7 +182,7 @@ public class MinecraftDownloader {
 				final String first2HashLetters = StringUtil.first2Letters(assetObject.getHash());
 				
 				final File hashedFile = new File(assets, "objects" + Constants.FILE_SEPERATOR + first2HashLetters + Constants.FILE_SEPERATOR + assetObject.getHash());
-				final File unhashedFile = new File(virtualAssets, name);
+				final File unhashedFile = new File(unhashedFolder, name);
 				FileUtil.createParentFolders(unhashedFile);
 				
 				try {
