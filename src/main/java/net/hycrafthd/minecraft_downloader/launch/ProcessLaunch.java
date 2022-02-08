@@ -29,9 +29,6 @@ public class ProcessLaunch {
 		final List<String> commands = new ArrayList<>();
 		commands.add(java);
 		commands.addAll(parser.getJvmArgs());
-		if (generatedSettings.getLogFile() != null) {
-			commands.add(generatedSettings.getClientJson().getLogging().getClient().getArgument().replace("${path}", generatedSettings.getLogFile().getAbsolutePath())); // TODO move this to argument parser
-		}
 		commands.add(generatedSettings.getClientJson().getMainClass());
 		commands.addAll(parser.getGameArgs());
 		

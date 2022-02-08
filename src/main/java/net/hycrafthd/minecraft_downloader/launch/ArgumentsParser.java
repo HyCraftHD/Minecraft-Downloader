@@ -10,9 +10,11 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.Arguments
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalGameArgumentJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.ArgumentsJson.ConditionalJvmArgumentJson;
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.BaseOsRuleJson.OSJson;
+import net.hycrafthd.minecraft_downloader.settings.GeneratedSettings;
 import net.hycrafthd.minecraft_downloader.settings.LauncherFeatures;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
+import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class ArgumentsParser {
 	
@@ -23,7 +25,8 @@ public class ArgumentsParser {
 		this.gameArgs = new ArrayList<>();
 		this.jvmArgs = new ArrayList<>();
 		
-		final CurrentClientJson clientJson = settings.getGeneratedSettings().getClientJson();
+		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
+		final CurrentClientJson clientJson = generatedSettings.getClientJson();
 		
 		final ArgumentsJson argumentsJson = clientJson.getArguments();
 		final String minecraftArguments = clientJson.getMinecraftArguments();
@@ -38,6 +41,11 @@ public class ArgumentsParser {
 		
 		// Add standard jvm args
 		Stream.of(standardJvmArgs.split(" ")).forEach(jvmArgs::add);
+		
+		// Add log file argument
+		if (generatedSettings.getLogFile() != null && clientJson.getLogging() != null) {
+			jvmArgs.add(StringUtil.replaceVariable("path", clientJson.getLogging().getClient().getArgument(), generatedSettings.getLogFile().getAbsolutePath()));
+		}
 	}
 	
 	private final Stream<String> replaceVariables(Stream<String> arguments, ProvidedSettings settings) {
