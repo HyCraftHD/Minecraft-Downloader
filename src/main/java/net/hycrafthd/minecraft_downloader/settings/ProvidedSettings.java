@@ -25,6 +25,7 @@ public class ProvidedSettings {
 	private final File clientJsonFile;
 	private final File clientJarFile;
 	private final File clientMappingsFile;
+	private final File clientClasspathJarFile;
 	
 	private final Optional<File> runDirectoryOptional;
 	
@@ -45,6 +46,7 @@ public class ProvidedSettings {
 		clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
 		clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
 		clientMappingsFile = new File(outputDirectory, Constants.CLIENT_MAPPINGS.get(version));
+		clientClasspathJarFile = new File(outputDirectory, Constants.CLIENT_CLASSPATH_JAR.get(version));
 		
 		runDirectoryOptional = Optional.ofNullable(runDirectory);
 		
@@ -90,6 +92,11 @@ public class ProvidedSettings {
 	public File getClientMappingsFile() {
 		ensureDirectoryExists(outputDirectory);
 		return clientMappingsFile;
+	}
+	
+	public File getClientClasspathJarFile() {
+		ensureDirectoryExists(outputDirectory);
+		return clientClasspathJarFile;
 	}
 	
 	public boolean hasRunDirectory() {

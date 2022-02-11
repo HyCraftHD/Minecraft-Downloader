@@ -35,6 +35,8 @@ public class Main {
 		final OptionSpec<Void> defaultJavaSpec = parser.accepts("default-java-exec", "Download and use the vanilla supplied java runtime for that version. If not specified the current java runtime will be used for launching minecraft").availableIf(launchSpec);
 		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft").availableIf(launchSpec).availableUnless(defaultJavaSpec).withRequiredArg().ofType(File.class);
 		
+		final OptionSpec<Void> skipClasspathShorteningSpec = parser.accepts("skip-classpath-shortening", "Skip classpath shortening").availableIf(launchSpec);
+		
 		final OptionSpec<Void> defaultLogSpec = parser.accepts("default-log-config", "Use vanilla supplied log4j configuration").availableIf(launchSpec);
 		final OptionSpec<File> logFileSpec = parser.accepts("log-config", "Use the specified file as log4j configuration").availableIf(launchSpec).availableUnless(defaultLogSpec).withRequiredArg().ofType(File.class);
 		
@@ -77,6 +79,8 @@ public class Main {
 		
 		final boolean defaultJava = set.has(defaultJavaSpec);
 		final File javaExec = set.valueOf(javaExecSpec);
+		
+		final boolean skipClasspathShortening = set.has(skipClasspathShorteningSpec);
 		
 		final boolean defaultLog = set.has(defaultLogSpec);
 		final File logFile = set.valueOf(logFileSpec);
@@ -136,7 +140,7 @@ public class Main {
 				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
 			}
 			MinecraftJavaRuntimeSetup.launch(settings, defaultJava, javaExec);
-			MinecraftClasspathBuilder.launch(settings);
+			MinecraftClasspathBuilder.launch(settings, skipClasspathShortening);
 			MinecraftLauncher.launch(settings, standardJvmArguments);
 		}
 	}
