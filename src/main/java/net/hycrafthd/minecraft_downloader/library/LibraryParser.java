@@ -12,6 +12,7 @@ import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJs
 import net.hycrafthd.minecraft_downloader.mojang_api.CurrentClientJson.LibraryJson.NativesJson;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
+import net.hycrafthd.minecraft_downloader.util.StringUtil;
 
 public class LibraryParser {
 	
@@ -66,7 +67,7 @@ public class LibraryParser {
 		if (natives != null) {
 			final String classifierName = natives.getNatives().get(OSUtil.CURRENT_OS.getName());
 			if (classifierName != null) {
-				final ArtifactJson nativeArtifact = downloads.getClassifiers().getClassifiers().get(classifierName);
+				final ArtifactJson nativeArtifact = downloads.getClassifiers().getClassifiers().get(StringUtil.replaceVariable("arch", classifierName, OSUtil.CURRENT_ARCH.getClassifierName()));
 				
 				if (nativeArtifact != null) {
 					final List<String> extractExclusion;
