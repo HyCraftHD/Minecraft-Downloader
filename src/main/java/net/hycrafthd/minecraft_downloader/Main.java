@@ -43,6 +43,8 @@ public class Main {
 		final OptionSpec<Integer> widthSpec = parser.accepts("width", "Width of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		final OptionSpec<Integer> heightSpec = parser.accepts("height", "Height of the window").availableIf(launchSpec).withRequiredArg().ofType(Integer.class);
 		
+		final OptionSpec<String> standardJvmArgumentsSpec = parser.accepts("standard-jvm-args", "Standard jvm arguments for launching minecraft").availableIf(launchSpec).withRequiredArg().defaultsTo(Constants.STANDARD_JVM_ARGS);
+		
 		// Login specs
 		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data").withRequiredArg().ofType(File.class);
 		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login a mojang or microsoft accounts to create an authentication file. Currently console is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
@@ -84,6 +86,8 @@ public class Main {
 		final boolean customResolution = set.has(widthSpec) && set.has(heightSpec);
 		final Integer width = set.valueOf(widthSpec);
 		final Integer height = set.valueOf(heightSpec);
+		
+		final String standardJvmArguments = set.valueOf(standardJvmArgumentsSpec);
 		
 		final File authFile = set.valueOf(authFileSpec);
 		final boolean authenticate = set.has(authenticateSpec);
@@ -133,7 +137,7 @@ public class Main {
 			}
 			MinecraftJavaRuntimeSetup.launch(settings, defaultJava, javaExec);
 			MinecraftClasspathBuilder.launch(settings);
-			MinecraftLauncher.launch(settings);
+			MinecraftLauncher.launch(settings, standardJvmArguments);
 		}
 	}
 }

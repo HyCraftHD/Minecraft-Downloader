@@ -17,15 +17,12 @@ public class ProcessLaunch {
 	
 	private static final Marker LAUNCH_MARKER = MarkerManager.getMarker("LAUNCH");
 	
-	// TODO make them accessible in the arguments
-	private static final String STANDARD_JVM_ARGS = "-Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M";
-	
-	public static void launch(ProvidedSettings settings) {
+	public static void launch(ProvidedSettings settings, String standardJvmArguments) {
 		Main.LOGGER.info("Prepare process launch");
 		
 		final GeneratedSettings generatedSettings = settings.getGeneratedSettings();
 		
-		final ArgumentsParser parser = new ArgumentsParser(settings, STANDARD_JVM_ARGS);
+		final ArgumentsParser parser = new ArgumentsParser(settings, standardJvmArguments);
 		final String java = generatedSettings.getJavaExec().getAbsolutePath();
 		
 		// Build command for process builder
