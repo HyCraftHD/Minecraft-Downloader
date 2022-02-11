@@ -32,4 +32,6 @@ public class Constants {
 	
 	public static final String SHIPPED_LOG4J_CONFIG = "default_log4j_minecraft_config.xml";
 	
+	public static final String JAVA_EXEC_NAME = "javaw";
+	
 }

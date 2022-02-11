@@ -21,6 +21,7 @@ import net.hycrafthd.minecraft_downloader.util.FileDownloadFailedException;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil;
 import net.hycrafthd.minecraft_downloader.util.OSUtil.ARCH;
+import net.hycrafthd.minecraft_downloader.util.OSUtil.OS;
 
 public class MinecraftJavaRuntimeSetup {
 	
@@ -28,9 +29,9 @@ public class MinecraftJavaRuntimeSetup {
 		if (defaultJava) {
 			downloadJavaRuntime(settings);
 		} else if (javaExec != null) {
-			
+			settings.getGeneratedSettings().setJavaExec(javaExec);
 		} else {
-			
+			settings.getGeneratedSettings().setJavaExec(findJavaExecutable(new File(System.getProperty("java.home"))));
 		}
 	}
 	
@@ -94,6 +95,8 @@ public class MinecraftJavaRuntimeSetup {
 			}
 		});
 		
+		settings.getGeneratedSettings().setJavaExec(findJavaExecutable(jreDownloadDirectory));
+		
 		Main.LOGGER.info("Finished downloading java runtime");
 	}
 	
@@ -133,6 +136,17 @@ public class MinecraftJavaRuntimeSetup {
 		} else {
 			return platform.getJreLegacy().get(0);
 		}
+	}
+	
+	private static File findJavaExecutable(File jreDirectory) {
+		final String javaFile;
+		if (OSUtil.CURRENT_OS == OS.WINDOWS) {
+			javaFile = Constants.JAVA_EXEC_NAME + ".exe";
+		} else {
+			javaFile = Constants.JAVA_EXEC_NAME;
+		}
+		
+		return new File(jreDirectory, "bin" + Constants.FILE_SEPERATOR + javaFile);
 	}
 	
 }

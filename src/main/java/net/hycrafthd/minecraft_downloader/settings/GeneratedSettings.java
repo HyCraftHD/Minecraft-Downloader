@@ -18,6 +18,8 @@ public class GeneratedSettings {
 	
 	private File logFile;
 	
+	private File javaExec;
+	
 	private Set<File> classPath;
 	
 	public void setClientJson(CurrentClientJson clientJson) {
@@ -68,6 +70,20 @@ public class GeneratedSettings {
 	
 	public File getLogFile() {
 		return logFile;
+	}
+	
+	public void setJavaExec(File javaExec) {
+		if (this.javaExec != null) {
+			throw new IllegalStateException("Java exec was already set");
+		}
+		this.javaExec = javaExec;
+	}
+	
+	public File getJavaExec() {
+		if (javaExec == null) {
+			throw new IllegalStateException("Java exec is not set");
+		}
+		return javaExec;
 	}
 	
 	public void setClassPath(Set<File> classPath) {
