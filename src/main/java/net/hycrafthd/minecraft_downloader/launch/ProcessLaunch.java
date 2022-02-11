@@ -40,6 +40,8 @@ public class ProcessLaunch {
 		processBuilder.directory(settings.getRunDirectory());
 		processBuilder.redirectErrorStream(true);
 		
+		Main.LOGGER.info("Java executable is {}", java);
+		
 		Main.LOGGER.debug("Process starts with commands:");
 		processBuilder.command().forEach(command -> {
 			Main.LOGGER.debug(" " + command);
