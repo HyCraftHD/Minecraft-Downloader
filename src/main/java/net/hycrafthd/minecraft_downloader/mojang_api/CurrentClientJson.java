@@ -19,9 +19,10 @@ public class CurrentClientJson {
 	protected ArgumentsJson arguments; // Null in older versions
 	protected AssetIndexJson assetIndex;
 	protected String assets;
+	protected int complianceLevel;
 	protected DownloadsJson downloads;
 	protected String id;
-	protected int complianceLevel;
+	protected JavaVersionJson javaVersion;
 	protected ArrayList<LibraryJson> libraries;
 	protected LoggingJson logging;
 	protected String mainClass;
@@ -31,13 +32,14 @@ public class CurrentClientJson {
 	protected String time;
 	protected String type;
 	
-	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, DownloadsJson downloads, String id, int complianceLevel, ArrayList<LibraryJson> libraries, LoggingJson logging, String mainClass, String minecraftArguments, int minimumLauncherVersion, String releaseTime, String time, String type) {
+	public CurrentClientJson(ArgumentsJson arguments, AssetIndexJson assetIndex, String assets, int complianceLevel, DownloadsJson downloads, String id, JavaVersionJson javaVersion, ArrayList<LibraryJson> libraries, LoggingJson logging, String mainClass, String minecraftArguments, int minimumLauncherVersion, String releaseTime, String time, String type) {
 		this.arguments = arguments;
 		this.assetIndex = assetIndex;
 		this.assets = assets;
+		this.complianceLevel = complianceLevel;
 		this.downloads = downloads;
 		this.id = id;
-		this.complianceLevel = complianceLevel;
+		this.javaVersion = javaVersion;
 		this.libraries = libraries;
 		this.logging = logging;
 		this.mainClass = mainClass;
@@ -60,6 +62,10 @@ public class CurrentClientJson {
 		return assets;
 	}
 	
+	public int getComplianceLevel() {
+		return complianceLevel;
+	}
+	
 	public DownloadsJson getDownloads() {
 		return downloads;
 	}
@@ -68,8 +74,8 @@ public class CurrentClientJson {
 		return id;
 	}
 	
-	public int getComplianceLevel() {
-		return complianceLevel;
+	public JavaVersionJson getJavaVersion() {
+		return javaVersion;
 	}
 	
 	public ArrayList<LibraryJson> getLibraries() {
@@ -106,7 +112,7 @@ public class CurrentClientJson {
 	
 	@Override
 	public String toString() {
-		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", downloads=" + downloads + ", id=" + id + ", complianceLevel=" + complianceLevel + ", libraries=" + libraries + ", logging=" + logging + ", mainClass=" + mainClass + ", minimumLauncherVersion=" + minimumLauncherVersion + ", releaseTime=" + releaseTime + ", time=" + time + ", type=" + type + "]";
+		return "CurrentClientJson [arguments=" + arguments + ", assetIndex=" + assetIndex + ", assets=" + assets + ", complianceLevel=" + complianceLevel + ", downloads=" + downloads + ", id=" + id + ", javaVersion=" + javaVersion + ", libraries=" + libraries + ", logging=" + logging + ", mainClass=" + mainClass + ", minecraftArguments=" + minecraftArguments + ", minimumLauncherVersion=" + minimumLauncherVersion + ", releaseTime=" + releaseTime + ", time=" + time + ", type=" + type + "]";
 	}
 	
 	@JsonAdapter(ArgumentsSerializer.class)
@@ -385,6 +391,31 @@ public class CurrentClientJson {
 			}
 			
 		}
+	}
+	
+	public static class JavaVersionJson {
+		
+		protected String component;
+		protected int majorVersion;
+		
+		public JavaVersionJson(String component, int majorVersion) {
+			this.component = component;
+			this.majorVersion = majorVersion;
+		}
+		
+		public String getComponent() {
+			return component;
+		}
+		
+		public int getMajorVersion() {
+			return majorVersion;
+		}
+		
+		@Override
+		public String toString() {
+			return "JavaVersionJson [component=" + component + ", majorVersion=" + majorVersion + "]";
+		}
+		
 	}
 	
 	public static class LibraryJson {

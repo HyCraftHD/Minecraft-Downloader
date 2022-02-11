@@ -39,6 +39,8 @@ dependencies {
 	implementation group: "com.google.code.gson", name: "gson", version: config.gson.version
 	
 	implementation group: "net.hycrafthd", name: "minecraft_authenticator", version: config.minecraft_authenticator.version
+	
+	implementation group: "org.tukaani", name: "xz", version: config.xz.version
 }
 
 group = "net.hycrafthd"

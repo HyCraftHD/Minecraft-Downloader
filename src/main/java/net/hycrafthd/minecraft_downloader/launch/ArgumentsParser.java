@@ -95,7 +95,7 @@ public class ArgumentsParser {
 					}
 				}
 				if (arch != null) {
-					if (Pattern.compile(arch).matcher(OSUtil.CURRENT_ARCH).find()) {
+					if (Pattern.compile(arch).matcher(OSUtil.CURRENT_ARCH.getName()).find()) {
 						returnValue = value;
 					} else {
 						returnValue = !value;

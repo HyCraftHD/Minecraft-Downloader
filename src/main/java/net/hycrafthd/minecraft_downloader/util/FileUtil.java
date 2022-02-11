@@ -20,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.hycrafthd.minecraft_authenticator.util.FunctionWithIOException;
 import net.hycrafthd.minecraft_downloader.Main;
 
 public class FileUtil {
@@ -48,6 +49,10 @@ public class FileUtil {
 	}
 	
 	public static void downloadFile(String url, File output, Integer expectedSize, String expectedSha1) throws IOException {
+		downloadFile(url, output, expectedSize, expectedSha1, inputStream -> inputStream);
+	}
+	
+	public static void downloadFile(String url, File output, Integer expectedSize, String expectedSha1, FunctionWithIOException<InputStream, InputStream> streamMapper) throws IOException {
 		Main.LOGGER.debug("Try to download file from {} to {}", url, output);
 		
 		final MessageDigest digest = createSha1Digest();
@@ -75,7 +80,7 @@ public class FileUtil {
 		
 		final byte buffer[] = new byte[8192];
 		
-		try (final InputStream inputStream = new DigestInputStream(urlConnection.getInputStream(), digest); //
+		try (final InputStream inputStream = streamMapper.apply(new DigestInputStream(urlConnection.getInputStream(), digest)); //
 				final OutputStream outputStream = new FileOutputStream(output)) {
 			copy(inputStream, outputStream, buffer);
 		}
@@ -95,6 +100,10 @@ public class FileUtil {
 	
 	public static boolean checkFileSize(File file, int expectedSize) {
 		return file.length() == expectedSize;
+	}
+	
+	public static boolean checkFileSha1(File file, String expectedSha1) throws IOException {
+		return checkFileSha1(createSha1Digest(), file, expectedSha1);
 	}
 	
 	public static boolean checkFileSha1(MessageDigest digest, File file, String expectedSha1) throws IOException {

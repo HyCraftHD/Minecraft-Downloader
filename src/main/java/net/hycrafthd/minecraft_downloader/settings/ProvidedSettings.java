@@ -20,6 +20,7 @@ public class ProvidedSettings {
 	private final File librariesDirectory;
 	private final File nativesDirectory;
 	private final File assetsDirectory;
+	private final File runtimeDirectory;
 	
 	private final File clientJsonFile;
 	private final File clientJarFile;
@@ -39,6 +40,7 @@ public class ProvidedSettings {
 		librariesDirectory = new File(outputDirectory, Constants.LIBRARIES.get(version));
 		nativesDirectory = new File(outputDirectory, Constants.NATIVES.get(version));
 		assetsDirectory = new File(outputDirectory, Constants.ASSETS.get(version));
+		runtimeDirectory = new File(outputDirectory, Constants.RUNTIME.get(version));
 		
 		clientJsonFile = new File(outputDirectory, Constants.CLIENT_JSON.get(version));
 		clientJarFile = new File(outputDirectory, Constants.CLIENT_JAR.get(version));
@@ -69,6 +71,10 @@ public class ProvidedSettings {
 	
 	public File getAssetsDirectory() {
 		return ensureDirectoryExists(assetsDirectory);
+	}
+	
+	public File getRuntimeDirectory() {
+		return ensureDirectoryExists(runtimeDirectory);
 	}
 	
 	public File getClientJsonFile() {

@@ -30,8 +30,10 @@ public class Main {
 		
 		// Launch specs
 		final OptionSpec<Void> launchSpec = parser.accepts("launch", "Launch minecraft after downloading the files");
-		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft. If non java executable is set, the jre from this process will be used").availableIf(launchSpec).withRequiredArg().ofType(File.class);
 		final OptionSpec<File> runSpec = parser.accepts("run", "Run directory for the game").availableIf(launchSpec).requiredIf(launchSpec).withRequiredArg().ofType(File.class);
+		
+		final OptionSpec<Void> defaultJavaSpec = parser.accepts("default-java-exec", "Download and use the vanilla supplied java runtime for that version. If not specified the current java runtime will be used for launching minecraft").availableIf(launchSpec);
+		final OptionSpec<File> javaExecSpec = parser.accepts("java-exec", "Which java executable should be used to launch minecraft").availableIf(launchSpec).availableUnless(defaultJavaSpec).withRequiredArg().ofType(File.class);
 		
 		final OptionSpec<Void> defaultLogSpec = parser.accepts("default-log-config", "Use vanilla supplied log4j configuration").availableIf(launchSpec);
 		final OptionSpec<File> logFileSpec = parser.accepts("log-config", "Use the specified file as log4j configuration").availableIf(launchSpec).availableUnless(defaultLogSpec).withRequiredArg().ofType(File.class);
@@ -69,8 +71,10 @@ public class Main {
 		final File output = set.valueOf(outputSpec);
 		
 		final boolean launch = set.has(launchSpec);
-		final File javaExec = set.valueOf(javaExecSpec);
 		final File run = set.valueOf(runSpec);
+		
+		final boolean defaultJava = set.has(defaultJavaSpec);
+		final File javaExec = set.valueOf(javaExecSpec);
 		
 		final boolean defaultLog = set.has(defaultLogSpec);
 		final File logFile = set.valueOf(logFileSpec);
@@ -127,6 +131,7 @@ public class Main {
 				settings.addVariable(LauncherVariables.RESOLUTION_WIDTH, width.toString());
 				settings.addVariable(LauncherVariables.RESOLUTION_HEIGHT, height.toString());
 			}
+			MinecraftJavaRuntimeSetup.launch(settings, defaultJava, javaExec);
 			MinecraftClasspathBuilder.launch(settings);
 			MinecraftLauncher.launch(settings, javaExec);
 		}
