@@ -41,7 +41,7 @@ public class MinecraftJavaRuntimeSetup {
 		final JavaRuntimeJson javaRuntimeVersion = extractVersionOfManifest(settings);
 		final ManifestJson javaRuntimeVersionManifest = javaRuntimeVersion.getManifest();
 		
-		final File specificRuntimeDirectory = new File(settings.getRuntimeDirectory(), javaRuntimeVersionManifest.getSha1());
+		final File specificRuntimeDirectory = new File(settings.getRuntimeDirectory(), javaRuntimeVersion.getVersion().getName() + Constants.FILE_SEPERATOR + javaRuntimeVersionManifest.getSha1());
 		
 		final CurrentJavaVersionJson index;
 		
@@ -86,6 +86,10 @@ public class MinecraftJavaRuntimeSetup {
 							
 							if (!FileUtil.bytesToHex(digest.digest()).equals(raw.getSha1())) {
 								throw new IllegalStateException("SHA1 signature does not match the expected one");
+							}
+							
+							if (fileObject.isExecutable()) {
+								file.setExecutable(true);
 							}
 						}
 					} catch (final IOException ex) {
