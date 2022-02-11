@@ -133,7 +133,7 @@ public class Main {
 			}
 			MinecraftJavaRuntimeSetup.launch(settings, defaultJava, javaExec);
 			MinecraftClasspathBuilder.launch(settings);
-			MinecraftLauncher.launch(settings, javaExec);
+			MinecraftLauncher.launch(settings);
 		}
 	}
 }

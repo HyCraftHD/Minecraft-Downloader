@@ -12,11 +12,11 @@ import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 
 public class MinecraftLauncher {
 	
-	public static void launch(ProvidedSettings settings, File javaExec) {
+	public static void launch(ProvidedSettings settings) {
 		Main.LOGGER.info("Start minecraft");
 		
 		setVariables(settings);
-		ProcessLaunch.launch(settings, javaExec);
+		ProcessLaunch.launch(settings);
 	}
 	
 	private static void setVariables(ProvidedSettings settings) {
