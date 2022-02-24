@@ -23,6 +23,7 @@ public class MinecraftAuthenticator {
 		
 		try {
 			final Authenticator authenticator;
+			final String authMethod;
 			
 			if (authenticate) {
 				final Optional<AuthenticationMethodCreator> method = SimpleMinecraftAuthentication.getMethod(authenticateType);
@@ -31,18 +32,31 @@ public class MinecraftAuthenticator {
 				}
 				
 				authenticator = method.get().create().initalAuthentication().buildAuthenticator();
+				authMethod = method.get().name();
 			} else {
 				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
 					final AuthenticationFile existingAuthFile = AuthenticationFile.readCompressed(inputStream);
 					
-					authenticator = SimpleMinecraftAuthentication.getDefaultMethod().create().existingAuthentication(existingAuthFile).buildAuthenticator();
+					final String requiredMethod = existingAuthFile.getExtraProperties().get("method");
+					
+					final AuthenticationMethodCreator method;
+					if (requiredMethod == null || !SimpleMinecraftAuthentication.getAvailableMethods().contains(requiredMethod)) {
+						method = SimpleMinecraftAuthentication.getDefaultMethod();
+					} else {
+						method = SimpleMinecraftAuthentication.getMethod(requiredMethod).get();
+					}
+					
+					authenticator = method.create().existingAuthentication(existingAuthFile).buildAuthenticator();
+					authMethod = method.name();
 				}
 			}
 			
 			authenticator.run();
 			
 			try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
-				authenticator.getResultFile().writeCompressed(outputStream);
+				final AuthenticationFile resultFile = authenticator.getResultFile();
+				resultFile.getExtraProperties().put("method", authMethod);
+				resultFile.writeCompressed(outputStream);
 			}
 			
 			final User user = authenticator.getUser().get();
