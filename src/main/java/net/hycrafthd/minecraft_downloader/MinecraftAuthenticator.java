@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.io.IoBuilder;
 
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationFile;
@@ -21,7 +25,7 @@ public class MinecraftAuthenticator {
 	public static void launch(ProvidedSettings settings, File authFile, boolean authenticate, String authenticateType) {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
-		try {
+		try (final PrintStream out = IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).buildPrintStream()) {
 			final Authenticator authenticator;
 			final String authMethod;
 			
@@ -31,23 +35,25 @@ public class MinecraftAuthenticator {
 					throw new IllegalArgumentException("Authentication type " + authenticateType + " does not exist");
 				}
 				
-				authenticator = method.get().create().initalAuthentication().buildAuthenticator();
-				authMethod = method.get().name();
+				final AuthenticationMethodCreator creator = method.get();
+				
+				authenticator = creator.create(out, System.in).initalAuthentication().buildAuthenticator();
+				authMethod = creator.name();
 			} else {
 				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
 					final AuthenticationFile existingAuthFile = AuthenticationFile.readCompressed(inputStream);
 					
 					final String requiredMethod = existingAuthFile.getExtraProperties().get("method");
 					
-					final AuthenticationMethodCreator method;
+					final AuthenticationMethodCreator creator;
 					if (requiredMethod == null || !SimpleMinecraftAuthentication.getAvailableMethods().contains(requiredMethod)) {
-						method = SimpleMinecraftAuthentication.getDefaultMethod();
+						creator = SimpleMinecraftAuthentication.getDefaultMethod();
 					} else {
-						method = SimpleMinecraftAuthentication.getMethod(requiredMethod).get();
+						creator = SimpleMinecraftAuthentication.getMethod(requiredMethod).get();
 					}
 					
-					authenticator = method.create().existingAuthentication(existingAuthFile).buildAuthenticator();
-					authMethod = method.name();
+					authenticator = creator.create(out, System.in).existingAuthentication(existingAuthFile).buildAuthenticator();
+					authMethod = creator.name();
 				}
 			}
 			
