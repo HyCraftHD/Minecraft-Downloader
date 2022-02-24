@@ -49,7 +49,7 @@ public class Main {
 		
 		// Login specs
 		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data").withRequiredArg().ofType(File.class);
-		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login a mojang or microsoft accounts to create an authentication file. Currently console is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
+		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login with a microsoft accounts to create an authentication file. Currently 'web' and 'console' is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
 		
 		// Special specs
 		final OptionSpec<Void> skipNativesSpec = parser.accepts("skip-natives", "Skip extracting natives").availableUnless(launchSpec);

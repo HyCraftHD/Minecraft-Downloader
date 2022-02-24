@@ -1,21 +1,20 @@
 package net.hycrafthd.minecraft_downloader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.Optional;
 
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
+import net.hycrafthd.minecraft_authenticator.login.AuthenticationFile;
 import net.hycrafthd.minecraft_authenticator.login.Authenticator;
 import net.hycrafthd.minecraft_authenticator.login.User;
-import net.hycrafthd.minecraft_authenticator.login.file.AuthenticationFile;
-import net.hycrafthd.minecraft_authenticator.microsoft.service.MicrosoftService;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
+import net.hycrafthd.simple_minecraft_authenticator.SimpleMinecraftAuthentication;
+import net.hycrafthd.simple_minecraft_authenticator.creator.AuthenticationMethodCreator;
 
 public class MinecraftAuthenticator {
 	
@@ -23,82 +22,45 @@ public class MinecraftAuthenticator {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
 		try {
-			final AuthenticationFile startAuthFile;
+			final Authenticator authenticator;
 			
 			if (authenticate) {
-				if (authenticateType == null || authenticateType.isEmpty() || authenticateType.equals("console")) {
-					startAuthFile = consoleAuthentication();
-				} else {
-					throw new IllegalArgumentException("Authentication type is not known. Only 'console' is supported");
+				final Optional<AuthenticationMethodCreator> method = SimpleMinecraftAuthentication.getMethod(authenticateType);
+				if (method.isEmpty()) {
+					throw new IllegalArgumentException("Authentication type " + authenticateType + " does not exist");
 				}
+				
+				authenticator = method.get().create().initalAuthentication().buildAuthenticator();
 			} else {
 				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
-					startAuthFile = AuthenticationFile.read(inputStream);
+					final AuthenticationFile existingAuthFile = AuthenticationFile.readCompressed(inputStream);
+					
+					authenticator = SimpleMinecraftAuthentication.getDefaultMethod().create().existingAuthentication(existingAuthFile).buildAuthenticator();
 				}
 			}
 			
-			final Authenticator authenticator = Authenticator.of(startAuthFile) //
-					.shouldAuthenticate() //
-					.serviceConnectTimeout(10000) //
-					.serviceReadTimeout(10000) //
-					.run();
+			authenticator.run();
 			
-			final AuthenticationFile updatedAuthFile = authenticator.getResultFile();
-			if (!startAuthFile.equals(updatedAuthFile)) {
-				try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
-					updatedAuthFile.write(outputStream);
-				}
+			try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
+				authenticator.getResultFile().writeCompressed(outputStream);
 			}
 			
 			final User user = authenticator.getUser().get();
 			
 			// Set base login information
-			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.getName());
-			settings.addVariable(LauncherVariables.AUTH_UUID, user.getUuid());
-			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, user.getAccessToken());
-			settings.addVariable(LauncherVariables.USER_TYPE, user.getType());
-			
-			// TODO populate client id and xuid
-			// settings.addVariable(LauncherVariables.AUTH_XUID, "-");
-			// settings.addVariable(LauncherVariables.CLIENT_ID, "-");
-			
-			// TODO Populate with right values
-			// settings.addVariable(LauncherVariables.USER_PROPERTIES, "{}");
-			// settings.addVariable(LauncherVariables.USER_PROPERTY_MAP, "{}");
+			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.name());
+			settings.addVariable(LauncherVariables.AUTH_UUID, user.uuid());
+			settings.addVariable(LauncherVariables.AUTH_ACCESS_TOKEN, user.accessToken());
+			settings.addVariable(LauncherVariables.USER_TYPE, user.type());
+			settings.addVariable(LauncherVariables.AUTH_XUID, user.xuid());
+			settings.addVariable(LauncherVariables.CLIENT_ID, user.clientId());
 			
 			// Set legacy auth session
-			settings.addVariable(LauncherVariables.AUTH_SESSION, "token:" + user.getAccessToken() + ":" + user.getUuid());
+			settings.addVariable(LauncherVariables.AUTH_SESSION, "token:" + user.accessToken() + ":" + user.uuid());
 			
 			Main.LOGGER.info("Logged into minecraft account");
 		} catch (AuthenticationException | IOException | NoSuchElementException ex) {
 			Main.LOGGER.info("An error occured while trying to log into minecraft account", ex);
-		}
-	}
-	
-	private static AuthenticationFile consoleAuthentication() throws IOException, AuthenticationException {
-		Main.LOGGER.info("Authentication in console");
-		
-		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-			while (true) {
-				System.out.println("Type 'microsoft' or 'mojang' for account type");
-				final String type = reader.readLine();
-				
-				if (type.equals("microsoft")) {
-					System.out.println("Open the following link and log into your microsoft account");
-					System.out.println(MicrosoftService.oAuthLoginUrl());
-					System.out.println("Paste the code parameter of the returned url");
-					final String authCode = reader.readLine();
-					
-					return Authenticator.ofMicrosoft(authCode).serviceConnectTimeout(10000).serviceReadTimeout(10000).run().getResultFile();
-				} else if (type.equals("mojang")) {
-					System.out.println("Type in your username / email");
-					final String username = reader.readLine();
-					System.out.println("Type in your password");
-					final String password = reader.readLine();
-					
-					return Authenticator.ofYggdrasil(UUID.randomUUID().toString(), username, password).serviceConnectTimeout(10000).serviceReadTimeout(10000).run().getResultFile();
-				}
-			}
 		}
 	}
 }
