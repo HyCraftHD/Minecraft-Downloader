@@ -17,6 +17,7 @@ import net.hycrafthd.minecraft_authenticator.login.User;
 import net.hycrafthd.minecraft_authenticator.util.ConsumerWithIOException;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
+import net.hycrafthd.minecraft_downloader.util.FileUtil;
 import net.hycrafthd.simple_minecraft_authenticator.SimpleMinecraftAuthentication;
 import net.hycrafthd.simple_minecraft_authenticator.creator.AuthenticationMethodCreator;
 import net.hycrafthd.simple_minecraft_authenticator.util.SimpleAuthenticationFileUtil;
@@ -39,6 +40,10 @@ public class MinecraftAuthenticator {
 				creator = SimpleMinecraftAuthentication.getMethodOrThrow(authenticateMethod);
 				authenticator = creator.create(headlessAuthenticate, out, System.in).initalAuthentication().buildAuthenticator();
 			} else {
+				if (!FileUtil.checkFile(authFile)) {
+					throw new IllegalArgumentException("Authentication file " + authFile.getAbsolutePath() + " could not be read");
+				}
+				
 				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
 					final AuthenticationData authenticationData = SimpleAuthenticationFileUtil.read(inputStream.readAllBytes());
 					creator = authenticationData.creator();
@@ -80,7 +85,7 @@ public class MinecraftAuthenticator {
 			settings.addVariable(LauncherVariables.AUTH_SESSION, "token:" + user.accessToken() + ":" + user.uuid());
 			
 			Main.LOGGER.info("Logged into minecraft account");
-		} catch (final AuthenticationException | IOException | NoSuchElementException ex) {
+		} catch (final AuthenticationException | IOException | NoSuchElementException | IllegalArgumentException ex) {
 			Main.LOGGER.info("An error occured while trying to log into minecraft account", ex);
 		}
 	}
