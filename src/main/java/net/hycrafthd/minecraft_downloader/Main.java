@@ -49,7 +49,8 @@ public class Main {
 		
 		// Login specs
 		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data").withRequiredArg().ofType(File.class);
-		final OptionSpec<String> authenticateSpec = parser.accepts("authenticate", "Lets the user login with a microsoft accounts to create an authentication file. Currently 'web' and 'console' is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
+		final OptionSpec<String> authenticateMethodSpec = parser.accepts("authenticate", "Lets the user login with a microsoft accounts to create an authentication file. Currently 'web' and 'console' is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
+		final OptionSpec<Void> headlessAuthenticateSpec = parser.accepts("headless-authenticate", "Force headless authentication").availableIf(authFileSpec, authenticateMethodSpec);
 		
 		// Special specs
 		final OptionSpec<Void> skipNativesSpec = parser.accepts("skip-natives", "Skip extracting natives").availableUnless(launchSpec);
@@ -94,8 +95,9 @@ public class Main {
 		final String standardJvmArguments = set.valueOf(standardJvmArgumentsSpec);
 		
 		final File authFile = set.valueOf(authFileSpec);
-		final boolean authenticate = set.has(authenticateSpec);
-		final String authenticateType = set.valueOf(authenticateSpec);
+		final boolean authenticate = set.has(authenticateMethodSpec);
+		final String authenticateMethod = set.valueOf(authenticateMethodSpec);
+		final boolean headlessAuthenticate = set.has(headlessAuthenticateSpec);
 		
 		final boolean skipNatives = set.has(skipNativesSpec);
 		final boolean skipAssets = set.has(skipAssetsSpec);
@@ -117,7 +119,7 @@ public class Main {
 		MinecraftDownloader.launch(settings, defaultLog, logFile, skipNatives, skipAssets);
 		
 		if ((launch || userData != null) && authFile != null) {
-			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateType);
+			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateMethod, headlessAuthenticate);
 		}
 		
 		if (information) {

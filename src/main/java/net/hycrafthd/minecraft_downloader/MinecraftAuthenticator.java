@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.io.IoBuilder;
@@ -15,55 +14,57 @@ import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationFile;
 import net.hycrafthd.minecraft_authenticator.login.Authenticator;
 import net.hycrafthd.minecraft_authenticator.login.User;
+import net.hycrafthd.minecraft_authenticator.util.ConsumerWithIOException;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.simple_minecraft_authenticator.SimpleMinecraftAuthentication;
 import net.hycrafthd.simple_minecraft_authenticator.creator.AuthenticationMethodCreator;
+import net.hycrafthd.simple_minecraft_authenticator.util.SimpleAuthenticationFileUtil;
+import net.hycrafthd.simple_minecraft_authenticator.util.SimpleAuthenticationFileUtil.AuthenticationData;
 
 public class MinecraftAuthenticator {
 	
-	public static void launch(ProvidedSettings settings, File authFile, boolean authenticate, String authenticateType) {
+	public static void launch(ProvidedSettings settings, File authFile, boolean authenticate, String authenticateMethod, boolean headlessAuthenticate) {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
 		try (final PrintStream out = IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).buildPrintStream()) {
 			final Authenticator authenticator;
-			final String authMethod;
+			final AuthenticationMethodCreator creator;
+			
+			if (headlessAuthenticate) {
+				Main.LOGGER.error("Force headless authentication");
+			}
 			
 			if (authenticate) {
-				final Optional<AuthenticationMethodCreator> method = SimpleMinecraftAuthentication.getMethod(authenticateType);
-				if (method.isEmpty()) {
-					throw new IllegalArgumentException("Authentication type " + authenticateType + " does not exist");
-				}
-				
-				final AuthenticationMethodCreator creator = method.get();
-				
-				authenticator = creator.create(out, System.in).initalAuthentication().buildAuthenticator();
-				authMethod = creator.name();
+				creator = SimpleMinecraftAuthentication.getMethodOrThrow(authenticateMethod);
+				authenticator = creator.create(headlessAuthenticate, out, System.in).initalAuthentication().buildAuthenticator();
 			} else {
 				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
-					final AuthenticationFile existingAuthFile = AuthenticationFile.readCompressed(inputStream);
+					final AuthenticationData authenticationData = SimpleAuthenticationFileUtil.read(inputStream.readAllBytes());
+					creator = authenticationData.creator();
 					
-					final String requiredMethod = existingAuthFile.getExtraProperties().get("method");
-					
-					final AuthenticationMethodCreator creator;
-					if (requiredMethod == null || !SimpleMinecraftAuthentication.getAvailableMethods().contains(requiredMethod)) {
-						creator = SimpleMinecraftAuthentication.getDefaultMethod();
-					} else {
-						creator = SimpleMinecraftAuthentication.getMethod(requiredMethod).get();
-					}
-					
-					authenticator = creator.create(out, System.in).existingAuthentication(existingAuthFile).buildAuthenticator();
-					authMethod = creator.name();
+					authenticator = creator.create(headlessAuthenticate, out, System.in).existingAuthentication(authenticationData.file()).buildAuthenticator();
 				}
 			}
 			
-			authenticator.run();
+			final ConsumerWithIOException<AuthenticationFile> saveResultFile = resultFile -> {
+				final byte[] bytes = SimpleAuthenticationFileUtil.write(new AuthenticationData(resultFile, creator));
+				try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
+					outputStream.write(bytes);
+				}
+			};
 			
-			try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
-				final AuthenticationFile resultFile = authenticator.getResultFile();
-				resultFile.getExtraProperties().put("method", authMethod);
-				resultFile.writeCompressed(outputStream);
+			try {
+				authenticator.run();
+			} catch (final AuthenticationException ex) {
+				Main.LOGGER.error("An authentication error occured. Saving authentication result file");
+				if (authenticator.getResultFile() != null) {
+					saveResultFile.accept(authenticator.getResultFile());
+				}
+				throw ex;
 			}
+			
+			saveResultFile.accept(authenticator.getResultFile());
 			
 			final User user = authenticator.getUser().get();
 			
@@ -79,7 +80,7 @@ public class MinecraftAuthenticator {
 			settings.addVariable(LauncherVariables.AUTH_SESSION, "token:" + user.accessToken() + ":" + user.uuid());
 			
 			Main.LOGGER.info("Logged into minecraft account");
-		} catch (AuthenticationException | IOException | NoSuchElementException ex) {
+		} catch (final AuthenticationException | IOException | NoSuchElementException ex) {
 			Main.LOGGER.info("An error occured while trying to log into minecraft account", ex);
 		}
 	}
