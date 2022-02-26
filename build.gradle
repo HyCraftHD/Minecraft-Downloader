@@ -45,7 +45,7 @@ dependencies {
 
 group = "net.hycrafthd"
 archivesBaseName = "minecraft_downloader"
-version = "1.0.0"
+version = "1.0.1"
 
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
