@@ -36,9 +36,11 @@ public class MinecraftInformation {
 		final String uuid = settings.getVariable(LauncherVariables.AUTH_UUID);
 		final String accessToken = settings.getVariable(LauncherVariables.AUTH_ACCESS_TOKEN);
 		final String userType = settings.getVariable(LauncherVariables.USER_TYPE);
+		final String xuid = settings.getVariable(LauncherVariables.AUTH_XUID);
+		final String clientId = settings.getVariable(LauncherVariables.CLIENT_ID);
 		
 		try {
-			FileUtil.writeText(Stream.of(playerName, uuid, accessToken, userType), userData);
+			FileUtil.writeText(Stream.of(playerName, uuid, accessToken, userType, xuid, clientId), userData);
 		} catch (final IOException ex) {
 			throw new IllegalStateException("Could not write access token file", ex);
 		}
