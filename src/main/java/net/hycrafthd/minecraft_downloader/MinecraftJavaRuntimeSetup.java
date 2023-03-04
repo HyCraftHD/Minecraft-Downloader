@@ -118,7 +118,7 @@ public class MinecraftJavaRuntimeSetup {
 		final PlatformJson platform = switch (OSUtil.CURRENT_OS) {
 		case WINDOWS -> OSUtil.CURRENT_ARCH == ARCH.X86_64 ? manifest.getWindowsX64() : manifest.getWindowsX86();
 		case LINUX -> OSUtil.CURRENT_ARCH == ARCH.X86_64 ? manifest.getLinux() : manifest.getLinuxI386();
-		case OSX -> manifest.getMacOs();
+		case OSX -> OSUtil.CURRENT_ARCH == ARCH.AARCH_64 ? manifest.getMacOsArm64() : manifest.getMacOs();
 		default -> null;
 		};
 		
@@ -130,11 +130,14 @@ public class MinecraftJavaRuntimeSetup {
 		if (javaVersion != null) {
 			final String component = javaVersion.getComponent();
 			
-			if (component.equals("java-runtime-beta")) {
-				return platform.getJavaRuntimeBeta().get(0);
-			} else if (component.equals("java-runtime-alpha")) {
+			switch (component) {
+			case "java-runtime-alpha":
 				return platform.getJavaRuntimeAlpha().get(0);
-			} else {
+			case "java-runtime-beta":
+				return platform.getJavaRuntimeBeta().get(0);
+			case "java-runtime-gamma":
+				return platform.getJavaRuntimeGamma().get(0);
+			default:
 				return platform.getJreLegacy().get(0);
 			}
 		} else {

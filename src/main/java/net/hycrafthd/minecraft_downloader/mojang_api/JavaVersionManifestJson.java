@@ -12,16 +12,19 @@ public class JavaVersionManifestJson {
 	protected PlatformJson linux_i386;
 	@SerializedName("mac-os")
 	protected PlatformJson mac_os;
+	@SerializedName("mac-os-arm64")
+	protected PlatformJson mac_os_arm64;
 	@SerializedName("windows-x64")
 	protected PlatformJson windows_x64;
 	@SerializedName("windows-x86")
 	protected PlatformJson windows_x86;
 	
-	public JavaVersionManifestJson(PlatformJson gamecore, PlatformJson linux, PlatformJson linux_i386, PlatformJson mac_os, PlatformJson windows_x64, PlatformJson windows_x86) {
+	public JavaVersionManifestJson(PlatformJson gamecore, PlatformJson linux, PlatformJson linux_i386, PlatformJson mac_os, PlatformJson mac_os_arm64, PlatformJson windows_x64, PlatformJson windows_x86) {
 		this.gamecore = gamecore;
 		this.linux = linux;
 		this.linux_i386 = linux_i386;
 		this.mac_os = mac_os;
+		this.mac_os_arm64 = mac_os_arm64;
 		this.windows_x64 = windows_x64;
 		this.windows_x86 = windows_x86;
 	}
@@ -42,6 +45,10 @@ public class JavaVersionManifestJson {
 		return mac_os;
 	}
 	
+	public PlatformJson getMacOsArm64() {
+		return mac_os_arm64;
+	}
+	
 	public PlatformJson getWindowsX64() {
 		return windows_x64;
 	}
@@ -52,7 +59,7 @@ public class JavaVersionManifestJson {
 	
 	@Override
 	public String toString() {
-		return "JavaVersionManifestJson [gamecore=" + gamecore + ", linux=" + linux + ", linux_i386=" + linux_i386 + ", mac_os=" + mac_os + ", windows_x64=" + windows_x64 + ", windows_x86=" + windows_x86 + "]";
+		return "JavaVersionManifestJson [gamecore=" + gamecore + ", linux=" + linux + ", linux_i386=" + linux_i386 + ", mac_os=" + mac_os + ", mac_os_arm64=" + mac_os_arm64 + ", windows_x64=" + windows_x64 + ", windows_x86=" + windows_x86 + "]";
 	}
 	
 	public static class PlatformJson {
@@ -61,14 +68,17 @@ public class JavaVersionManifestJson {
 		protected ArrayList<JavaRuntimeJson> javaRuntimeAlpha;
 		@SerializedName("java-runtime-beta")
 		protected ArrayList<JavaRuntimeJson> javaRuntimeBeta;
+		@SerializedName("java-runtime-gamma")
+		protected ArrayList<JavaRuntimeJson> javaRuntimeGamma;
 		@SerializedName("jre-legacy")
 		protected ArrayList<JavaRuntimeJson> jreLegacy;
 		@SerializedName("minecraft-java-exe")
 		protected ArrayList<JavaRuntimeJson> minecraftJavaExe;
 		
-		public PlatformJson(ArrayList<JavaRuntimeJson> javaRuntimeAlpha, ArrayList<JavaRuntimeJson> javaRuntimeBeta, ArrayList<JavaRuntimeJson> jreLegacy, ArrayList<JavaRuntimeJson> minecraftJavaExe) {
+		public PlatformJson(ArrayList<JavaRuntimeJson> javaRuntimeAlpha, ArrayList<JavaRuntimeJson> javaRuntimeBeta, ArrayList<JavaRuntimeJson> javaRuntimeGamma, ArrayList<JavaRuntimeJson> jreLegacy, ArrayList<JavaRuntimeJson> minecraftJavaExe) {
 			this.javaRuntimeAlpha = javaRuntimeAlpha;
 			this.javaRuntimeBeta = javaRuntimeBeta;
+			this.javaRuntimeGamma = javaRuntimeGamma;
 			this.jreLegacy = jreLegacy;
 			this.minecraftJavaExe = minecraftJavaExe;
 		}
@@ -81,6 +91,10 @@ public class JavaVersionManifestJson {
 			return javaRuntimeBeta;
 		}
 		
+		public ArrayList<JavaRuntimeJson> getJavaRuntimeGamma() {
+			return javaRuntimeGamma;
+		}
+		
 		public ArrayList<JavaRuntimeJson> getJreLegacy() {
 			return jreLegacy;
 		}
@@ -91,7 +105,7 @@ public class JavaVersionManifestJson {
 		
 		@Override
 		public String toString() {
-			return "PlatformJson [javaRuntimeAlpha=" + javaRuntimeAlpha + ", javaRuntimeBeta=" + javaRuntimeBeta + ", jreLegacy=" + jreLegacy + ", minecraftJavaExe=" + minecraftJavaExe + "]";
+			return "PlatformJson [javaRuntimeAlpha=" + javaRuntimeAlpha + ", javaRuntimeBeta=" + javaRuntimeBeta + ", javaRuntimeGamma=" + javaRuntimeGamma + ", jreLegacy=" + jreLegacy + ", minecraftJavaExe=" + minecraftJavaExe + "]";
 		}
 		
 		public static class JavaRuntimeJson {
