@@ -1,6 +1,7 @@
 package net.hycrafthd.minecraft_downloader.launch;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class ProcessLaunch {
 			final Process process = processBuilder.start();
 			
 			final Thread ioThread = new Thread(() -> {
-				try {
-					process.getInputStream().transferTo(IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).setMarker(LAUNCH_MARKER).buildOutputStream());
-				} catch (IOException ex) {
+				try (final OutputStream outputStream = IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).setMarker(LAUNCH_MARKER).buildOutputStream()) {
+					process.getInputStream().transferTo(outputStream);
+				} catch (final IOException ex) {
 					Main.LOGGER.error("Cannot print minecraft log", ex);
 				}
 			});
