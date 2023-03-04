@@ -1,25 +1,16 @@
 buildscript {
 	ext.buildProps = file "build.properties"
-	
 	buildProps.withReader {
 		def prop = new Properties()
 		prop.load(it)
 		ext.config = new ConfigSlurper().parse prop
 	}
-	
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath group: "org.eclipse.jgit", name: "org.eclipse.jgit", version: "5.11.1.202105131744-r"
-	}
 }
 
 plugins {
 	id "java-library"
-	id "eclipse"
 	id "maven-publish"
-	id "com.palantir.launch-config" version "1.2.0"
+	id "com.github.johnrengelman.shadow" version "8.1.0"
 }
 
 repositories {
@@ -51,6 +42,10 @@ tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 
+sourceSets {
+	main
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -60,32 +55,91 @@ java {
 }
 
 tasks.named("jar") {
-	archiveClassifier = ""
-	
 	from "LICENSE"
 	
 	manifest {
-		attributes(
+		attributes (
 				"Implementation-Version": project.version,
 				"Implementation-Vendor": "HyCraftHD, Luc_ZZ",
-				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+				"Fingerprint": project.findProperty("keystore.fingerprint") ?: "NONE",
+				"Main-Class": "net.hycrafthd.minecraft_downloader.Main"
 				)
 	}
 }
 
-task runDownloader(type: JavaExec) {
-	main "net.hycrafthd.minecraft_downloader.Main"
-	args "--version", "1.16.5", "--output", "download", "--launch", "--run", "game", "--extra-information", "--user-data", "login-data.txt", "--library-list", "libraries.txt", "--library-list-natives", "native-libraries.txt", "--auth-file", "auth.json", "--authenticate", "console"
-	classpath sourceSets.main.runtimeClasspath
-	def run = new File("$rootDir/run")
-	if(!run.exists() ) {
-		run.mkdirs()
+tasks.create("signJar") {
+	dependsOn tasks.named("jar")
+	mustRunAfter tasks.named("jar")
+	
+	enabled = project.hasProperty("createBuild")
+	
+	def keyStore = project.findProperty("keystore")
+	def alias = project.findProperty("keystore.alias")
+	def storePass = project.findProperty("keystore.password")
+	def keyPass = project.findProperty("keystore.password_key")
+	
+	doLast {
+		ant.signjar(
+				keyStore: keyStore,
+				alias: alias,
+				storepass: storePass,
+				keyPass: keyPass,
+				jar: tasks.named("jar").get().archiveFile.get(),
+				signedJar: tasks.named("jar").get().archiveFile.get()
+				)
 	}
-	workingDir run
 }
 
-launchConfig {
-	includedTasks "runDownloader"
+shadowJar {
+	archiveClassifier = "fat"
+	
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.ApacheLicenseResourceTransformer)
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.ApacheNoticeResourceTransformer)
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer)
+	
+	manifest {
+		attributes(
+				"Multi-Release": "true"
+				)
+	}
+}
+
+tasks.create("signShadowJar") {
+	dependsOn tasks.named("shadowJar")
+	mustRunAfter tasks.named("shadowJar")
+	
+	enabled = project.hasProperty("createBuild")
+	
+	def keyStore = project.findProperty("keystore")
+	def alias = project.findProperty("keystore.alias")
+	def storePass = project.findProperty("keystore.password")
+	def keyPass = project.findProperty("keystore.password_key")
+	
+	doLast {
+		ant.signjar(
+				keyStore: keyStore,
+				alias: alias,
+				storepass: storePass,
+				keyPass: keyPass,
+				jar: tasks.named("shadowJar").get().archiveFile.get(),
+				signedJar: tasks.named("shadowJar").get().archiveFile.get()
+				)
+	}
+}
+
+tasks.named("assemble") {
+	dependsOn tasks.named("signJar")
+	dependsOn tasks.named("signShadowJar")
+}
+afterEvaluate {
+	tasks.matching { task ->
+		task.group == "publishing"
+	}.each { task ->
+		task.dependsOn("signJar")
+		task.dependsOn("signShadowJar")
+	}
 }
 
 tasks.withType(PublishToMavenRepository) {
@@ -95,8 +149,6 @@ tasks.withType(PublishToMavenRepository) {
 }
 
 publishing {
-	publish.dependsOn build
-	
 	repositories {
 		maven {
 			url "https://repo.u-team.info"
@@ -157,17 +209,5 @@ def getValue(name) {
 			return project.getProperty(name)
 		}
 	}
-	return null;
-}
-
-task release {
-	tasks.release.dependsOn build
-	tasks.release.dependsOn publish
-	doLast {
-		def git = org.eclipse.jgit.api.Git.open(file("${rootDir}"))
-		if(git != null) {
-			git.tag().setName(project.version).setForceUpdate(true).call()
-		}
-		println "Released, Need to push tags"
-	}
+	return null
 }
