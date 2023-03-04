@@ -36,7 +36,7 @@ public class MinecraftAuthenticator {
 			if (authFile.exists()) {
 				user = useExistingAuthFile(authFile, headlessAuth, out);
 			}
-			if (user != null) {
+			if (user == null) {
 				user = createNewAuthFile(authFile, authMethod, headlessAuth, out);
 			}
 			
