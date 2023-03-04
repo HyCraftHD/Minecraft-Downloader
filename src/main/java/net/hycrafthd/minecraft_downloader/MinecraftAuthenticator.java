@@ -14,7 +14,6 @@ import net.hycrafthd.minecraft_authenticator.login.AuthenticationException;
 import net.hycrafthd.minecraft_authenticator.login.AuthenticationFile;
 import net.hycrafthd.minecraft_authenticator.login.Authenticator;
 import net.hycrafthd.minecraft_authenticator.login.User;
-import net.hycrafthd.minecraft_authenticator.util.ConsumerWithIOException;
 import net.hycrafthd.minecraft_downloader.settings.LauncherVariables;
 import net.hycrafthd.minecraft_downloader.settings.ProvidedSettings;
 import net.hycrafthd.minecraft_downloader.util.FileUtil;
@@ -25,53 +24,21 @@ import net.hycrafthd.simple_minecraft_authenticator.util.SimpleAuthenticationFil
 
 public class MinecraftAuthenticator {
 	
-	public static void launch(ProvidedSettings settings, File authFile, boolean authenticate, String authenticateMethod, boolean headlessAuthenticate) {
+	public static void launch(ProvidedSettings settings, File authFile, String authMethod, boolean headlessAuth) {
 		Main.LOGGER.info("Start the authenticator to log into minecraft");
 		
+		if (headlessAuth) {
+			Main.LOGGER.error("Force headless authentication");
+		}
+		
 		try (final PrintStream out = IoBuilder.forLogger(Main.LOGGER).setAutoFlush(true).setLevel(Level.INFO).buildPrintStream()) {
-			final Authenticator authenticator;
-			final AuthenticationMethodCreator creator;
-			
-			if (headlessAuthenticate) {
-				Main.LOGGER.error("Force headless authentication");
+			User user = null;
+			if (authFile.exists()) {
+				user = useExistingAuthFile(authFile, headlessAuth, out);
 			}
-			
-			if (authenticate) {
-				creator = SimpleMinecraftAuthentication.getMethodOrThrow(authenticateMethod);
-				authenticator = creator.create(headlessAuthenticate, out, System.in).initalAuthentication().buildAuthenticator();
-			} else {
-				if (!FileUtil.checkFile(authFile)) {
-					throw new IllegalArgumentException("Authentication file " + authFile.getAbsolutePath() + " could not be read");
-				}
-				
-				try (final FileInputStream inputStream = new FileInputStream(authFile)) {
-					final AuthenticationData authenticationData = SimpleAuthenticationFileUtil.read(inputStream.readAllBytes());
-					creator = authenticationData.creator();
-					
-					authenticator = creator.create(headlessAuthenticate, out, System.in).existingAuthentication(authenticationData.file()).buildAuthenticator();
-				}
+			if (user != null) {
+				user = createNewAuthFile(authFile, authMethod, headlessAuth, out);
 			}
-			
-			final ConsumerWithIOException<AuthenticationFile> saveResultFile = resultFile -> {
-				final byte[] bytes = SimpleAuthenticationFileUtil.write(new AuthenticationData(resultFile, creator));
-				try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
-					outputStream.write(bytes);
-				}
-			};
-			
-			try {
-				authenticator.run();
-			} catch (final AuthenticationException ex) {
-				Main.LOGGER.error("An authentication error occured. Saving authentication result file");
-				if (authenticator.getResultFile() != null) {
-					saveResultFile.accept(authenticator.getResultFile());
-				}
-				throw ex;
-			}
-			
-			saveResultFile.accept(authenticator.getResultFile());
-			
-			final User user = authenticator.getUser().get();
 			
 			// Set base login information
 			settings.addVariable(LauncherVariables.AUTH_PLAYER_NAME, user.name());
@@ -87,6 +54,68 @@ public class MinecraftAuthenticator {
 			Main.LOGGER.info("Logged into minecraft account");
 		} catch (final AuthenticationException | IOException | NoSuchElementException | IllegalArgumentException ex) {
 			Main.LOGGER.info("An error occured while trying to log into minecraft account", ex);
+		}
+	}
+	
+	private static User useExistingAuthFile(File authFile, boolean headlessAuth, PrintStream out) throws IOException {
+		if (!FileUtil.checkFile(authFile)) {
+			throw new IllegalArgumentException("Authentication file " + authFile.getAbsolutePath() + " could not be read");
+		}
+		
+		final Authenticator authenticator;
+		final AuthenticationMethodCreator creator;
+		
+		try (final FileInputStream inputStream = new FileInputStream(authFile)) {
+			final AuthenticationData authenticationData = SimpleAuthenticationFileUtil.read(inputStream.readAllBytes());
+			
+			creator = authenticationData.creator();
+			authenticator = creator.create(headlessAuth, out, System.in).existingAuthentication(authenticationData.file()).buildAuthenticator();
+		} catch (final IOException ex) {
+			Main.LOGGER.warn("Existing auth file is corrupted");
+			Main.LOGGER.catching(Level.DEBUG, ex);
+			return null;
+		}
+		
+		try {
+			authenticator.run();
+		} catch (final AuthenticationException ex) {
+			Main.LOGGER.warn("Could not authenticate with existing auth file");
+			Main.LOGGER.catching(Level.DEBUG, ex);
+			
+			if (authenticator.getResultFile() != null) {
+				saveAuthFile(authFile, authenticator.getResultFile(), creator);
+			}
+			return null;
+		}
+		
+		saveAuthFile(authFile, authenticator.getResultFile(), creator);
+		return authenticator.getUser().get();
+	}
+	
+	private static User createNewAuthFile(File authFile, String authMethod, boolean headlessAuth, PrintStream out) throws AuthenticationException, IOException {
+		final AuthenticationMethodCreator creator = SimpleMinecraftAuthentication.getMethodOrThrow(authMethod);
+		final Authenticator authenticator = creator.create(headlessAuth, out, System.in).initalAuthentication().buildAuthenticator();
+		
+		try {
+			authenticator.run();
+		} catch (final AuthenticationException ex) {
+			if (authenticator.getResultFile() != null) {
+				saveAuthFile(authFile, authenticator.getResultFile(), creator);
+			}
+			throw ex;
+		}
+		
+		saveAuthFile(authFile, authenticator.getResultFile(), creator);
+		return authenticator.getUser().get();
+	}
+	
+	private static void saveAuthFile(File authFile, AuthenticationFile resultFile, AuthenticationMethodCreator creator) throws IOException {
+		final byte[] bytes = SimpleAuthenticationFileUtil.write(new AuthenticationData(resultFile, creator));
+		try (final FileOutputStream outputStream = new FileOutputStream(authFile)) {
+			outputStream.write(bytes);
+		} catch (final IOException ex) {
+			Main.LOGGER.error("Cannot write authentication result file to {}", authFile.getAbsolutePath());
+			throw ex;
 		}
 	}
 }

@@ -2,6 +2,7 @@ package net.hycrafthd.minecraft_downloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -48,9 +49,9 @@ public class Main {
 		final OptionSpec<String> standardJvmArgumentsSpec = parser.accepts("standard-jvm-args", "Standard jvm arguments for launching minecraft").availableIf(launchSpec).withRequiredArg().defaultsTo(Constants.STANDARD_JVM_ARGS);
 		
 		// Login specs
-		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data").withRequiredArg().ofType(File.class);
-		final OptionSpec<String> authenticateMethodSpec = parser.accepts("authenticate", "Lets the user login with a microsoft accounts to create an authentication file. Currently 'web' and 'console' is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
-		final OptionSpec<Void> headlessAuthenticateSpec = parser.accepts("headless-authenticate", "Force headless authentication").availableIf(authFileSpec, authenticateMethodSpec);
+		final OptionSpec<File> authFileSpec = parser.accepts("auth-file", "Authentication file for reading, writing and updating authentication data. If file does not exist, or is not usable, then the user will be prompted to login with the selected authentication method").withRequiredArg().ofType(File.class);
+		final OptionSpec<String> authMethodSpec = parser.accepts("auth-method", "Authentication method that should be used when file does not exists. Currently 'web' and 'console' is supported").availableIf(authFileSpec).withRequiredArg().defaultsTo("console");
+		final OptionSpec<Void> headlessAuthSpec = parser.accepts("headless-auth", "Force headless authentication").availableIf(authFileSpec, authMethodSpec);
 		
 		// Special specs
 		final OptionSpec<Void> skipNativesSpec = parser.accepts("skip-natives", "Skip extracting natives").availableUnless(launchSpec);
@@ -65,7 +66,11 @@ public class Main {
 		final OptionSet set = parser.parse(args);
 		
 		if (set.has(helpSpec) || set.specs().size() < 2) {
-			parser.printHelpOn(IoBuilder.forLogger(LOGGER).setAutoFlush(true).setLevel(Level.ERROR).buildPrintStream());
+			try (final OutputStream outputStream = IoBuilder.forLogger(LOGGER).setLevel(Level.ERROR).buildOutputStream()) {
+				parser.printHelpOn(outputStream);
+			} catch (final IOException ex) {
+				LOGGER.error("Cannot print help on console", ex);
+			}
 			return;
 		}
 		
@@ -95,9 +100,8 @@ public class Main {
 		final String standardJvmArguments = set.valueOf(standardJvmArgumentsSpec);
 		
 		final File authFile = set.valueOf(authFileSpec);
-		final boolean authenticate = set.has(authenticateMethodSpec);
-		final String authenticateMethod = set.valueOf(authenticateMethodSpec);
-		final boolean headlessAuthenticate = set.has(headlessAuthenticateSpec);
+		final String authMethod = set.valueOf(authMethodSpec);
+		final boolean headlessAuth = set.has(headlessAuthSpec);
 		
 		final boolean skipNatives = set.has(skipNativesSpec);
 		final boolean skipAssets = set.has(skipAssetsSpec);
@@ -119,7 +123,7 @@ public class Main {
 		MinecraftDownloader.launch(settings, defaultLog, logFile, skipNatives, skipAssets);
 		
 		if ((launch || userData != null) && authFile != null) {
-			MinecraftAuthenticator.launch(settings, authFile, authenticate, authenticateMethod, headlessAuthenticate);
+			MinecraftAuthenticator.launch(settings, authFile, authMethod, headlessAuth);
 		}
 		
 		if (information) {
