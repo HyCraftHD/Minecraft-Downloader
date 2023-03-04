@@ -34,7 +34,7 @@ public class OSUtil {
 			CURRENT_ARCH = ARCH.X86_32;
 		} else if (arch.equals("x86_64") || arch.equals("amd64")) {
 			CURRENT_ARCH = ARCH.X86_64;
-		} else if (arch.equals("aarch64")) {
+		} else if (arch.equals("aarch64") || arch.equals("arm64")) {
 			CURRENT_ARCH = ARCH.AARCH_64;
 		} else {
 			throw new IllegalStateException("Cannot detect arch " + arch);
