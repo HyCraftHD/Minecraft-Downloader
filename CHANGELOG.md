@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2023-03-05
+### Changed
+ - Update dependencies to latest versions
+ - Rework authentication to be way more robust
+ - Modularize project
+ - Publish fat jar
+ - Gamma-jre now works for minecraft
+ - MacOS arm64 should now work
+
 ## [1.0.1] - 2022-02-26
 ### Changed
  - Updated to java 17
