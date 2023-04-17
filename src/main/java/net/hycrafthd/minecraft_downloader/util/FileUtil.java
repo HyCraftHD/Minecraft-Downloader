@@ -20,8 +20,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.hycrafthd.minecraft_authenticator.util.function.FunctionWithIOException;
 import net.hycrafthd.minecraft_downloader.Main;
-import net.hycrafthd.simple_minecraft_authenticator.util.FunctionWithIOException;
 
 public class FileUtil {
 	
