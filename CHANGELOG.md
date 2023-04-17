@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2023-04-17
+### Changed
+ - Update simple minecraft authenticator dependency
+
 ## [1.1.0] - 2023-03-05
 ### Changed
  - Update dependencies to latest versions
